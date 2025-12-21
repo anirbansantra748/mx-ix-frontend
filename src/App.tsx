@@ -280,8 +280,7 @@ function App() {
                   INFRA<br />
                   <span className="text-[#F20732]">STRUCTURE</span><br />
                   <span className="text-transparent" style={{
-                    WebkitTextStroke: '2px #000',
-                    textStroke: '2px #000'
+                    WebkitTextStroke: '2px #000'
                   }}>EVOLVED</span>
                 </h1>
 
