@@ -179,7 +179,14 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
           </div>
         </div>
 
-        <div className="flex-shrink-0 flex items-center justify-end z-50 min-w-[200px]">
+        <div className="flex-shrink-0 flex items-center justify-end gap-6 z-50 min-w-[200px]">
+          <div className="hidden lg:flex items-center gap-2">
+            <div className="relative flex items-center">
+              <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+              <div className="w-1.5 h-1.5 bg-green-500 rounded-full absolute animate-ping"></div>
+            </div>
+            <span className="text-[9px] text-green-600 font-mono font-bold tracking-wider whitespace-nowrap">ALL SYSTEMS OPERATIONAL</span>
+          </div>
           <button
             onClick={() => setPage('contact')}
             className="hover-trigger bg-[#F20732] text-white px-6 py-3 font-mono text-[10px] font-bold tracking-[0.2em] hover:bg-black transition-colors flex items-center gap-3 group shadow-lg shadow-[#F20732]/20 uppercase"
@@ -193,7 +200,7 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
 };
 
 const Footer = ({ setPage }: { setPage: (p: string) => void }) => (
-  <footer className="text-white py-20 relative overflow-hidden bg-[#F20732] z-10">
+  <footer className="text-white py-20 relative overflow-hidden bg-black z-10">
     <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
     
     <div className="container mx-auto px-8 relative z-10">
@@ -203,24 +210,24 @@ const Footer = ({ setPage }: { setPage: (p: string) => void }) => (
             <img src="/assets/logo.png" alt="MX-IX Logo" className="w-16 h-16 object-contain" />
             <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white leading-none">MX-IX</h2>
           </div>
-          <p className="font-mono max-w-sm text-black font-bold text-lg leading-tight">Redefining the physical layer of the internet.</p>
+          <p className="font-mono max-w-sm text-gray-300 font-bold text-lg leading-tight">Redefining the physical layer of the internet.</p>
         </div>
 
         <div className="lg:col-span-3 pt-2">
-           <h4 className="font-bold mb-6 uppercase tracking-widest text-xs text-black border-b border-black/20 pb-2 inline-block min-w-[100px]">Company</h4>
+           <h4 className="font-bold mb-6 uppercase tracking-widest text-xs text-gray-400 border-b border-gray-700 pb-2 inline-block min-w-[100px]">Company</h4>
            <ul className="space-y-3 font-mono text-sm text-white font-medium">
               <li>
-                <button onClick={() => setPage('about')} className="hover:text-black transition-colors hover-trigger flex items-center group">
+                <button onClick={() => setPage('about')} className="hover:text-[#F20732] transition-colors hover-trigger flex items-center group">
                   About Us <span className="opacity-0 group-hover:opacity-100 transition-opacity ml-2">→</span>
                 </button>
               </li>
               <li>
-                <button onClick={() => setPage('contact')} className="hover:text-black transition-colors hover-trigger flex items-center group">
+                <button onClick={() => setPage('contact')} className="hover:text-[#F20732] transition-colors hover-trigger flex items-center group">
                   Contact <span className="opacity-0 group-hover:opacity-100 transition-opacity ml-2">→</span>
                 </button>
               </li>
               <li>
-                <button onClick={() => setPage('services')} className="hover:text-black transition-colors hover-trigger flex items-center group">
+                <button onClick={() => setPage('services')} className="hover:text-[#F20732] transition-colors hover-trigger flex items-center group">
                   Services <span className="opacity-0 group-hover:opacity-100 transition-opacity ml-2">→</span>
                 </button>
               </li>
@@ -232,10 +239,10 @@ const Footer = ({ setPage }: { setPage: (p: string) => void }) => (
            
            <div className="space-y-4">
               <div>
-                <p className="font-mono text-xs text-black font-bold mb-1 uppercase tracking-widest">Global HQ</p>
-                <p className="font-mono text-xs text-white/90">100 Cybernetics Way<br/>Floor 42, Server Block A<br/>New York, NY 10012</p>
+                <p className="font-mono text-xs text-gray-400 font-bold mb-1 uppercase tracking-widest">Global HQ</p>
+                <p className="font-mono text-xs text-gray-300">100 Cybernetics Way<br/>Floor 42, Server Block A<br/>New York, NY 10012</p>
               </div>
-              <span className="block font-mono text-[10px] text-black/60 uppercase tracking-widest pt-4">© 2025 MX-IX INFRASTRUCTURE<br/>ALL RIGHTS RESERVED</span>
+              <span className="block font-mono text-[10px] text-gray-500 uppercase tracking-widest pt-4">© 2025 MX-IX INFRASTRUCTURE<br/>ALL RIGHTS RESERVED</span>
            </div>
         </div>
       </div>

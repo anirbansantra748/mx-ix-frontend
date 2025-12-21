@@ -6,7 +6,7 @@ const AboutPage = () => (
       <span className="text-[#F20732] font-mono text-xs tracking-[0.25em] uppercase block mb-6">:: MISSION REPORT</span>
       <h1 className="text-6xl md:text-8xl font-black mb-12 text-black leading-tight">WE BUILD<br/>THE CORE.</h1>
       <div className="space-y-8 text-xl text-gray-600 leading-relaxed font-light">
-        <p>Nexus IX started with a simple question: What happens when physical infrastructure can think?</p>
+        <p>MX-IX started with a simple question: What happens when physical infrastructure can think?</p>
         <p>We are a team of network engineers, data scientists, and hardware specialists redefining the physical layer of the internet. By integrating predictive AI models directly into our switching fabric, we've eliminated the concept of "reactive" routing.</p>
         <div className="grid grid-cols-2 gap-8 py-12">
           <div className="border-l-4 border-[#F20732] pl-6">
