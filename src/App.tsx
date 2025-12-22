@@ -134,10 +134,28 @@ const CustomCursor = () => {
 
 const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p: string) => void }) => {
   const [scrolled, setScrolled] = useState(false);
+  const [isDarkNav, setIsDarkNav] = useState(false);
+  
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    // Check for dark-nav class
+    const checkDarkNav = () => {
+      setIsDarkNav(document.body.classList.contains('dark-nav'));
+    };
+    
+    // Initial check
+    checkDarkNav();
+    
+    // Watch for class changes
+    const observer = new MutationObserver(checkDarkNav);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect();
+    };
   }, []);
 
   const navItems = [
@@ -146,30 +164,54 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
     { id: 'admin', label: 'ADMIN' },
   ];
 
+  // Adjust colors based on dark mode and scroll state
+  const getNavBg = () => {
+    if (isDarkNav && !scrolled) return 'bg-black/50 backdrop-blur-md border-b border-white/10';
+    if (scrolled) return 'bg-white/95 backdrop-blur-md border-b border-gray-200';
+    return 'bg-transparent';
+  };
+
+  const getTextColor = () => {
+    return isDarkNav && !scrolled ? 'text-white' : 'text-black';
+  };
+
+  const getNavItemBg = () => {
+    if (isDarkNav && !scrolled) return 'bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20';
+    return 'bg-white/60 backdrop-blur-md border-gray-100 hover:bg-white/80';
+  };
+
+  const getNavItemTextColor = (isActive: boolean) => {
+    if (isDarkNav && !scrolled) {
+      return isActive ? 'text-[#F20732]' : 'text-gray-300 hover:text-white';
+    }
+    return isActive ? 'text-[#F20732]' : 'text-gray-500 hover:text-black';
+  };
+
+  const getStatusTextColor = () => {
+    return isDarkNav && !scrolled ? 'text-green-400' : 'text-green-600';
+  };
+
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md border-b border-gray-200 py-3' : 'bg-transparent py-8'}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${getNavBg()} ${scrolled ? 'py-3' : 'py-8'}`}>
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 flex items-center justify-between h-14">
         <div className="flex-shrink-0 flex items-center justify-start z-50 min-w-[200px]">
           <button onClick={() => setPage('home')} className="flex items-center gap-3 hover-trigger group">
             <div className="flex items-center gap-3">
                 <img src="/assets/logo.png" alt="MX-IX Logo" className="w-10 h-10 object-contain transition-transform group-hover:scale-110" />
-                <span className="font-bold tracking-tight text-2xl hidden md:block text-black">MX-IX</span>
+                <span className={`font-bold tracking-tight text-2xl hidden md:block ${getTextColor()}`}>MX-IX</span>
             </div>
           </button>
         </div>
 
         <div className="hidden lg:flex flex-1 items-center justify-center px-4">
-           <div className="flex items-center gap-12 bg-white/60 backdrop-blur-md px-12 py-3 rounded-full border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-white/80">
+           <div className={`flex items-center gap-12 px-12 py-3 rounded-full border shadow-sm transition-all duration-300 hover:shadow-md ${getNavItemBg()}`}>
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setPage(item.id)}
                 className={`
                   text-[11px] font-mono font-bold tracking-[0.15em] uppercase transition-all duration-300 hover-trigger relative group
-                  ${currentPage === item.id 
-                    ? 'text-[#F20732]' 
-                    : 'text-gray-500 hover:text-black'
-                  }
+                  ${getNavItemTextColor(currentPage === item.id)}
                 `}
               >
                 {item.label}
@@ -185,7 +227,7 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
               <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
               <div className="w-1.5 h-1.5 bg-green-500 rounded-full absolute animate-ping"></div>
             </div>
-            <span className="text-[9px] text-green-600 font-mono font-bold tracking-wider whitespace-nowrap">ALL SYSTEMS OPERATIONAL</span>
+            <span className={`text-[9px] font-mono font-bold tracking-wider whitespace-nowrap ${getStatusTextColor()}`}>ALL SYSTEMS OPERATIONAL</span>
           </div>
           <button
             onClick={() => setPage('contact')}
