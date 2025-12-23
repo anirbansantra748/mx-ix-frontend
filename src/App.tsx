@@ -396,7 +396,7 @@ function App() {
       case 'services':
         return <ServicesPage />;
       case 'locations':
-        return <LocationsPage locations={appData.locations} />;
+        return <LocationsPage />;
       case 'contact':
         return <ContactPage />;
       case 'admin':
