@@ -195,8 +195,8 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${getNavBg()} ${scrolled ? 'py-3' : 'py-8'}`}>
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 flex items-center justify-between h-14">
         <div className="flex-shrink-0 flex items-center justify-start z-50 min-w-[200px]">
-          <button onClick={() => setPage('home')} className="flex items-center gap-3 hover-trigger group">
-            <div className="flex items-center gap-3">
+          <button onClick={() => setPage('home')} className="flex items-center gap-1.5 hover-trigger group">
+            <div className="flex items-center gap-1.5">
                 <img src="/assets/logo.png" alt="MX-IX Logo" className="w-10 h-10 object-contain transition-transform group-hover:scale-110" />
                 <span className={`font-bold tracking-tight text-2xl hidden md:block ${getTextColor()}`}>MX-IX</span>
             </div>

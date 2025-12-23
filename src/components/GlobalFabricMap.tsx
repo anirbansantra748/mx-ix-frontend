@@ -36,18 +36,25 @@ const GlobalFabricMap = () => {
   const isVisible = (id: string) => activeId === id || hoveredId === id;
 
   return (
-    <section className="w-full bg-black py-24">
-      <div className="max-w-[1600px] mx-auto px-6">
+    <section className="relative w-full bg-black py-24 overflow-hidden">
+      {/* Background Textures & Gradients */}
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-[#F20732]/20 via-transparent to-transparent"></div>
+      
+      <div className="max-w-[1600px] mx-auto px-6 relative z-10">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-10">
-          <div className="w-3 h-3 bg-red-600" />
-          <h2 className="text-white text-4xl font-black tracking-tight">
-            Global Locations
-          </h2>
+        <div className="inline-flex items-center gap-3 mb-10">
+          <div className="w-2 h-2 rounded-full bg-[#F20732] animate-pulse" />
+          <span className="font-mono text-xs font-bold tracking-[0.2em] text-[#F20732] uppercase">
+            Global Network
+          </span>
         </div>
+        <h2 className="text-white text-5xl md:text-7xl font-black tracking-tighter mb-12">
+          Global <span className="text-[#F20732]">Locations</span>
+        </h2>
 
         {/* Map Container */}
-        <div className="relative bg-[#0b0b0b] border border-[#1a1a1a] rounded-lg overflow-hidden">
+        <div className="relative bg-[#0b0b0b] border border-[#1a1a1a] overflow-hidden">
           <ComposableMap
             projection="geoMercator"
             className="w-full h-[520px]"
@@ -78,11 +85,18 @@ const GlobalFabricMap = () => {
                   setActiveId(activeId === loc.id ? null : loc.id)
                 }
               >
-                {/* Dot */}
+                {/* Larger invisible hit area for easier hovering */}
+                <circle
+                  r={16}
+                  fill="transparent"
+                  className="cursor-pointer"
+                />
+
+                {/* Visible Dot */}
                 <circle
                   r={4}
-                  fill="#dc2626"
-                  className="cursor-pointer"
+                  fill="#F20732"
+                  className="cursor-pointer pointer-events-none"
                 />
 
                 {/* Pulse */}
@@ -90,17 +104,24 @@ const GlobalFabricMap = () => {
                   <circle
                     r={10}
                     fill="none"
-                    stroke="#dc2626"
+                    stroke="#F20732"
                     strokeWidth={1}
-                    className="animate-ping"
+                    className="animate-ping pointer-events-none"
                   />
                 )}
 
                 {/* Info Card */}
                 {isVisible(loc.id) && (
-                  <foreignObject x={10} y={-35} width={160} height={90}>
-                    <div className="relative bg-white border border-black shadow-xl rounded-md pointer-events-none">
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-600" />
+                  <foreignObject 
+                    x={10} 
+                    y={-35} 
+                    width={160} 
+                    height={90}
+                    onMouseEnter={() => setHoveredId(loc.id)}
+                    onMouseLeave={() => setHoveredId(null)}
+                  >
+                    <div className="relative bg-white border border-black shadow-xl cursor-pointer">
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#F20732]" />
                       <div className="pl-4 pr-4 py-3">
                         <p className="text-[9px] tracking-widest text-gray-500">
                           LOCATION
@@ -113,7 +134,7 @@ const GlobalFabricMap = () => {
                           <span className="font-mono text-[10px] text-gray-700">
                             {loc.code}
                           </span>
-                          <span className="text-[10px] font-bold text-red-600">
+                          <span className="text-[10px] font-bold text-[#F20732]">
                             ONLINE
                           </span>
                         </div>
