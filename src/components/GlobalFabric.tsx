@@ -8,6 +8,7 @@ import {
   ZoomableGroup,
 } from "react-simple-maps";
 import { Zap, Network, Clock, Globe2 } from "lucide-react";
+import { useAdmin } from "../contexts/AdminContext";
 
 const GEO_URL =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -22,18 +23,7 @@ type Location = {
   sites: number;
 };
 
-const locations: Location[] = [
-  { id: "nyc", name: "New York", coordinates: [-74.006, 40.7128], code: "NYC_CORE", region: "AMERICAS", asns: 41, sites: 1 },
-  { id: "sfo", name: "San Francisco", coordinates: [-122.4194, 37.7749], code: "SFO_GATE", region: "AMERICAS", asns: 28, sites: 1 },
-  { id: "ams", name: "Amsterdam", coordinates: [4.9041, 52.3676], code: "AMS_IX", region: "EUROPE", asns: 89, sites: 2 },
-  { id: "lon", name: "London", coordinates: [-0.1276, 51.5072], code: "LON_X", region: "EUROPE", asns: 76, sites: 2 },
-  { id: "frk", name: "Frankfurt", coordinates: [8.6821, 50.1109], code: "FRA_HUB", region: "EUROPE", asns: 94, sites: 2 },
-  { id: "bom", name: "Mumbai", coordinates: [72.8777, 19.076], code: "BOM_WEST", region: "ASIA", asns: 34, sites: 1 },
-  { id: "sgp", name: "Singapore", coordinates: [103.8198, 1.3521], code: "SIN_NODE", region: "ASIA", asns: 67, sites: 2 },
-  { id: "tyo", name: "Tokyo", coordinates: [139.6917, 35.6895], code: "TYO_CNTR", region: "ASIA", asns: 52, sites: 1 },
-  { id: "sao", name: "São Paulo", coordinates: [-46.6333, -23.5505], code: "GRU_SOUTH", region: "AMERICAS", asns: 31, sites: 1 },
-  { id: "syd", name: "Sydney", coordinates: [151.2093, -33.8688], code: "SYD_EAST", region: "OCEANIA", asns: 29, sites: 1 },
-];
+// Locations now come from AdminContext
 
 // Connection lines between major hubs (admin configurable - disabled for now)
 // const connections = [
@@ -53,6 +43,7 @@ const locations: Location[] = [
 // ];
 
 const GlobalFabricMap = () => {
+  const { locations, globalFabricStats } = useAdmin();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1);
@@ -325,10 +316,10 @@ const GlobalFabricMap = () => {
         {/* Network Stats */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
-            { label: "TOTAL CAPACITY", value: "5.2 Tbps", Icon: Zap, color: "#F20732" },
-            { label: "ACTIVE ROUTES", value: "10,000+", Icon: Network, color: "#F20746" },
-            { label: "AVG LATENCY", value: "<5ms", Icon: Clock, color: "#A6032F" },
-            { label: "GLOBAL COVERAGE", value: "100%", Icon: Globe2, color: "#F20732" },
+            { label: "TOTAL CAPACITY", value: globalFabricStats.totalCapacity, Icon: Zap, color: "#F20732" },
+            { label: "ACTIVE ROUTES", value: globalFabricStats.activeRoutes, Icon: Network, color: "#F20746" },
+            { label: "AVG LATENCY", value: globalFabricStats.avgLatency, Icon: Clock, color: "#A6032F" },
+            { label: "GLOBAL COVERAGE", value: globalFabricStats.globalCoverage, Icon: Globe2, color: "#F20732" },
           ].map((stat) => (
             <div
               key={stat.label}

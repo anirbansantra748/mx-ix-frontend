@@ -3,12 +3,13 @@ import LocationsPage from './pages/LocationsPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import ServicesPage from './pages/ServicesPage';
-import AdminPanel from './pages/AdminPanel';
+import AdminPage from './pages/AdminPage';
 import StatsPage from './pages/StatsPage';
 import RealTimeCapacity from './components/RealTimeCapacity';
 import GlobalFabric from './components/GlobalFabric';
 import HeroNetworkMap from './components/HeroNetworkMap';
 import OrbitalLogoAdvanced from './components/OrbitalLogoAdvanced';
+import { AdminProvider, useAdmin } from './contexts/AdminContext';
 
 
 // --- TYPES ---
@@ -184,7 +185,6 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
     { id: 'services', label: 'SERVICES' },
     { id: 'locations', label: 'LOCATIONS' },
     { id: 'stats', label: 'STATS' },
-    { id: 'admin', label: 'ADMIN' },
   ];
 
   // Adjust colors based on dark mode and scroll state
@@ -323,9 +323,9 @@ const Footer = ({ setPage }: { setPage: (p: string) => void }) => (
   </footer>
 );
 
-function App() {
+function AppContent() {
+  const { networkStats } = useAdmin();
   const [page, setPage] = useState('home');
-  const [appData, setAppData] = useState<AppData>(INITIAL_DATA);
   const [selectedCity, setSelectedCity] = useState<string>('');
 
   useEffect(() => {
@@ -402,8 +402,8 @@ function App() {
                     <span className="font-mono text-[10px] text-[#F20732] border border-[#F20732]/20 bg-[#F20732]/5 px-1.5 py-0.5 rounded">AVG</span>
                   </div>
                   <div className="text-5xl lg:text-6xl font-light tracking-tighter text-black flex items-baseline">
-                    <span>{appData.latency}</span>
-                    <span className="text-xl ml-2 text-gray-400 font-bold group-hover:text-[#F20732] transition-colors">ms</span>
+                    <span>{networkStats.globalLatency.value}</span>
+                    <span className="text-xl ml-2 text-gray-400 font-bold group-hover:text-[#F20732] transition-colors">{networkStats.globalLatency.unit}</span>
                   </div>
                 </div>
 
@@ -417,7 +417,7 @@ function App() {
                     </div>
                   </div>
                   <div className="text-5xl lg:text-6xl font-light tracking-tighter text-black">
-                    <span>{appData.peers.toLocaleString()}</span>
+                    <span>{networkStats.activeNodes.toLocaleString()}</span>
                   </div>
                 </div>
 
@@ -428,7 +428,7 @@ function App() {
                     <svg className="w-4 h-4 text-gray-300 group-hover:text-[#F20732] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
                   </div>
                   <div className="text-5xl lg:text-6xl font-light tracking-tighter text-black flex items-baseline">
-                    {appData.capacity}<span className="text-xl ml-2 text-gray-400 font-bold group-hover:text-[#F20732] transition-colors">Tbps</span>
+                    {networkStats.throughput}<span className="text-xl ml-2 text-gray-400 font-bold group-hover:text-[#F20732] transition-colors">Tbps</span>
                   </div>
                 </div>
               </div>
@@ -453,7 +453,7 @@ function App() {
       case 'contact':
         return <ContactPage preSelectedCity={selectedCity} />;
       case 'admin':
-        return <AdminPanel data={appData} onUpdate={setAppData} />;
+        return <AdminPage />;
       default:
         return (
           <section className="relative min-h-screen pt-24 md:pt-20 flex flex-col border-b border-gray-200 bg-white z-10 overflow-hidden">
@@ -478,6 +478,14 @@ function App() {
       
       <Footer setPage={setPage} />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AdminProvider>
+      <AppContent />
+    </AdminProvider>
   );
 }
 
