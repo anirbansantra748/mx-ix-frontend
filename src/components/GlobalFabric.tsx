@@ -4,7 +4,10 @@ import {
   Geographies,
   Geography,
   Marker,
+  Line,
+  ZoomableGroup,
 } from "react-simple-maps";
+import { Zap, Network, Clock, Globe2 } from "lucide-react";
 
 const GEO_URL =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -15,130 +18,151 @@ type Location = {
   coordinates: [number, number];
   code: string;
   region: string;
+  asns: number;
+  sites: number;
 };
 
 const locations: Location[] = [
-  { id: "nyc", name: "New York", coordinates: [-74.006, 40.7128], code: "NYC_CORE", region: "AMERICAS" },
-  { id: "sfo", name: "San Francisco", coordinates: [-122.4194, 37.7749], code: "SFO_GATE", region: "AMERICAS" },
-  { id: "ams", name: "Amsterdam", coordinates: [4.9041, 52.3676], code: "AMS_IX", region: "EUROPE" },
-  { id: "lon", name: "London", coordinates: [-0.1276, 51.5072], code: "LON_X", region: "EUROPE" },
-  { id: "frk", name: "Frankfurt", coordinates: [8.6821, 50.1109], code: "FRA_HUB", region: "EUROPE" },
-  { id: "bom", name: "Mumbai", coordinates: [72.8777, 19.076], code: "BOM_WEST", region: "ASIA" },
-  { id: "sgp", name: "Singapore", coordinates: [103.8198, 1.3521], code: "SIN_NODE", region: "ASIA" },
-  { id: "tyo", name: "Tokyo", coordinates: [139.6917, 35.6895], code: "TYO_CNTR", region: "ASIA" },
-  { id: "sao", name: "São Paulo", coordinates: [-46.6333, -23.5505], code: "GRU_SOUTH", region: "AMERICAS" },
-  { id: "syd", name: "Sydney", coordinates: [151.2093, -33.8688], code: "SYD_EAST", region: "OCEANIA" },
+  { id: "nyc", name: "New York", coordinates: [-74.006, 40.7128], code: "NYC_CORE", region: "AMERICAS", asns: 41, sites: 1 },
+  { id: "sfo", name: "San Francisco", coordinates: [-122.4194, 37.7749], code: "SFO_GATE", region: "AMERICAS", asns: 28, sites: 1 },
+  { id: "ams", name: "Amsterdam", coordinates: [4.9041, 52.3676], code: "AMS_IX", region: "EUROPE", asns: 89, sites: 2 },
+  { id: "lon", name: "London", coordinates: [-0.1276, 51.5072], code: "LON_X", region: "EUROPE", asns: 76, sites: 2 },
+  { id: "frk", name: "Frankfurt", coordinates: [8.6821, 50.1109], code: "FRA_HUB", region: "EUROPE", asns: 94, sites: 2 },
+  { id: "bom", name: "Mumbai", coordinates: [72.8777, 19.076], code: "BOM_WEST", region: "ASIA", asns: 34, sites: 1 },
+  { id: "sgp", name: "Singapore", coordinates: [103.8198, 1.3521], code: "SIN_NODE", region: "ASIA", asns: 67, sites: 2 },
+  { id: "tyo", name: "Tokyo", coordinates: [139.6917, 35.6895], code: "TYO_CNTR", region: "ASIA", asns: 52, sites: 1 },
+  { id: "sao", name: "São Paulo", coordinates: [-46.6333, -23.5505], code: "GRU_SOUTH", region: "AMERICAS", asns: 31, sites: 1 },
+  { id: "syd", name: "Sydney", coordinates: [151.2093, -33.8688], code: "SYD_EAST", region: "OCEANIA", asns: 29, sites: 1 },
 ];
+
+// Connection lines between major hubs (admin configurable - disabled for now)
+// const connections = [
+//   ["nyc", "lon"],
+//   ["nyc", "sfo"],
+//   ["lon", "ams"],
+//   ["lon", "frk"],
+//   ["ams", "frk"],
+//   ["frk", "bom"],
+//   ["bom", "sgp"],
+//   ["sgp", "tyo"],
+//   ["tyo", "sfo"],
+//   ["sfo", "syd"],
+//   ["ams", "syd"],
+//   ["tyo", "syd"],
+//   ["sgp", "syd"],
+// ];
 
 const GlobalFabricMap = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [zoom, setZoom] = useState(1);
+  const [center, setCenter] = useState<[number, number]>([10, 20]);
 
   const isVisible = (id: string) => activeId === id || hoveredId === id;
 
+  const handleReset = () => {
+    setZoom(1);
+    setCenter([10, 20]);
+  };
+
+  // Removed for now - can be enabled via admin panel later
+  // const getConnectionCoordinates = (id1: string, id2: string) => {
+  //   const loc1 = locations.find(l => l.id === id1);
+  //   const loc2 = locations.find(l => l.id === id2);
+  //   if (loc1 && loc2) {
+  //     return { from: loc1.coordinates, to: loc2.coordinates };
+  //   }
+  //   return null;
+  // };
+
   return (
-    <section className="relative w-full bg-gradient-to-br from-[#1a1a1a] via-[#1f1f1f] to-[#1a1a1a] py-12 overflow-hidden">
-      {/* Animated Background Grid */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#F2073215_1px,transparent_1px),linear-gradient(to_bottom,#F2073215_1px,transparent_1px)] bg-[size:60px_60px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(242,7,50,0.15),transparent_60%)]" />
+    <section className="relative w-full bg-gradient-to-br from-[#0a0a0a] via-[#0f0f0f] to-[#0a0a0a] py-16 overflow-hidden">
+      {/* Background Grid */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#F2073210_1px,transparent_1px),linear-gradient(to_bottom,#F2073210_1px,transparent_1px)] bg-[size:40px_40px]" />
       </div>
 
-      {/* Floating Orbs */}
-      <div className="absolute top-20 left-20 w-96 h-96 bg-[#F20732]/15 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 right-20 w-96 h-96 bg-[#A6032F]/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-
       <div className="relative max-w-[1800px] mx-auto px-8">
-        {/* Header Section */}
-        <div className="mb-6">
+        {/* Header */}
+        <div className="mb-8">
           <div className="flex items-center gap-4 mb-3">
-            <div className="relative">
-              <div className="absolute inset-0 bg-[#F20732] blur-md opacity-50 animate-pulse" />
-              <div className="relative w-10 h-10 bg-gradient-to-br from-[#F20732] to-[#A6032F] flex items-center justify-center shadow-lg shadow-[#F20732]/50">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
+            <div className="relative w-12 h-12 bg-[#F20732] flex items-center justify-center shadow-lg shadow-[#F20732]/50">
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
             <div>
               <h2 className="text-5xl font-black text-white tracking-tight leading-none">
                 Global Network
               </h2>
-              <div className="flex items-center gap-3 mt-2">
-                <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#F20732]/30" />
-                <p className="text-[#F20746] text-xs font-black tracking-[0.2em] uppercase">
-                  {locations.length} Active Locations Worldwide
-                </p>
-                <div className="h-px flex-1 bg-gradient-to-r from-[#F20732]/30 to-transparent" />
-              </div>
+              <p className="text-[#F20732] text-xs font-bold tracking-[0.2em] uppercase mt-1">
+                {locations.length} ACTIVE LOCATIONS WORLDWIDE
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Main Map Container */}
-        <div className="relative group">
-          {/* Outer glow */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-[#F20732]/20 via-[#F20746]/20 to-[#F20732]/20 rounded-2xl blur-xl opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
-          
-          {/* Map Container */}
-          <div className="relative bg-gradient-to-br from-[#1a1a1a] via-[#1f1f1f] to-[#1a1a1a] border-2 border-gray-700/50 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
-            {/* Corner Accents */}
-            <div className="absolute top-0 left-0 w-24 h-24 border-t-2 border-l-2 border-[#F20732]/30" />
-            <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-[#F20732]/30" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-[#F20732]/30" />
-            <div className="absolute bottom-0 right-0 w-24 h-24 border-b-2 border-r-2 border-[#F20732]/30" />
-
-            {/* Top Stats Bar */}
-            <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-10">
-              <div className="flex items-center gap-6">
-                <div className="bg-black/60 backdrop-blur-md border border-[#F20732]/30 rounded-lg px-4 py-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50" />
-                    <span className="text-green-400 text-xs font-bold tracking-wide">ALL SYSTEMS OPERATIONAL</span>
-                  </div>
+        {/* Map Container */}
+        <div className="relative bg-[#0b0b0b] border-2 border-[#1a1a1a] rounded-xl overflow-hidden">
+          {/* Top Stats Bar */}
+          <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20">
+            <div className="flex items-center gap-4">
+              <div className="bg-black/80 backdrop-blur-md border border-[#F20732]/30 rounded-lg px-4 py-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50" />
+                  <span className="text-green-400 text-xs font-bold tracking-wide">ALL SYSTEMS OPERATIONAL</span>
                 </div>
-                <div className="bg-black/60 backdrop-blur-md border border-gray-700/50 rounded-lg px-4 py-2">
-                  <span className="text-gray-300 text-xs font-mono font-semibold">UPTIME: 99.99%</span>
-                </div>
+              </div>
+              <div className="bg-black/80 backdrop-blur-md border border-gray-700/50 rounded-lg px-4 py-2">
+                <span className="text-gray-300 text-xs font-mono font-semibold">UPTIME: 99.99%</span>
               </div>
             </div>
 
-            {/* Map */}
-            <div className="relative">
-              <ComposableMap
-                projection="geoMercator"
-                className="w-full h-[400px]"
-                projectionConfig={{ scale: 140, center: [10, 20] }}
+            {/* Zoom Controls */}
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => setZoom(z => Math.min(z * 1.5, 4))}
+                className="w-10 h-10 bg-black/80 backdrop-blur-md border border-gray-700/50 rounded-lg flex items-center justify-center text-white hover:border-[#F20732]/50 hover:text-[#F20732] transition-all"
               >
-                <defs>
-                  {/* Gradient for countries */}
-                  <linearGradient id="geoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#252525" />
-                    <stop offset="100%" stopColor="#1f1f1f" />
-                  </linearGradient>
-                  
-                  {/* Glow filter */}
-                  <filter id="glow">
-                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                    <feMerge>
-                      <feMergeNode in="coloredBlur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-                </defs>
+                <span className="text-xl font-bold">+</span>
+              </button>
+              <button
+                onClick={() => setZoom(z => Math.max(z / 1.5, 1))}
+                className="w-10 h-10 bg-black/80 backdrop-blur-md border border-gray-700/50 rounded-lg flex items-center justify-center text-white hover:border-[#F20732]/50 hover:text-[#F20732] transition-all"
+              >
+                <span className="text-xl font-bold">−</span>
+              </button>
+              <button
+                onClick={handleReset}
+                className="w-10 h-10 bg-black/80 backdrop-blur-md border border-gray-700/50 rounded-lg flex items-center justify-center text-white hover:border-[#F20732]/50 hover:text-[#F20732] transition-all"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </button>
+            </div>
+          </div>
 
+          {/* Map */}
+          <div className="relative">
+            <ComposableMap
+              projection="geoMercator"
+              className="w-full h-[500px]"
+              projectionConfig={{ scale: 140, center: center }}
+            >
+              <ZoomableGroup zoom={zoom} center={center}>
                 <Geographies geography={GEO_URL}>
                   {({ geographies }) =>
                     geographies.map((geo) => (
                       <Geography
                         key={geo.rsmKey}
                         geography={geo}
-                        fill="url(#geoGradient)"
-                        stroke="#333333"
+                        fill="#1a1a1a"
+                        stroke="#2a2a2a"
                         strokeWidth={0.5}
                         style={{
                           default: { outline: "none" },
-                          hover: { outline: "none", fill: "#2a2a2a" },
+                          hover: { outline: "none", fill: "#222222" },
                           pressed: { outline: "none" },
                         }}
                       />
@@ -146,28 +170,34 @@ const GlobalFabricMap = () => {
                   }
                 </Geographies>
 
-                {/* Connection Lines */}
-                {locations.map((loc, idx) => {
-                  if (idx < locations.length - 1) {
-                    return (
-                      <line
-                        key={`line-${loc.id}`}
-                        x1={0}
-                        y1={0}
-                        x2={0}
-                        y2={0}
-                        stroke="#F20732"
-                        strokeWidth={0.3}
-                        opacity={0.2}
-                        strokeDasharray="2,2"
-                      />
-                    );
-                  }
-                  return null;
-                })}
+                {/* Connection Lines - Disabled for now, can be managed via admin */}
+                {/* {connections.map((conn, idx) => {
+                  const coords = getConnectionCoordinates(conn[0], conn[1]);
+                  if (!coords) return null;
+                  return (
+                    <Line
+                      key={`line-${idx}`}
+                      from={coords.from}
+                      to={coords.to}
+                      stroke="#F20732"
+                      strokeWidth={1.5}
+                      opacity={0.4}
+                      strokeLinecap="round"
+                    />
+                  );
+                })} */}
 
-                {/* Location Markers */}
-                {locations.map((loc) => (
+                {/* Location Markers - Active marker renders last to appear on top */}
+                {locations
+                  .sort((a, b) => {
+                    // Active or hovered marker should render last (on top)
+                    const aIsActive = a.id === activeId || a.id === hoveredId;
+                    const bIsActive = b.id === activeId || b.id === hoveredId;
+                    if (aIsActive && !bIsActive) return 1;
+                    if (!aIsActive && bIsActive) return -1;
+                    return 0;
+                  })
+                  .map((loc) => (
                   <Marker
                     key={loc.id}
                     coordinates={loc.coordinates}
@@ -175,106 +205,92 @@ const GlobalFabricMap = () => {
                     onMouseLeave={() => setHoveredId(null)}
                     onClick={() => setActiveId(activeId === loc.id ? null : loc.id)}
                   >
-                    <g className="cursor-pointer" filter={isVisible(loc.id) ? "url(#glow)" : undefined}>
-                      {/* Outer pulse rings */}
+                    <g className="cursor-pointer">
+                      {/* Pulse rings on hover */}
                       {isVisible(loc.id) && (
                         <>
                           <circle
-                            r={15}
+                            r={20}
                             fill="none"
                             stroke="#F20732"
-                            strokeWidth={1.5}
+                            strokeWidth={2}
                             opacity={0.6}
                             className="animate-ping"
                           />
                           <circle
-                            r={20}
+                            r={15}
                             fill="none"
                             stroke="#F20746"
-                            strokeWidth={1}
-                            opacity={0.3}
+                            strokeWidth={1.5}
+                            opacity={0.4}
                             className="animate-ping"
-                            style={{ animationDelay: '0.3s' }}
+                            style={{ animationDelay: '0.2s' }}
                           />
                         </>
                       )}
                       
-                      {/* Middle glow circle */}
+                      {/* Glow circle */}
                       {isVisible(loc.id) && (
-                        <circle r={8} fill="#F20732" opacity={0.3} />
+                        <circle r={10} fill="#F20732" opacity={0.3} />
                       )}
                       
-                      {/* Core marker */}
+                      {/* Main marker */}
                       <circle
-                        r={isVisible(loc.id) ? 5 : 4}
+                        r={isVisible(loc.id) ? 6 : 5}
                         fill="#F20732"
                         className="transition-all duration-300"
                       />
                       <circle
-                        r={isVisible(loc.id) ? 2.5 : 2}
+                        r={isVisible(loc.id) ? 3 : 2.5}
                         fill="#ffffff"
                         className="transition-all duration-300"
                       />
                     </g>
 
-                    {/* Premium Info Card */}
+                    {/* Info Card - Higher z-index to appear above all markers */}
                     {isVisible(loc.id) && (
-                      <foreignObject x={15} y={-50} width={210} height={90}>
-                        <div className="relative animate-[fadeIn_0.3s_ease-out] hover:scale-105 transition-transform duration-300">
-                          {/* Enhanced Card glow effect */}
-                          <div className="absolute -inset-1.5 bg-[#F20732] rounded-xl blur-md opacity-50 animate-pulse" />
-                          <div className="absolute -inset-0.5 bg-gradient-to-r from-[#F20732] via-[#F20746] to-[#F20732] rounded-xl blur-sm opacity-25" />
+                      <foreignObject x={15} y={-90} width={200} height={170} style={{ zIndex: 1000 }}>
+                        <div className="relative animate-fadeIn" style={{ position: 'relative', zIndex: 1000 }}>
+                          {/* Glow effect */}
+                          <div className="absolute -inset-1 bg-[#F20732] rounded-lg blur-md opacity-50" />
                           
-                          {/* Main card */}
-                          <div className="relative bg-[#F2F2F2] border-3 border-[#F20732] shadow-[0_15px_40px_rgba(242,7,50,0.3),0_8px_20px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden hover:shadow-[0_20px_50px_rgba(242,7,50,0.4),0_10px_25px_rgba(0,0,0,0.6)] transition-shadow duration-300">
-                            {/* Top red accent dot */}
-                            <div className="absolute top-2.5 left-3">
-                              <div className="w-2 h-2 rounded-full bg-[#F20732]" />
+                          {/* Card */}
+                          <div className="relative bg-[#1a1a1a] border-2 border-[#F20732] shadow-2xl rounded-lg overflow-hidden">
+                            {/* Header */}
+                            <div className="bg-[#F20732] px-4 py-2">
+                              <p className="text-white text-sm font-black uppercase tracking-tight">
+                                {loc.name}
+                              </p>
+                              <p className="text-white/80 text-[9px] tracking-wide">
+                                Internet Exchange
+                              </p>
                             </div>
 
-                            {/* Region badge - top right */}
-                            <div className="absolute top-2 right-3">
-                              <div className="bg-[#F20732] text-white text-[8px] font-black px-2 py-0.5 rounded tracking-wide">
-                                {loc.region}
-                              </div>
-                            </div>
-                            
                             {/* Content */}
-                            <div className="px-4 pt-8 pb-3">
-                              {/* Exchange Point Label */}
-                              <div className="mb-1">
-                                <span className="text-[#A6032F]/60 text-[8px] font-bold uppercase tracking-[0.1em]">
-                                  EXCHANGE POINT
-                                </span>
+                            <div className="px-4 py-3 space-y-1.5">
+                              <div className="flex justify-between text-[10px]">
+                                <span className="text-gray-400">Connected ASNs:</span>
+                                <span className="text-white font-bold">{loc.asns}</span>
                               </div>
+                              <div className="flex justify-between text-[10px]">
+                                <span className="text-gray-400">Enabled sites:</span>
+                                <span className="text-white font-bold">{loc.sites}</span>
+                              </div>
+                              <p className="text-[#F20732] text-[9px] tracking-wide">Cloud providers</p>
                               
-                              {/* City Name */}
-                              <div className="mb-2.5">
-                                <h3 className="text-[#0D0D0D] text-lg font-black uppercase tracking-tight leading-none">
-                                  {loc.name}
-                                </h3>
-                              </div>
-                              
-                              {/* Bottom info row */}
-                              <div className="flex items-center justify-between">
-                                {/* Code badge */}
-                                <div className="flex items-center gap-1.5">
-                                  <svg className="w-3 h-3 text-[#0D0D0D]/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                                  </svg>
-                                  <span className="font-mono font-bold text-[10px] text-[#0D0D0D]/80">
-                                    {loc.code}
-                                  </span>
-                                </div>
-                                
-                                {/* Active status */}
-                                <div className="flex items-center gap-1.5">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-[#10b981] shadow-md shadow-green-500/50" />
-                                  <span className="font-black text-[10px] text-[#10b981] uppercase tracking-wide">
-                                    ACTIVE
-                                  </span>
-                                </div>
-                              </div>
+                              {/* CTA Button */}
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  window.dispatchEvent(new CustomEvent('navigateToContact', { 
+                                    detail: { city: loc.name, locationId: loc.id } 
+                                  }));
+                                }}
+                                className="w-full mt-2 bg-[#F20732] text-white text-[10px] font-bold uppercase tracking-wider py-2 rounded hover:bg-[#C00628] transition-colors flex items-center justify-center gap-2"
+                              >
+                                GET CONNECTED
+                                <span className="text-xs">→</span>
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -282,90 +298,55 @@ const GlobalFabricMap = () => {
                     )}
                   </Marker>
                 ))}
-              </ComposableMap>
-            </div>
+              </ZoomableGroup>
+            </ComposableMap>
+          </div>
 
-            {/* Bottom stats bar */}
-            <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="font-mono text-[9px] text-gray-500 tracking-widest uppercase bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-800/50">
-                  Projection: Mercator
-                </div>
-                <div className="font-mono text-[9px] text-gray-500 tracking-widest uppercase bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-800/50">
-                  Layer: Global Fabric
-                </div>
+          {/* Bottom stats bar */}
+          <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="font-mono text-[9px] text-gray-500 tracking-widest uppercase bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-800/50">
+                PROJECTION: MERCATOR
               </div>
-              
-              <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-800/50">
-                <div className="w-1.5 h-1.5 bg-[#F20732] rounded-full animate-pulse" />
-                <span className="font-mono text-[9px] text-[#F20746] tracking-widest uppercase font-bold">
-                  Live Network
-                </span>
+              <div className="font-mono text-[9px] text-gray-500 tracking-widest uppercase bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-800/50">
+                LAYER: GLOBAL FABRIC
               </div>
+            </div>
+            
+            <div className="flex items-center gap-2 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-800/50">
+              <div className="w-1.5 h-1.5 bg-[#F20732] rounded-full animate-pulse" />
+              <span className="font-mono text-[9px] text-[#F20732] tracking-widest uppercase font-bold">
+                LIVE NETWORK
+              </span>
             </div>
           </div>
         </div>
 
         {/* Network Stats */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
-            { label: "TOTAL CAPACITY", value: "5.2 Tbps", icon: (
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            ), color: "#F20732" },
-            { label: "ACTIVE ROUTES", value: "10,000+", icon: (
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-              </svg>
-            ), color: "#F20746" },
-            { label: "AVG LATENCY", value: "<5ms", icon: (
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            ), color: "#A6032F" },
-            { label: "GLOBAL COVERAGE", value: "100%", icon: (
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            ), color: "#F20732" },
+            { label: "TOTAL CAPACITY", value: "5.2 Tbps", Icon: Zap, color: "#F20732" },
+            { label: "ACTIVE ROUTES", value: "10,000+", Icon: Network, color: "#F20746" },
+            { label: "AVG LATENCY", value: "<5ms", Icon: Clock, color: "#A6032F" },
+            { label: "GLOBAL COVERAGE", value: "100%", Icon: Globe2, color: "#F20732" },
           ].map((stat) => (
             <div
               key={stat.label}
-              className="relative group/stat bg-gradient-to-br from-[#1a1a1a] to-[#1f1f1f] border border-gray-700/50 rounded-xl p-4 hover:border-[#F20732]/50 transition-all duration-300 overflow-hidden"
+              className="relative group bg-gradient-to-br from-[#0a0a0a] to-[#0f0f0f] border border-gray-800/50 rounded-xl p-6 hover:border-[#F20732]/50 transition-all duration-300 overflow-hidden"
             >
-              {/* Hover gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#F20732]/0 via-[#F20746]/8 to-[#F20732]/0 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#F20732]/0 via-[#F20746]/5 to-[#F20732]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               
-              {/* Content */}
               <div className="relative flex flex-col items-center text-center">
-                {/* Icon */}
-                <div 
-                  className="mb-2.5 p-2 rounded-lg transition-all duration-300 group-hover/stat:scale-110"
-                  style={{ 
-                    backgroundColor: `${stat.color}20`,
-                    color: stat.color
-                  }}
-                >
-                  {stat.icon}
+                <div className="mb-3">
+                  <stat.Icon className="w-8 h-8 text-[#F20732]" strokeWidth={2.5} />
                 </div>
-                
-                {/* Value */}
-                <div className="text-xl font-black text-white mb-1 tracking-tight">
+                <div className="text-2xl font-black text-white mb-1 tracking-tight">
                   {stat.value}
                 </div>
-                
-                {/* Label */}
-                <div className="text-[10px] font-bold tracking-[0.15em] uppercase" style={{ color: `${stat.color}99` }}>
+                <div className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#F20732]/80">
                   {stat.label}
                 </div>
               </div>
-
-              {/* Corner accent */}
-              <div 
-                className="absolute bottom-0 right-0 w-16 h-16 opacity-10 group-hover/stat:opacity-20 transition-opacity duration-300" 
-                style={{ backgroundColor: stat.color, clipPath: 'polygon(100% 0, 100% 100%, 0 100%)' }}
-              />
             </div>
           ))}
         </div>
@@ -376,9 +357,8 @@ const GlobalFabricMap = () => {
           from { opacity: 0; transform: scale(0.95); }
           to { opacity: 1; transform: scale(1); }
         }
-        @keyframes shimmer {
-          0%, 100% { transform: translateX(-100%) skewX(-12deg); }
-          50% { transform: translateX(100%) skewX(-12deg); }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
         }
       `}</style>
     </section>

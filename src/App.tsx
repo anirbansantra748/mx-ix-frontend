@@ -4,8 +4,12 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import ServicesPage from './pages/ServicesPage';
 import AdminPanel from './pages/AdminPanel';
+import StatsPage from './pages/StatsPage';
 import RealTimeCapacity from './components/RealTimeCapacity';
 import GlobalFabric from './components/GlobalFabric';
+import HeroNetworkMap from './components/HeroNetworkMap';
+import OrbitalLogoAdvanced from './components/OrbitalLogoAdvanced';
+
 
 // --- TYPES ---
 interface AppData {
@@ -135,6 +139,7 @@ const CustomCursor = () => {
 const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p: string) => void }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isDarkNav, setIsDarkNav] = useState(false);
+  const [isLogoRotating, setIsLogoRotating] = useState(false);
   
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -152,15 +157,33 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
     const observer = new MutationObserver(checkDarkNav);
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
     
+    // Trigger logo rotation on initial load
+    setTimeout(() => {
+      setIsLogoRotating(true);
+      setTimeout(() => setIsLogoRotating(false), 1500);
+    }, 500);
+    
     return () => {
       window.removeEventListener('scroll', handleScroll);
       observer.disconnect();
     };
   }, []);
 
+  const handleLogoClick = () => {
+    setPage('home');
+  };
+
+  const handleLogoHover = () => {
+    if (!isLogoRotating) {
+      setIsLogoRotating(true);
+      setTimeout(() => setIsLogoRotating(false), 3000);
+    }
+  };
+
   const navItems = [
     { id: 'services', label: 'SERVICES' },
     { id: 'locations', label: 'LOCATIONS' },
+    { id: 'stats', label: 'STATS' },
     { id: 'admin', label: 'ADMIN' },
   ];
 
@@ -195,9 +218,9 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${getNavBg()} ${scrolled ? 'py-3' : 'py-8'}`}>
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 flex items-center justify-between h-14">
         <div className="flex-shrink-0 flex items-center justify-start z-50 min-w-[200px]">
-          <button onClick={() => setPage('home')} className="flex items-center gap-1.5 hover-trigger group">
+          <button onClick={handleLogoClick} onMouseEnter={handleLogoHover} className="flex items-center gap-1.5 hover-trigger group">
             <div className="flex items-center gap-1.5">
-                <img src="/assets/logo.png" alt="MX-IX Logo" className="w-10 h-10 object-contain transition-transform group-hover:scale-110" />
+                <OrbitalLogoAdvanced isAnimating={false} />
                 <span className={`font-bold tracking-tight text-2xl hidden md:block ${getTextColor()}`}>MX-IX</span>
             </div>
           </button>
@@ -284,8 +307,16 @@ const Footer = ({ setPage }: { setPage: (p: string) => void }) => (
                 <p className="font-mono text-xs text-gray-400 font-bold mb-1 uppercase tracking-widest">Global HQ</p>
                 <p className="font-mono text-xs text-gray-300">100 Cybernetics Way<br/>Floor 42, Server Block A<br/>New York, NY 10012</p>
               </div>
-              <span className="block font-mono text-[10px] text-gray-500 uppercase tracking-widest pt-4">© 2025 MX-IX INFRASTRUCTURE<br/>ALL RIGHTS RESERVED</span>
-           </div>
+               <span className="block font-mono text-[10px] text-gray-500 uppercase tracking-widest pt-4">© 2025 MX-IX INFRASTRUCTURE<br/>ALL RIGHTS RESERVED</span>
+            </div>
+         </div>
+      </div>
+      
+      {/* System Version Indicator */}
+      <div className="max-w-[1920px] mx-auto px-8 pb-6">
+        <div className="flex justify-end items-center gap-3 pt-6 border-t border-gray-800">
+          <div className="w-2 h-2 rounded-full bg-[#F20732] animate-pulse"></div>
+          <span className="font-mono text-xs font-bold tracking-[0.2em] text-[#F20732] uppercase">System Optimal // v4.2</span>
         </div>
       </div>
     </div>
@@ -295,10 +326,22 @@ const Footer = ({ setPage }: { setPage: (p: string) => void }) => (
 function App() {
   const [page, setPage] = useState('home');
   const [appData, setAppData] = useState<AppData>(INITIAL_DATA);
+  const [selectedCity, setSelectedCity] = useState<string>('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [page]);
+
+  useEffect(() => {
+    const handleNavigateToContact = (e: CustomEvent) => {
+      const { city } = e.detail;
+      setSelectedCity(city);
+      setPage('contact');
+    };
+    
+    window.addEventListener('navigateToContact' as any, handleNavigateToContact);
+    return () => window.removeEventListener('navigateToContact' as any, handleNavigateToContact);
+  }, []);
 
   const renderPage = () => {
     switch(page) {
@@ -308,36 +351,44 @@ function App() {
           <section className="relative min-h-screen pt-24 md:pt-20 flex flex-col border-b border-gray-200 bg-white z-10 overflow-hidden">
             <div className="absolute inset-0 z-0 pointer-events-none">
               <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] bg-[size:64px_64px]"></div>
-              <div className="absolute right-0 top-0 w-1/3 h-full bg-gradient-to-l from-gray-50/80 to-transparent"></div>
             </div>
 
-            <div className="flex-1 w-full max-w-[1920px] mx-auto px-6 md:px-12 flex flex-col justify-center relative z-10 py-12 lg:py-0">
-              <div className="max-w-5xl">
-                <div className="inline-flex items-center gap-3 mb-8 pl-1">
-                  <div className="w-2 h-2 rounded-full bg-[#F20732] animate-pulse"></div>
-                  <span className="font-mono text-xs font-bold tracking-[0.2em] text-[#F20732] uppercase">System Optimal // v4.2</span>
+            <div className="flex-1 w-full max-w-[1920px] mx-auto px-6 md:px-12 relative z-10 py-12 lg:py-0">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 h-full items-center">
+                {/* Left side - Content */}
+                <div className="max-w-2xl">
+                  {/* System Status Indicator */}
+                  <div className="flex items-center gap-2 mb-6">
+                    {/* <div className="w-2 h-2 rounded-full bg-[#00FF00] animate-pulse"></div> */}
+                    {/* <span className="font-mono text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">System Optimal // v4.2</span> */}
+                  </div>
+
+                  <h1 className="text-6xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tighter mb-8 text-black">
+                    INFRA<br />
+                    <span className="text-[#F20732]">STRUCTURE</span><br />
+                    <span className="text-transparent" style={{
+                      WebkitTextStroke: '2px #000'
+                    }}>EVOLVED</span>
+                  </h1>
+
+                  <p className="max-w-xl text-gray-500 text-base md:text-lg leading-relaxed mb-12 font-light border-l-2 border-gray-100 pl-6">
+                    The world's first AI-governed Internet Exchange. We've eliminated the concept of "reactive" routing by integrating predictive models directly into the switching fabric.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row gap-4 mb-16 lg:mb-0">
+                    <button className="bg-black text-white px-8 py-5 font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#F20732] transition-all duration-300 hover-trigger flex items-center justify-center gap-3 group shadow-lg shadow-black/10">
+                      Initialize Peering
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+                    <button className="bg-white border border-gray-200 text-black px-8 py-5 font-mono text-xs font-bold uppercase tracking-widest hover:border-black hover:bg-gray-50 transition-all duration-300 hover-trigger">
+                      View Topology
+                    </button>
+                  </div>
                 </div>
 
-                <h1 className="text-6xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tighter mb-8 text-black">
-                  INFRA<br />
-                  <span className="text-[#F20732]">STRUCTURE</span><br />
-                  <span className="text-transparent" style={{
-                    WebkitTextStroke: '2px #000'
-                  }}>EVOLVED</span>
-                </h1>
-
-                <p className="max-w-xl text-gray-500 text-base md:text-lg leading-relaxed mb-12 font-light border-l-2 border-gray-100 pl-6">
-                  The world's first AI-governed Internet Exchange. We've eliminated the concept of "reactive" routing by integrating predictive models directly into the switching fabric.
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-4 mb-16">
-                  <button className="bg-black text-white px-8 py-5 font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#F20732] transition-all duration-300 hover-trigger flex items-center justify-center gap-3 group shadow-lg shadow-black/10">
-                    Initialize Peering
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
-                  </button>
-                  <button className="bg-white border border-gray-200 text-black px-8 py-5 font-mono text-xs font-bold uppercase tracking-widest hover:border-black hover:bg-gray-50 transition-all duration-300 hover-trigger">
-                    View Topology
-                  </button>
+                {/* Right side - Network Map Visualization */}
+                <div className="hidden lg:block h-[500px] xl:h-[600px] relative">
+                  <HeroNetworkMap />
                 </div>
               </div>
             </div>
@@ -397,8 +448,10 @@ function App() {
         return <ServicesPage />;
       case 'locations':
         return <LocationsPage />;
+      case 'stats':
+        return <StatsPage />;
       case 'contact':
-        return <ContactPage />;
+        return <ContactPage preSelectedCity={selectedCity} />;
       case 'admin':
         return <AdminPanel data={appData} onUpdate={setAppData} />;
       default:
@@ -414,7 +467,6 @@ function App() {
 
   return (
     <div className="scroll-smooth bg-gray-50 text-black selection:bg-[#F20732] selection:text-white min-h-screen">
-      <CustomCursor />
       
       <div className="fixed inset-0 z-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-200 via-transparent to-transparent"></div>
       

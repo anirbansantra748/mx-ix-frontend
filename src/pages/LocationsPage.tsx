@@ -4,6 +4,7 @@ interface LocationData {
   id: string;
   name: string;
   country: string;
+  continentId: string;
   region: string;
   status: 'active' | 'maintenance' | 'planned';
   latency: string;
@@ -20,8 +21,14 @@ interface LocationData {
   cityImage: string;
 }
 
+interface ContinentData {
+  id: string;
+  name: string;
+}
+
 const LocationsPage = () => {
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [expandedContinent, setExpandedContinent] = useState<string>('asia');
+  const [selectedLocation, setSelectedLocation] = useState<string>('tyo');
 
   // Add dark-nav class for navbar visibility
   useEffect(() => {
@@ -31,11 +38,19 @@ const LocationsPage = () => {
     };
   }, []);
 
+  const continents: ContinentData[] = [
+    { id: 'asia', name: 'ASIA' },
+    { id: 'africa', name: 'AFRICA' },
+    { id: 'europe', name: 'EUROPE' },
+    { id: 'north-america', name: 'NORTH AMERICA' }
+  ];
+
   const locations: LocationData[] = [
     {
       id: 'tyo',
       name: 'TOKYO',
-      country: 'JAPAN',
+      country: 'Japan',
+      continentId: 'asia',
       region: 'Asia Pacific',
       status: 'active',
       latency: '1.5',
@@ -59,61 +74,10 @@ const LocationsPage = () => {
       cityImage: '/assets/cities/tokyo.png'
     },
     {
-      id: 'ams',
-      name: 'AMSTERDAM',
-      country: 'NETHERLANDS',
-      region: 'Europe',
-      status: 'active',
-      latency: '0.8',
-      datacenter: 'EQUINIX AM7',
-      address: 'Kuiperbergweg 87, 1101 AG Amsterdam, Netherlands',
-      ixName: 'AMS-IX',
-      peers: 1250,
-      capacity: '400+',
-      portSpeeds: ['1G', '10G', '40G', '100G', '400G'],
-      protocols: ['BGP-4', 'IPv4', 'IPv6', 'MPLS'],
-      features: [
-        'Direct peering with 1000+ networks',
-        'Sub-millisecond latency across EU',
-        '24/7 NOC support on-site',
-        'Redundant power & cooling',
-        'DDoS protection included',
-        'Premium European networks'
-      ],
-      description: 'Our flagship European presence at the world-renowned AMS-IX.',
-      established: '2019',
-      cityImage: '/assets/cities/amsterdam.png'
-    },
-    {
-      id: 'nyc',
-      name: 'NEW YORK',
-      country: 'USA',
-      region: 'North America',
-      status: 'active',
-      latency: '1.2',
-      datacenter: 'TELEHOUSE CHELSEA',
-      address: '85 10th Avenue, New York, NY 10011, USA',
-      ixName: 'NYIIX',
-      peers: 890,
-      capacity: '300+',
-      portSpeeds: ['10G', '40G', '100G', '400G'],
-      protocols: ['BGP-4', 'IPv4', 'IPv6', 'SD-WAN'],
-      features: [
-        'Direct access to major US networks',
-        'Cloud on-ramps (AWS, Azure, GCP)',
-        'Financial services optimized',
-        'Tier 3+ datacenter facility',
-        'Real-time traffic analytics',
-        'Ultra-low latency trading'
-      ],
-      description: 'Strategic North American hub connecting Wall Street to the world.',
-      established: '2020',
-      cityImage: '/assets/cities/newyork.png'
-    },
-    {
       id: 'sin',
       name: 'SINGAPORE',
-      country: 'SINGAPORE',
+      country: 'Singapore',
+      continentId: 'asia',
       region: 'Asia Pacific',
       status: 'active',
       latency: '2.1',
@@ -137,9 +101,64 @@ const LocationsPage = () => {
       cityImage: '/assets/cities/singapore.png'
     },
     {
+      id: 'hkg',
+      name: 'HONG KONG',
+      country: 'Hong Kong',
+      continentId: 'asia',
+      region: 'Asia Pacific',
+      status: 'planned',
+      latency: '1.8',
+      datacenter: 'MEGA-i',
+      address: '7 Chun Ying Street, Tseung Kwan O, Hong Kong',
+      ixName: 'HKIX',
+      peers: 380,
+      capacity: '150+',
+      portSpeeds: ['10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'Gateway to Greater China',
+        'Financial hub connectivity',
+        'Low latency to mainland',
+        'Tier 3 datacenter',
+        'Diverse carrier options',
+        'Strategic Asia location'
+      ],
+      description: 'Strategic gateway connecting to Greater China and Southeast Asia.',
+      established: '2024',
+      cityImage: '/assets/cities/hongkong.png'
+    },
+    {
+      id: 'ams',
+      name: 'AMSTERDAM',
+      country: 'Netherlands',
+      continentId: 'europe',
+      region: 'Europe',
+      status: 'active',
+      latency: '0.8',
+      datacenter: 'EQUINIX AM7',
+      address: 'Kuiperbergweg 87, 1101 AG Amsterdam, Netherlands',
+      ixName: 'AMS-IX',
+      peers: 1250,
+      capacity: '400+',
+      portSpeeds: ['1G', '10G', '40G', '100G', '400G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6', 'MPLS'],
+      features: [
+        'Direct peering with 1000+ networks',
+        'Sub-millisecond latency across EU',
+        '24/7 NOC support on-site',
+        'Redundant power & cooling',
+        'DDoS protection included',
+        'Premium European networks'
+      ],
+      description: 'Our flagship European presence at the world-renowned AMS-IX.',
+      established: '2019',
+      cityImage: '/assets/cities/amsterdam.png'
+    },
+    {
       id: 'frk',
       name: 'FRANKFURT',
-      country: 'GERMANY',
+      country: 'Germany',
+      continentId: 'europe',
       region: 'Europe',
       status: 'active',
       latency: '0.9',
@@ -161,22 +180,55 @@ const LocationsPage = () => {
       description: 'Connected to the world\'s largest internet exchange by traffic volume.',
       established: '2019',
       cityImage: '/assets/cities/frankfurt.png'
+    },
+    {
+      id: 'nyc',
+      name: 'NEW YORK',
+      country: 'United States',
+      continentId: 'north-america',
+      region: 'North America',
+      status: 'active',
+      latency: '1.2',
+      datacenter: 'TELEHOUSE CHELSEA',
+      address: '85 10th Avenue, New York, NY 10011, USA',
+      ixName: 'NYIIX',
+      peers: 890,
+      capacity: '300+',
+      portSpeeds: ['10G', '40G', '100G', '400G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6', 'SD-WAN'],
+      features: [
+        'Direct access to major US networks',
+        'Cloud on-ramps (AWS, Azure, GCP)',
+        'Financial services optimized',
+        'Tier 3+ datacenter facility',
+        'Real-time traffic analytics',
+        'Ultra-low latency trading'
+      ],
+      description: 'Strategic North American hub connecting Wall Street to the world.',
+      established: '2020',
+      cityImage: '/assets/cities/newyork.png'
     }
   ];
 
+  const getCitiesInContinent = (continentId: string) => {
+    return locations.filter(l => l.continentId === continentId);
+  };
+
   const selectedLocationData = locations.find(loc => loc.id === selectedLocation);
 
-  // Scroll to details when location is selected
-  const handleLocationClick = (locationId: string) => {
-    setSelectedLocation(selectedLocation === locationId ? null : locationId);
-    if (selectedLocation !== locationId) {
-      // Scroll to the details section after a short delay to let the DOM update
-      setTimeout(() => {
-        const detailsElement = document.getElementById('location-details');
-        if (detailsElement) {
-          detailsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
+  const toggleContinent = (continentId: string) => {
+    if (expandedContinent === continentId) {
+      setExpandedContinent('');
+    } else {
+      setExpandedContinent(continentId);
+    }
+  };
+
+  const handleCityClick = (cityId: string) => {
+    setSelectedLocation(cityId);
+    // Scroll to top on mobile
+    if (window.innerWidth < 1024) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -259,248 +311,329 @@ const LocationsPage = () => {
         </div>
       </section>
 
-      {/* Location Cards Section */}
-      <section className="relative bg-white py-20">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          {selectedLocationData ? (
-            /* Detailed Location Card */
-            <div id="location-details" className="bg-white border-2 border-gray-200 overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {/* Hero Image with Overlay */}
-              <div className="relative h-80 overflow-hidden">
-                <img 
-                  src={selectedLocationData.cityImage} 
-                  alt={selectedLocationData.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                
-                {/* City Name Overlay */}
-                <div className="absolute top-8 left-8">
-                  <h2 className="text-5xl md:text-6xl font-black text-white mb-1">
-                    {selectedLocationData.name}
-                  </h2>
-                  <p className="text-[#F20732] font-bold text-xl tracking-wide">
-                    {selectedLocationData.country}
-                  </p>
+      {/* Main Content: Sidebar + Details Panel */}
+      <section className="relative bg-gray-100">
+        <div className="max-w-[1920px] mx-auto">
+          <div className="flex flex-col lg:flex-row min-h-screen">
+            {/* LEFT SIDEBAR - Continent/City Navigation */}
+            <aside className="lg:w-96 bg-white border-r-2 border-gray-300 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto shadow-lg">
+              <div className="p-8 border-b-2 border-gray-200 bg-gradient-to-br from-white to-gray-50">
+                <div className="inline-flex items-center gap-2 mb-3">
+                  <div className="w-1.5 h-1.5 bg-[#F20732] rounded-full"></div>
+                  <span className="font-mono text-[10px] font-bold tracking-[0.2em] text-[#F20732] uppercase">
+                    Global Topology
+                  </span>
                 </div>
-
-                {/* Close Button */}
-                <button
-                  onClick={() => setSelectedLocation(null)}
-                  className="absolute top-8 right-8 w-12 h-12 bg-white/10 backdrop-blur-sm hover:bg-white hover:text-black text-white transition-all duration-300 flex items-center justify-center group"
-                >
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                <h2 className="text-4xl font-black text-black tracking-tight">
+                  LOCATIONS
+                </h2>
               </div>
 
-              {/* Stats Header Bar */}
-              <div className="bg-white border-b border-gray-200 px-8 py-6">
-                <div className="grid grid-cols-3 divide-x divide-gray-200">
-                  <div className="text-center">
-                    <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-1">
-                      Peers
-                    </div>
-                    <div className="text-3xl font-bold text-black">
-                      {selectedLocationData.peers}
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-1">
-                      Latency
-                    </div>
-                    <div className="text-3xl font-bold text-black">
-                      {selectedLocationData.latency}<span className="text-lg">ms</span>
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-1">
-                      Total Capacity
-                    </div>
-                    <div className="text-3xl font-bold text-black">
-                      {selectedLocationData.capacity} <span className="text-lg">Tbps</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Content Section */}
-              <div className="p-8 md:p-12">
-                <p className="text-gray-600 text-lg mb-12 leading-relaxed">
-                  {selectedLocationData.description}
-                </p>
-
-                {/* Info Boxes Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                  {/* Datacenter */}
-                  <div className="bg-pink-50 p-6 border border-pink-100">
-                    <div className="flex items-start gap-3 mb-3">
-                      <svg className="w-5 h-5 text-[#F20732] mt-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
-                      </svg>
-                      <div>
-                        <div className="font-mono text-xs text-[#F20732] uppercase tracking-widest mb-2">
-                          Datacenter
-                        </div>
-                        <div className="font-bold text-base mb-2 text-black">
-                          {selectedLocationData.datacenter}
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          {selectedLocationData.address}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Total Capacity */}
-                  <div className="bg-pink-50 p-6 border border-pink-100">
-                    <div className="font-mono text-xs text-[#F20732] uppercase tracking-widest mb-3">
-                      Total Capacity
-                    </div>
-                    <div className="text-4xl font-bold text-black mb-2">
-                      {selectedLocationData.capacity} <span className="text-xl">Tbps</span>
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      Est. {selectedLocationData.established}
-                    </div>
-                  </div>
-
-                  {/* Connected Networks */}
-                  <div className="bg-pink-50 p-6 border border-pink-100">
-                    <div className="font-mono text-xs text-[#F20732] uppercase tracking-widest mb-3">
-                      Connected Networks
-                    </div>
-                    <div className="text-4xl font-bold text-black mb-2">
-                      {selectedLocationData.peers}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      Active Peers
-                    </div>
-                  </div>
-                </div>
-
-                {/* Port Speeds and Protocols */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-                  {/* Available Port Speeds */}
-                  <div>
-                    <h3 className="text-lg font-black text-black mb-4 flex items-center gap-3">
-                      <div className="w-1 h-6 bg-[#F20732]"></div>
-                      Available Port Speeds
-                    </h3>
-                    <div className="flex flex-wrap gap-3">
-                      {selectedLocationData.portSpeeds.map((speed) => (
-                        <div
-                          key={speed}
-                          className="bg-pink-50 border border-pink-200 text-black px-4 py-2 font-mono text-sm font-bold"
+              {/* Accordion Menu */}
+              <nav className="py-4">
+                {continents.map((continent) => {
+                  const cities = getCitiesInContinent(continent.id);
+                  const isExpanded = expandedContinent === continent.id;
+                  
+                  return (
+                    <div key={continent.id} className="border-b border-gray-100">
+                      {/* Continent Header */}
+                      <button
+                        onClick={() => toggleContinent(continent.id)}
+                        className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors group"
+                      >
+                        <span className="font-bold text-sm tracking-wide text-black group-hover:text-[#F20732] transition-colors">
+                          {continent.name}
+                        </span>
+                        <svg 
+                          className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                          fill="none" 
+                          viewBox="0 0 24 24" 
+                          stroke="currentColor"
                         >
-                          {speed}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Supported Protocols */}
-                  <div>
-                    <h3 className="text-lg font-black text-black mb-4 flex items-center gap-3">
-                      <div className="w-1 h-6 bg-black"></div>
-                      Supported Protocols
-                    </h3>
-                    <div className="flex flex-wrap gap-3">
-                      {selectedLocationData.protocols.map((protocol) => (
-                        <div
-                          key={protocol}
-                          className="bg-pink-50 border border-pink-200 text-black px-4 py-2 font-mono text-sm"
-                        >
-                          {protocol}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Key Features */}
-                <div className="border-t border-gray-200 pt-8">
-                  <h3 className="text-2xl font-black text-black mb-6">Key Features</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {selectedLocationData.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-start gap-3">
-                        <svg className="w-5 h-5 text-[#F20732] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
-                        <span className="text-gray-700 leading-relaxed">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                      </button>
 
-                {/* Action Buttons */}
-                <div className="mt-12 flex flex-wrap gap-4">
-                  <button className="bg-[#F20732] text-white px-8 py-4 font-mono text-xs font-bold uppercase tracking-widest hover:bg-black transition-all duration-300 flex items-center gap-3 group">
-                    Request Port
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
-                  </button>
-                  <button className="bg-white border-2 border-black text-black px-8 py-4 font-mono text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">
-                    Download Specs
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            /* Location Grid - Click to Open */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {locations.map((location) => (
-                <button
-                  key={location.id}
-                  onClick={() => handleLocationClick(location.id)}
-                  className="group bg-white border-2 border-gray-200 hover:border-[#F20732] transition-all duration-300 overflow-hidden text-left hover:shadow-xl"
-                >
-                  {/* City Image */}
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={location.cityImage} 
-                      alt={location.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                    <div className="absolute bottom-4 left-4">
-                      <h3 className="text-2xl font-black text-white mb-1">{location.name}</h3>
-                      <p className="text-[#F20732] font-bold text-sm">{location.country}</p>
+                      {/* City List */}
+                      {isExpanded && cities.length > 0 && (
+                        <div className="bg-gray-50">
+                          {cities.map((city) => (
+                            <button
+                              key={city.id}
+                              onClick={() => handleCityClick(city.id)}
+                              className={`w-full px-6 py-3 text-left flex items-center justify-between group hover:bg-black transition-all duration-300 border-l-2 ${
+                                selectedLocation === city.id 
+                                  ? 'border-[#F20732] bg-black' 
+                                  : 'border-transparent bg-gray-50'
+                              }`}
+                            >
+                              <div className="flex-1">
+                                <div className={`font-medium text-sm transition-colors ${
+                                  selectedLocation === city.id 
+                                    ? 'text-white' 
+                                    : 'text-gray-700 group-hover:text-white'
+                                }`}>
+                                  {city.name}
+                                </div>
+                                <div className={`font-mono text-[10px] mt-0.5 transition-colors ${
+                                  selectedLocation === city.id 
+                                    ? 'text-gray-400' 
+                                    : 'text-gray-400 group-hover:text-gray-300'
+                                }`}>
+                                  {city.country} // {city.latency}ms
+                                </div>
+                              </div>
+                              
+                              {/* Active Badge */}
+                              {city.status === 'active' && (
+                                <span className="inline-block px-2 py-0.5 bg-[#F20732] text-white text-[9px] font-mono font-bold uppercase tracking-wider">
+                                  ACTIVE
+                                </span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </nav>
+            </aside>
+
+            {/* RIGHT PANEL - City Details */}
+            <main className="flex-1 lg:min-h-screen bg-white lg:p-8">
+              {selectedLocationData ? (
+                <div className="animate-in fade-in duration-500 bg-white lg:shadow-xl lg:border-2 lg:border-gray-200">
+                  {/* City Header */}
+                  <div className="bg-black text-white px-8 py-12 border-b-4 border-[#F20732]">
+                    <h2 className="text-5xl md:text-6xl font-black mb-3 tracking-tight">
+                      {selectedLocationData.name}
+                    </h2>
+                    <div className="flex items-center gap-4">
+                      <span className="text-[#F20732] font-bold text-xl tracking-wide">
+                        {selectedLocationData.country}
+                      </span>
+                      <span className="text-gray-400 font-mono text-sm">
+                        // {selectedLocationData.region}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Quick Stats */}
-                  <div className="p-6">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <div className="font-mono text-xs text-gray-400 uppercase tracking-widest mb-1">
+                  {/* Stats Bar */}
+                  <div className="bg-white border-b border-gray-200">
+                    <div className="max-w-5xl mx-auto px-8 py-8">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div className="text-center">
+                          <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">
+                            Facility Type
+                          </div>
+                          <div className="text-lg font-bold text-black">
+                            Tier IV Datacenter
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">
+                            Capacity
+                          </div>
+                          <div className="text-lg font-bold text-black">
+                            {selectedLocationData.capacity} Tbps
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">
+                            Interconnections
+                          </div>
+                          <div className="text-lg font-bold text-black">
+                            {selectedLocationData.peers}+ Networks
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">
+                            Power
+                          </div>
+                          <div className="text-lg font-bold text-black">
+                            100% Renewable
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Main Content */}
+                  <div className="max-w-5xl mx-auto px-8 py-12">
+                    {/* Key Stats Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                      <div className="bg-white p-6 border-l-4 border-[#F20732] shadow-sm">
+                        <div className="font-mono text-xs text-[#F20732] uppercase tracking-widest mb-2">
                           Peers
                         </div>
-                        <div className="text-xl font-bold text-black">
-                          {location.peers}
+                        <div className="text-5xl font-light text-black mb-1">
+                          {selectedLocationData.peers}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Connected Networks
                         </div>
                       </div>
-                      <div>
-                        <div className="font-mono text-xs text-gray-400 uppercase tracking-widest mb-1">
+
+                      <div className="bg-white p-6 border-l-4 border-black shadow-sm">
+                        <div className="font-mono text-xs text-black uppercase tracking-widest mb-2">
                           Latency
                         </div>
-                        <div className="text-xl font-bold text-black">
-                          {location.latency}ms
+                        <div className="text-5xl font-light text-black mb-1">
+                          {selectedLocationData.latency}<span className="text-2xl">ms</span>
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Average Response
+                        </div>
+                      </div>
+
+                      <div className="bg-white p-6 border-l-4 border-gray-300 shadow-sm">
+                        <div className="font-mono text-xs text-gray-700 uppercase tracking-widest mb-2">
+                          Total Capacity
+                        </div>
+                        <div className="text-5xl font-light text-black mb-1">
+                          {selectedLocationData.capacity}<span className="text-2xl">+</span>
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Tbps // Est. {selectedLocationData.established}
                         </div>
                       </div>
                     </div>
 
-                    <div className="mt-4 flex items-center justify-end gap-2 text-[#F20732] font-mono text-xs font-bold uppercase">
-                      View Details
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
+                    {/* Description */}
+                    <div className="mb-12">
+                      <p className="text-gray-700 text-lg leading-relaxed">
+                        {selectedLocationData.description}
+                      </p>
+                    </div>
+
+                    {/* Datacenter Info */}
+                    <div className="bg-white p-8 shadow-sm mb-8 border border-gray-200">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 bg-[#F20732] flex items-center justify-center flex-shrink-0">
+                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-mono text-xs text-[#F20732] uppercase tracking-widest mb-3">
+                            Datacenter
+                          </div>
+                          <h3 className="text-2xl font-black text-black mb-3">
+                            {selectedLocationData.datacenter}
+                          </h3>
+                          <p className="text-gray-600 mb-4">
+                            {selectedLocationData.address}
+                          </p>
+                          <div className="inline-flex items-center gap-2 bg-gray-100 px-4 py-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span className="font-mono text-xs font-bold text-gray-700">
+                              OPERATIONAL // {selectedLocationData.peers.toLocaleString()} ACTIVE PEERS
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Technical Specs */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                      {/* Port Speeds */}
+                      <div>
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="w-1 h-8 bg-[#F20732]"></div>
+                          <h3 className="text-xl font-black text-black">
+                            Available Port Speeds
+                          </h3>
+                        </div>
+                        <div className="flex flex-wrap gap-3">
+                          {selectedLocationData.portSpeeds.map((speed) => (
+                            <span
+                              key={speed}
+                              className="px-4 py-2 bg-white border-2 border-gray-200 font-mono text-sm font-bold text-black hover:border-[#F20732] transition-colors"
+                            >
+                              {speed}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Protocols */}
+                      <div>
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="w-1 h-8 bg-black"></div>
+                          <h3 className="text-xl font-black text-black">
+                            Supported Protocols
+                          </h3>
+                        </div>
+                        <div className="flex flex-wrap gap-3">
+                          {selectedLocationData.protocols.map((protocol) => (
+                            <span
+                              key={protocol}
+                              className="px-4 py-2 bg-white border-2 border-gray-200 font-mono text-sm text-black"
+                            >
+                              {protocol}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Key Features */}
+                    <div className="bg-white p-8 shadow-sm border border-gray-200 mb-12">
+                      <h3 className="text-2xl font-black text-black mb-6">
+                        Key Features
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {selectedLocationData.features.map((feature, idx) => (
+                          <div key={idx} className="flex items-start gap-3">
+                            <svg className="w-5 h-5 text-[#F20732] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                            </svg>
+                            <span className="text-gray-700 text-sm leading-relaxed">
+                              {feature}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-wrap gap-4">
+                      <button 
+                        onClick={() => {
+                          // Navigate to contact page - will be handled by App.tsx setPage
+                          // Convert city name to Title Case (e.g., "TOKYO" -> "Tokyo")
+                          const cityName = selectedLocationData.name.charAt(0) + selectedLocationData.name.slice(1).toLowerCase();
+                          window.dispatchEvent(new CustomEvent('navigateToContact', { 
+                            detail: { city: cityName, locationId: selectedLocationData.id } 
+                          }));
+                        }}
+                        className="bg-[#F20732] text-white px-8 py-4 font-mono text-xs font-bold uppercase tracking-widest hover:bg-black transition-all duration-300 flex items-center gap-3 group shadow-lg"
+                      >
+                        Request Port
+                        <span className="group-hover:translate-x-1 transition-transform">→</span>
+                      </button>
                     </div>
                   </div>
-                </button>
-              ))}
-            </div>
-          )}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-96">
+                  <div className="text-center">
+                    <div className="text-gray-400 mb-4">
+                      <svg className="w-16 h-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-500 font-mono text-sm">
+                      Select a location from the menu
+                    </p>
+                  </div>
+                </div>
+              )}
+            </main>
+          </div>
         </div>
       </section>
 
