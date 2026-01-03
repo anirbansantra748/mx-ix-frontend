@@ -272,7 +272,7 @@ const Footer = ({ setPage }: { setPage: (p: string) => void }) => (
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:items-start">
         <div className="lg:col-span-5 space-y-6">
           <div className="flex items-center gap-4 mb-4">
-            <img src="/assets/logo.png" alt="MX-IX Logo" className="w-16 h-16 object-contain" />
+            <img src="/assets/logo.png" alt="MX-IX Logo" className="w-24 h-24 object-contain" />
             <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white leading-none">MX-IX</h2>
           </div>
           <p className="font-mono max-w-sm text-gray-300 font-bold text-lg leading-tight">Redefining the physical layer of the internet.</p>
@@ -324,9 +324,11 @@ const Footer = ({ setPage }: { setPage: (p: string) => void }) => (
 );
 
 function AppContent() {
-  const { networkStats } = useAdmin();
+  const { networkStats, locations } = useAdmin();
   const [page, setPage] = useState('home');
   const [selectedCity, setSelectedCity] = useState<string>('');
+  const [selectedLocationId, setSelectedLocationId] = useState<string>('');
+  const [selectedSection, setSelectedSection] = useState<string>('overview');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -339,8 +341,19 @@ function AppContent() {
       setPage('contact');
     };
     
+    const handleNavigateToLocations = (e: CustomEvent) => {
+      const { locationId, section } = e.detail;
+      setSelectedLocationId(locationId);
+      setSelectedSection(section || 'overview');
+      setPage('locations');
+    };
+    
     window.addEventListener('navigateToContact' as any, handleNavigateToContact);
-    return () => window.removeEventListener('navigateToContact' as any, handleNavigateToContact);
+    window.addEventListener('navigateToLocations' as any, handleNavigateToLocations);
+    return () => {
+      window.removeEventListener('navigateToContact' as any, handleNavigateToContact);
+      window.removeEventListener('navigateToLocations' as any, handleNavigateToLocations);
+    };
   }, []);
 
   const renderPage = () => {
@@ -372,17 +385,17 @@ function AppContent() {
                   </h1>
 
                   <p className="max-w-xl text-gray-500 text-base md:text-lg leading-relaxed mb-12 font-light border-l-2 border-gray-100 pl-6">
-                    The world's first AI-governed Internet Exchange. We've eliminated the concept of "reactive" routing by integrating predictive models directly into the switching fabric.
+                     AI-governed Internet Exchange. We've eliminated the concept of "reactive" routing by integrating predictive models directly into the switching fabric.
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-4 mb-16 lg:mb-0">
-                    <button className="bg-black text-white px-8 py-5 font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#F20732] transition-all duration-300 hover-trigger flex items-center justify-center gap-3 group shadow-lg shadow-black/10">
+                    {/* <button className="bg-black text-white px-8 py-5 font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#F20732] transition-all duration-300 hover-trigger flex items-center justify-center gap-3 group shadow-lg shadow-black/10">
                       Initialize Peering
                       <span className="group-hover:translate-x-1 transition-transform">→</span>
                     </button>
                     <button className="bg-white border border-gray-200 text-black px-8 py-5 font-mono text-xs font-bold uppercase tracking-widest hover:border-black hover:bg-gray-50 transition-all duration-300 hover-trigger">
                       View Topology
-                    </button>
+                    </button> */}
                   </div>
                 </div>
 
@@ -398,19 +411,17 @@ function AppContent() {
                 <div className="p-8 lg:p-12 flex flex-col justify-center group hover:bg-gray-50 transition-colors hover-trigger relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-1 bg-[#F20732] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
                   <div className="flex justify-between items-end mb-3">
-                    <span className="font-mono text-xs text-gray-400 uppercase tracking-widest group-hover:text-black transition-colors">Global Latency</span>
-                    <span className="font-mono text-[10px] text-[#F20732] border border-[#F20732]/20 bg-[#F20732]/5 px-1.5 py-0.5 rounded">AVG</span>
+                    <span className="font-mono text-xs text-gray-400 uppercase tracking-widest group-hover:text-black transition-colors"> Locations</span>
                   </div>
                   <div className="text-5xl lg:text-6xl font-light tracking-tighter text-black flex items-baseline">
-                    <span>{networkStats.globalLatency.value}</span>
-                    <span className="text-xl ml-2 text-gray-400 font-bold group-hover:text-[#F20732] transition-colors">{networkStats.globalLatency.unit}</span>
+                    <span>{locations.length}</span>
                   </div>
                 </div>
 
                 <div className="p-8 lg:p-12 flex flex-col justify-center group hover:bg-gray-50 transition-colors hover-trigger relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-1 bg-[#F20732] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 delay-75"></div>
                   <div className="flex justify-between items-end mb-3">
-                    <span className="font-mono text-xs text-gray-400 uppercase tracking-widest group-hover:text-black transition-colors">Active Nodes</span>
+                    <span className="font-mono text-xs text-gray-400 uppercase tracking-widest group-hover:text-black transition-colors">Connected Data Centers</span>
                     <div className="flex gap-1">
                       <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
                       <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></div>
@@ -424,7 +435,7 @@ function AppContent() {
                 <div className="p-8 lg:p-12 flex flex-col justify-center group hover:bg-gray-50 transition-colors hover-trigger relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-1 bg-[#F20732] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 delay-150"></div>
                   <div className="flex justify-between items-end mb-3">
-                    <span className="font-mono text-xs text-gray-400 uppercase tracking-widest group-hover:text-black transition-colors">Throughput</span>
+                    <span className="font-mono text-xs text-gray-400 uppercase tracking-widest group-hover:text-black transition-colors">Capacity</span>
                     <svg className="w-4 h-4 text-gray-300 group-hover:text-[#F20732] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
                   </div>
                   <div className="text-5xl lg:text-6xl font-light tracking-tighter text-black flex items-baseline">
@@ -447,7 +458,7 @@ function AppContent() {
       case 'services':
         return <ServicesPage />;
       case 'locations':
-        return <LocationsPage />;
+        return <LocationsPage preSelectedLocation={selectedLocationId} preSelectedSection={selectedSection} />;
       case 'stats':
         return <StatsPage />;
       case 'contact':

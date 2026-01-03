@@ -5,7 +5,7 @@ const HeroNetworkMap: React.FC = () => {
     <div className="relative w-full h-full bg-gradient-to-br from-gray-50 to-white overflow-hidden">
       {/* High-quality static world map image */}
       <img 
-        src="/assets/world-map-network.png"
+        src="/assets/world-map-dots.png"
         alt="Global Network Map" 
         className="w-full h-full object-contain"
         style={{ 

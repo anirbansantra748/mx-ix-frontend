@@ -67,10 +67,10 @@ const GlobalFabricMap = () => {
   // };
 
   return (
-    <section className="relative w-full bg-gradient-to-br from-[#0a0a0a] via-[#0f0f0f] to-[#0a0a0a] py-16 overflow-hidden">
+    <section className="relative w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 py-16 overflow-hidden">
       {/* Background Grid */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#F2073210_1px,transparent_1px),linear-gradient(to_bottom,#F2073210_1px,transparent_1px)] bg-[size:40px_40px]" />
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] bg-[size:40px_40px]" />
       </div>
 
       <div className="relative max-w-[1800px] mx-auto px-8">
@@ -83,8 +83,8 @@ const GlobalFabricMap = () => {
               </svg>
             </div>
             <div>
-              <h2 className="text-5xl font-black text-white tracking-tight leading-none">
-                Global Network
+              <h2 className="text-5xl font-black text-black tracking-tight leading-none">
+                MX-IX Exchange
               </h2>
               <p className="text-[#F20732] text-xs font-bold tracking-[0.2em] uppercase mt-1">
                 {locations.length} ACTIVE LOCATIONS WORLDWIDE
@@ -94,18 +94,18 @@ const GlobalFabricMap = () => {
         </div>
 
         {/* Map Container */}
-        <div className="relative bg-[#0b0b0b] border-2 border-[#1a1a1a] rounded-xl overflow-hidden">
+        <div className="relative bg-white border-2 border-gray-200 rounded-xl overflow-hidden">
           {/* Top Stats Bar */}
           <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20">
             <div className="flex items-center gap-4">
-              <div className="bg-black/80 backdrop-blur-md border border-[#F20732]/30 rounded-lg px-4 py-2">
+              <div className="bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg px-4 py-2 shadow-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50" />
-                  <span className="text-green-400 text-xs font-bold tracking-wide">ALL SYSTEMS OPERATIONAL</span>
+                  <span className="text-green-600 text-xs font-bold tracking-wide">ALL SYSTEMS OPERATIONAL</span>
                 </div>
               </div>
-              <div className="bg-black/80 backdrop-blur-md border border-gray-700/50 rounded-lg px-4 py-2">
-                <span className="text-gray-300 text-xs font-mono font-semibold">UPTIME: 99.99%</span>
+              <div className="bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg px-4 py-2 shadow-sm">
+                <span className="text-gray-700 text-xs font-mono font-semibold">UPTIME: 99.99%</span>
               </div>
             </div>
 
@@ -113,19 +113,19 @@ const GlobalFabricMap = () => {
             <div className="flex flex-col gap-2">
               <button
                 onClick={() => setZoom(z => Math.min(z * 1.5, 4))}
-                className="w-10 h-10 bg-black/80 backdrop-blur-md border border-gray-700/50 rounded-lg flex items-center justify-center text-white hover:border-[#F20732]/50 hover:text-[#F20732] transition-all"
+                className="w-10 h-10 bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg flex items-center justify-center text-black hover:border-[#F20732] hover:text-[#F20732] transition-all shadow-sm"
               >
                 <span className="text-xl font-bold">+</span>
               </button>
               <button
                 onClick={() => setZoom(z => Math.max(z / 1.5, 1))}
-                className="w-10 h-10 bg-black/80 backdrop-blur-md border border-gray-700/50 rounded-lg flex items-center justify-center text-white hover:border-[#F20732]/50 hover:text-[#F20732] transition-all"
+                className="w-10 h-10 bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg flex items-center justify-center text-black hover:border-[#F20732] hover:text-[#F20732] transition-all shadow-sm"
               >
                 <span className="text-xl font-bold">−</span>
               </button>
               <button
                 onClick={handleReset}
-                className="w-10 h-10 bg-black/80 backdrop-blur-md border border-gray-700/50 rounded-lg flex items-center justify-center text-white hover:border-[#F20732]/50 hover:text-[#F20732] transition-all"
+                className="w-10 h-10 bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg flex items-center justify-center text-black hover:border-[#F20732] hover:text-[#F20732] transition-all shadow-sm"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -148,12 +148,12 @@ const GlobalFabricMap = () => {
                       <Geography
                         key={geo.rsmKey}
                         geography={geo}
-                        fill="#1a1a1a"
-                        stroke="#2a2a2a"
+                        fill="#f5f5f5"
+                        stroke="#d1d5db"
                         strokeWidth={0.5}
                         style={{
                           default: { outline: "none" },
-                          hover: { outline: "none", fill: "#222222" },
+                          hover: { outline: "none", fill: "#e5e7eb" },
                           pressed: { outline: "none" },
                         }}
                       />
@@ -246,40 +246,64 @@ const GlobalFabricMap = () => {
                           <div className="absolute -inset-1 bg-[#F20732] rounded-lg blur-md opacity-50" />
                           
                           {/* Card */}
-                          <div className="relative bg-[#1a1a1a] border-2 border-[#F20732] shadow-2xl rounded-lg overflow-hidden">
+                          <div className="relative bg-white border-2 border-gray-200 shadow-2xl rounded-lg overflow-hidden">
                             {/* Header */}
-                            <div className="bg-[#F20732] px-4 py-2">
-                              <p className="text-white text-sm font-black uppercase tracking-tight">
+                            <div className="bg-white border-b border-gray-200 px-4 py-2">
+                              <p className="text-black text-sm font-black uppercase tracking-tight">
                                 {loc.name}
                               </p>
-                              <p className="text-white/80 text-[9px] tracking-wide">
-                                Internet Exchange
+                              <p className="text-gray-600 text-[9px] tracking-wide">
+                                MX-IX Exchange
                               </p>
                             </div>
 
                             {/* Content */}
                             <div className="px-4 py-3 space-y-1.5">
-                              <div className="flex justify-between text-[10px]">
-                                <span className="text-gray-400">Connected ASNs:</span>
-                                <span className="text-white font-bold">{loc.asns}</span>
+                              {/* Connected ASNs - Clickable link */}
+                              <div 
+                                className="flex justify-between text-[10px] cursor-pointer hover:bg-gray-50 px-1 py-0.5 -mx-1 rounded transition-colors group"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  window.dispatchEvent(new CustomEvent('navigateToLocations', { 
+                                    detail: { locationId: loc.id, locationName: loc.name, section: 'asns' } 
+                                  }));
+                                }}
+                              >
+                                <span className="text-gray-600 group-hover:text-[#F20732] transition-colors">Connected ASNs:</span>
+                                <span className="text-black font-bold group-hover:text-[#F20732] transition-colors flex items-center gap-1">
+                                  {loc.asnList?.length || 0}
+                                  <span className="text-gray-400 group-hover:text-[#F20732]">→</span>
+                                </span>
                               </div>
-                              <div className="flex justify-between text-[10px]">
-                                <span className="text-gray-400">Enabled sites:</span>
-                                <span className="text-white font-bold">{loc.sites}</span>
+                              {/* Enabled sites - Clickable link */}
+                              <div 
+                                className="flex justify-between text-[10px] cursor-pointer hover:bg-gray-50 px-1 py-0.5 -mx-1 rounded transition-colors group"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  window.dispatchEvent(new CustomEvent('navigateToLocations', { 
+                                    detail: { locationId: loc.id, locationName: loc.name, section: 'sites' } 
+                                  }));
+                                }}
+                              >
+                                <span className="text-gray-600 group-hover:text-[#F20732] transition-colors">Enabled sites:</span>
+                                <span className="text-black font-bold group-hover:text-[#F20732] transition-colors flex items-center gap-1">
+                                  {loc.enabledSites?.length || 0}
+                                  <span className="text-gray-400 group-hover:text-[#F20732]">→</span>
+                                </span>
                               </div>
-                              <p className="text-[#F20732] text-[9px] tracking-wide">Cloud providers</p>
+                              <p className="text-gray-500 text-[9px] tracking-wide">Cloud providers</p>
                               
                               {/* CTA Button */}
                               <button 
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  window.dispatchEvent(new CustomEvent('navigateToContact', { 
-                                    detail: { city: loc.name, locationId: loc.id } 
+                                  window.dispatchEvent(new CustomEvent('navigateToLocations', { 
+                                    detail: { locationId: loc.id, locationName: loc.name, section: 'overview' } 
                                   }));
                                 }}
                                 className="w-full mt-2 bg-[#F20732] text-white text-[10px] font-bold uppercase tracking-wider py-2 rounded hover:bg-[#C00628] transition-colors flex items-center justify-center gap-2"
                               >
-                                GET CONNECTED
+                                VIEW DETAILS
                                 <span className="text-xs">→</span>
                               </button>
                             </div>
@@ -296,15 +320,15 @@ const GlobalFabricMap = () => {
           {/* Bottom stats bar */}
           <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="font-mono text-[9px] text-gray-500 tracking-widest uppercase bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-800/50">
+              <div className="font-mono text-[9px] text-gray-600 tracking-widest uppercase bg-white/60 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-200 shadow-sm">
                 PROJECTION: MERCATOR
               </div>
-              <div className="font-mono text-[9px] text-gray-500 tracking-widest uppercase bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-800/50">
+              <div className="font-mono text-[9px] text-gray-600 tracking-widest uppercase bg-white/60 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-200 shadow-sm">
                 LAYER: GLOBAL FABRIC
               </div>
             </div>
             
-            <div className="flex items-center gap-2 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-800/50">
+            <div className="flex items-center gap-2 bg-white/60 backdrop-blur-sm px-3 py-1.5 rounded border border-gray-200 shadow-sm">
               <div className="w-1.5 h-1.5 bg-[#F20732] rounded-full animate-pulse" />
               <span className="font-mono text-[9px] text-[#F20732] tracking-widest uppercase font-bold">
                 LIVE NETWORK

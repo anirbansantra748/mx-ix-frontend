@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useAdmin } from '../contexts/AdminContext';
+import type { ASN, EnabledSite } from '../contexts/AdminContext';
 
 interface LocationData {
   id: string;
@@ -26,9 +28,34 @@ interface ContinentData {
   name: string;
 }
 
-const LocationsPage = () => {
+interface LocationsPageProps {
+  preSelectedLocation?: string;
+  preSelectedSection?: string;
+}
+
+const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPageProps) => {
   const [expandedContinent, setExpandedContinent] = useState<string>('asia');
   const [selectedLocation, setSelectedLocation] = useState<string>('tyo');
+  const [asnSearch, setASNSearch] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<'overview' | 'asns' | 'sites'>('overview');
+  const { locations: adminLocations } = useAdmin();
+
+  // Handle pre-selected location and section from map navigation
+  useEffect(() => {
+    if (preSelectedLocation) {
+      setSelectedLocation(preSelectedLocation);
+      // Find the continent for this location and expand it
+      const location = locations.find(l => l.id === preSelectedLocation);
+      if (location) {
+        setExpandedContinent(location.continentId);
+      }
+    }
+    if (preSelectedSection) {
+      if (preSelectedSection === 'asns') setActiveTab('asns');
+      else if (preSelectedSection === 'sites') setActiveTab('sites');
+      else setActiveTab('overview');
+    }
+  }, [preSelectedLocation, preSelectedSection]);
 
   // Add dark-nav class for navbar visibility
   useEffect(() => {
@@ -40,6 +67,7 @@ const LocationsPage = () => {
 
   const continents: ContinentData[] = [
     { id: 'asia', name: 'ASIA' },
+    { id: 'middle-east', name: 'MIDDLE EAST' },
     { id: 'africa', name: 'AFRICA' },
     { id: 'europe', name: 'EUROPE' },
     { id: 'north-america', name: 'NORTH AMERICA' }
@@ -207,6 +235,114 @@ const LocationsPage = () => {
       description: 'Strategic North American hub connecting Wall Street to the world.',
       established: '2020',
       cityImage: '/assets/cities/newyork.png'
+    },
+    {
+      id: 'bom',
+      name: 'MUMBAI',
+      country: 'India',
+      continentId: 'asia',
+      region: 'South Asia',
+      status: 'active',
+      latency: '1.8',
+      datacenter: 'GPX MUMBAI 1',
+      address: 'Powai, Mumbai, Maharashtra 400076, India',
+      ixName: 'MBIIX',
+      peers: 340,
+      capacity: '120+',
+      portSpeeds: ['1G', '10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'Gateway to Indian subcontinent',
+        'Financial hub connectivity',
+        'Low-latency to APAC markets',
+        'Carrier-neutral facility',
+        'Enterprise connectivity',
+        'Cloud on-ramps available'
+      ],
+      description: 'Strategic gateway serving India\'s largest financial and commercial center.',
+      established: '2022',
+      cityImage: '/assets/cities/mumbai.png'
+    },
+    {
+      id: 'maa',
+      name: 'CHENNAI',
+      country: 'India',
+      continentId: 'asia',
+      region: 'South Asia',
+      status: 'active',
+      latency: '2.0',
+      datacenter: 'STT CHENNAI 1',
+      address: 'Ambattur Industrial Estate, Chennai 600058, India',
+      ixName: 'CIIX',
+      peers: 280,
+      capacity: '100+',
+      portSpeeds: ['1G', '10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'Submarine cable landing point',
+        'South India gateway',
+        'IT corridor connectivity',
+        'Disaster recovery hub',
+        'Cloud connectivity',
+        'Enterprise-grade facility'
+      ],
+      description: 'Key submarine cable landing station connecting India to global networks.',
+      established: '2023',
+      cityImage: '/assets/cities/chennai.png'
+    },
+    {
+      id: 'del',
+      name: 'DELHI',
+      country: 'India',
+      continentId: 'asia',
+      region: 'South Asia',
+      status: 'active',
+      latency: '1.6',
+      datacenter: 'NTT DELHI DC',
+      address: 'Sector 142, Noida, Uttar Pradesh 201304, India',
+      ixName: 'DELIX',
+      peers: 320,
+      capacity: '150+',
+      portSpeeds: ['1G', '10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6', 'MPLS'],
+      features: [
+        'North India gateway',
+        'Government connectivity hub',
+        'Enterprise connectivity',
+        'Multi-cloud access',
+        'Low-latency trading',
+        'Carrier-dense location'
+      ],
+      description: 'Strategic hub serving North India\'s enterprise and government networks.',
+      established: '2023',
+      cityImage: '/assets/cities/delhi.png'
+    },
+    {
+      id: 'dxb',
+      name: 'DUBAI',
+      country: 'United Arab Emirates',
+      continentId: 'middle-east',
+      region: 'Middle East',
+      status: 'active',
+      latency: '1.4',
+      datacenter: 'EQUINIX DX1',
+      address: 'Dubai Silicon Oasis, Dubai, UAE',
+      ixName: 'UAE-IX',
+      peers: 250,
+      capacity: '180+',
+      portSpeeds: ['10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'Middle East gateway',
+        'MENA region hub',
+        'Financial services hub',
+        'Low-latency to Africa/Asia',
+        'Enterprise connectivity',
+        'Cloud on-ramps available'
+      ],
+      description: 'Premier Middle East hub connecting MENA region to global networks.',
+      established: '2024',
+      cityImage: '/assets/cities/dubai.png'
     }
   ];
 
@@ -316,7 +452,7 @@ const LocationsPage = () => {
         <div className="max-w-[1920px] mx-auto">
           <div className="flex flex-col lg:flex-row min-h-screen">
             {/* LEFT SIDEBAR - Continent/City Navigation */}
-            <aside className="lg:w-96 bg-white border-r-2 border-gray-300 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto shadow-lg">
+            <aside className="lg:w-96 bg-white border-r-2 border-gray-300 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto shadow-lg scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               <div className="p-8 border-b-2 border-gray-200 bg-gradient-to-br from-white to-gray-50">
                 <div className="inline-flex items-center gap-2 mb-3">
                   <div className="w-1.5 h-1.5 bg-[#F20732] rounded-full"></div>
@@ -460,8 +596,56 @@ const LocationsPage = () => {
                     </div>
                   </div>
 
-                  {/* Main Content */}
+                  {/* Tab Navigation */}
+                  <div className="bg-gradient-to-r from-gray-800 to-gray-900 border-b border-gray-700">
+                    <div className="max-w-5xl mx-auto px-8">
+                      <div className="flex items-center gap-0">
+                        <button
+                          onClick={() => setActiveTab('overview')}
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${
+                            activeTab === 'overview' 
+                              ? 'text-white border-[#F20732] bg-black/30' 
+                              : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
+                          }`}
+                        >
+                          Overview
+                        </button>
+                        <button
+                          onClick={() => setActiveTab('asns')}
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 flex items-center gap-2 ${
+                            activeTab === 'asns' 
+                              ? 'text-white border-[#F20732] bg-black/30' 
+                              : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
+                          }`}
+                        >
+                          Connected Networks
+                          <span className={`px-2 py-0.5 rounded text-[10px] ${activeTab === 'asns' ? 'bg-[#F20732]' : 'bg-gray-700'}`}>
+                            {adminLocations.find(l => l.id === selectedLocationData.id)?.asnList?.length || 0}
+                          </span>
+                        </button>
+                        <button
+                          onClick={() => setActiveTab('sites')}
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 flex items-center gap-2 ${
+                            activeTab === 'sites' 
+                              ? 'text-white border-[#F20732] bg-black/30' 
+                              : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
+                          }`}
+                        >
+                          Enabled Sites
+                          <span className={`px-2 py-0.5 rounded text-[10px] ${activeTab === 'sites' ? 'bg-[#F20732]' : 'bg-gray-700'}`}>
+                            {adminLocations.find(l => l.id === selectedLocationData.id)?.enabledSites?.length || 0}
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Main Content - Tab Panels */}
                   <div className="max-w-5xl mx-auto px-8 py-12">
+                    
+                    {/* OVERVIEW TAB */}
+                    {activeTab === 'overview' && (
+                      <>
                     {/* Key Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                       <div className="bg-white p-6 border-l-4 border-[#F20732] shadow-sm">
@@ -597,6 +781,133 @@ const LocationsPage = () => {
                         ))}
                       </div>
                     </div>
+                      </>
+                    )}
+
+                    {/* CONNECTED NETWORKS TAB (ASNs) */}
+                    {activeTab === 'asns' && adminLocations.find(l => l.id === selectedLocationData.id)?.asnList && (
+                      <>
+                        {/* ASN Statistics */}
+                        <div className="bg-gradient-to-r from-gray-900 to-black text-white p-8 mb-12 rounded-lg">
+                          <h3 className="text-2xl font-black mb-6 flex items-center gap-3">
+                            <div className="w-1 h-8 bg-[#F20732]"></div>
+                            Connected Networks
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="bg-white/10 p-6 rounded-lg border-l-4 border-[#F20732]">
+                              <div className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-2">Active ASNs</div>
+                              <div className="text-5xl font-light text-white">
+                                {adminLocations.find(l => l.id === selectedLocationData.id)?.asnList.filter(a => a.status === 'ACTIVE').length || 0}
+                              </div>
+                            </div>
+                            <div className="bg-white/10 p-6 rounded-lg border-l-4 border-gray-300">
+                              <div className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-2">Connecting ASNs</div>
+                              <div className="text-5xl font-light text-white">
+                                {adminLocations.find(l => l.id === selectedLocationData.id)?.asnList.filter(a => a.status === 'CONNECTING').length || 0}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* ASN Table */}
+                        <div className="bg-white p-8 shadow-sm border border-gray-200 mb-12">
+                          <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-2xl font-black text-black">Network ASNs</h3>
+                            <input
+                              type="text"
+                              placeholder="Search ASN or name..."
+                              value={asnSearch}
+                              onChange={(e) => setASNSearch(e.target.value)}
+                              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#F20732] font-mono text-sm"
+                            />
+                          </div>
+                          
+                          <div className="overflow-x-auto">
+                            <table className="w-full">
+                              <thead>
+                                <tr className="bg-gray-100 border-b-2 border-gray-300">
+                                  <th className="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-gray-700">ASN</th>
+                                  <th className="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-gray-700">Name</th>
+                                  <th className="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-gray-700">Peering Policy</th>
+                                  <th className="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-gray-700">Status</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {adminLocations.find(l => l.id === selectedLocationData.id)?.asnList
+                                  .filter(asn => 
+                                    asnSearch === '' || 
+                                    asn.asnNumber.toString().includes(asnSearch) ||
+                                    asn.name.toLowerCase().includes(asnSearch.toLowerCase())
+                                  )
+                                  .map((asn, idx) => (
+                                    <tr key={idx} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                                      <td className="px-4 py-4 font-mono font-bold text-black">AS{asn.asnNumber}</td>
+                                      <td className="px-4 py-4 text-gray-700">{asn.name}</td>
+                                      <td className="px-4 py-4">
+                                        <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-mono rounded">
+                                          {asn.peeringPolicy}
+                                        </span>
+                                      </td>
+                                      <td className="px-4 py-4">
+                                        <span className={`px-3 py-1 text-xs font-bold rounded ${
+                                          asn.status === 'ACTIVE' ? 'bg-green-100 text-green-700' :
+                                          asn.status === 'CONNECTING' ? 'bg-yellow-100 text-yellow-700' :
+                                          'bg-gray-100 text-gray-700'
+                                        }`}>
+                                          {asn.status}
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    {/* ENABLED SITES TAB */}
+                    {activeTab === 'sites' && adminLocations.find(l => l.id === selectedLocationData.id)?.enabledSites && (
+                      <div className="bg-white p-8 shadow-sm border border-gray-200 mb-12">
+                        <h3 className="text-2xl font-black text-black mb-6 flex items-center gap-3">
+                          <div className="w-1 h-8 bg-[#F20732]"></div>
+                          Enabled Data Centers
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {adminLocations.find(l => l.id === selectedLocationData.id)?.enabledSites.map((site) => (
+                            <div key={site.id} className="border-2 border-gray-200 p-6 hover:border-[#F20732] transition-all duration-300 group">
+                              <div className="flex items-start justify-between mb-4">
+                                <div>
+                                  <h4 className="text-lg font-black text-black group-hover:text-[#F20732] transition-colors">
+                                    {site.name}
+                                  </h4>
+                                  <div className="text-sm font-mono text-gray-500 mt-1">{site.provider}</div>
+                                </div>
+                                <span className={`px-3 py-1 text-xs font-bold rounded ${
+                                  site.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'
+                                }`}>
+                                  {site.status === 'available' ? 'AVAILABLE' : 'COMING SOON'}
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-600 mb-4">{site.address}</p>
+                              <button 
+                                onClick={() => {
+                                  const cityName = selectedLocationData.name.charAt(0) + selectedLocationData.name.slice(1).toLowerCase();
+                                  window.dispatchEvent(new CustomEvent('navigateToContact', { 
+                                    detail: { city: cityName, locationId: selectedLocationData.id, site: site.name } 
+                                  }));
+                                }}
+                                className="w-full bg-black text-white px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#F20732] transition-colors flex items-center justify-center gap-2"
+                                disabled={site.status !== 'available'}
+                              >
+                                {site.status === 'available' ? 'Get Connected' : 'Notify Me'}
+                                <span>→</span>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Action Buttons */}
                     <div className="flex flex-wrap gap-4">

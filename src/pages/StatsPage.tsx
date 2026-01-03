@@ -4,7 +4,8 @@ import {
   Globe, 
   Network, 
   Zap, 
-  MapPin 
+  MapPin,
+  ChevronDown 
 } from 'lucide-react';
 import { 
   networkStats, 
@@ -13,13 +14,18 @@ import {
   formatStatValue, 
   statsConfig,
   NetworkStat,
-  TrafficDataPoint 
+  TrafficDataPoint,
+  getCityStats 
 } from '../config/stats.config';
+import { useAdmin } from '../contexts/AdminContext';
 
 const StatsPage = () => {
+  const { locations } = useAdmin();
+  const [selectedCity, setSelectedCity] = useState<string>('all');
   const [stats, setStats] = useState<NetworkStat[]>(networkStats);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [currentTrafficData, setCurrentTrafficData] = useState<TrafficDataPoint[]>(trafficData);
   const [isLive, setIsLive] = useState(statsConfig.enableRealTimeUpdates);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Set dark nav class
   useEffect(() => {
@@ -28,6 +34,21 @@ const StatsPage = () => {
       document.body.classList.remove('dark-nav');
     };
   }, []);
+
+  // Handle city selection
+  useEffect(() => {
+    if (selectedCity === 'all') {
+      setStats(networkStats);
+      setCurrentTrafficData(trafficData);
+    } else {
+      const location = locations.find(loc => loc.id === selectedCity);
+      if (location) {
+        const cityData = getCityStats(location.id, location.name, location.code);
+        setStats(cityData.stats);
+        setCurrentTrafficData(cityData.trafficData);
+      }
+    }
+  }, [selectedCity, locations]);
 
   // Real-time updates
   useEffect(() => {
@@ -41,17 +62,8 @@ const StatsPage = () => {
     return () => clearInterval(interval);
   }, [isLive]);
 
-  const categories = [
-    { id: 'all', label: 'All Metrics', Icon: BarChart3 },
-    { id: 'traffic', label: 'Traffic', Icon: Globe },
-    { id: 'network', label: 'Network', Icon: Network },
-    { id: 'performance', label: 'Performance', Icon: Zap },
-    { id: 'geographic', label: 'Geographic', Icon: MapPin }
-  ];
-
-  const filteredStats = selectedCategory === 'all' 
-    ? stats 
-    : stats.filter(stat => stat.category === selectedCategory);
+  // Show all stats (no category filtering)
+  const filteredStats = stats;
 
   // Animated Counter Component
   const AnimatedCounter: React.FC<{ value: string | number; duration?: number }> = ({ value, duration = 2000 }) => {
@@ -186,13 +198,13 @@ const StatsPage = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden border-b border-white/10">
+      <section className="relative pt-32 pb-20 border-b border-white/10">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-[#F20732]/20 via-transparent to-transparent"></div>
         
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-12">
+          {/* Header - Now stacked for better visibility */}
+          <div className="mb-12">
             <div>
               <div className="inline-flex items-center gap-3 mb-6">
                 <div className="w-2 h-2 rounded-full bg-[#F20732] animate-pulse"></div>
@@ -201,21 +213,80 @@ const StatsPage = () => {
                 </span>
               </div>
               
-              <h1 className="text-6xl md:text-8xl font-black leading-tight tracking-tighter mb-6">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tighter mb-6">
                 NETWORK <span className="text-[#F20732]">STATS</span>
               </h1>
               
-              <p className="max-w-2xl text-gray-300 text-xl leading-relaxed">
+              <p className="max-w-2xl text-gray-300 text-lg md:text-xl leading-relaxed mb-8">
                 Live performance metrics from our global infrastructure. Monitor traffic, 
                 capacity, and network health in real-time.
               </p>
             </div>
 
-            {/* Live Indicator */}
-            <div className="hidden lg:block">
+            {/* Controls Row - Location Dropdown & Live Indicator */}
+            <div className="flex flex-wrap items-center gap-4">
+              {/* City Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="px-6 py-3 border-2 border-white/20 font-mono text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-3 bg-white/5 hover:border-[#F20732] hover:bg-white/10 rounded-lg"
+                >
+                  <Globe size={16} strokeWidth={2.5} />
+                  {selectedCity === 'all' ? 'ALL LOCATIONS' : locations.find(l => l.id === selectedCity)?.name.toUpperCase() || 'SELECT CITY'}
+                  <ChevronDown size={16} className={`transform transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Dropdown Menu */}
+                {dropdownOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-black border-2 border-white/20 shadow-2xl z-50 max-h-96 overflow-y-auto rounded-lg [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    {/* All Locations Option */}
+                    <button
+                      onClick={() => {
+                        setSelectedCity('all');
+                        setDropdownOpen(false);
+                      }}
+                      className={`w-full px-6 py-3 text-left font-mono text-xs font-bold tracking-wider uppercase transition-all border-b border-white/10 ${
+                        selectedCity === 'all'
+                          ? 'bg-[#F20732] text-white'
+                          : 'text-white/80 hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Globe size={14} />
+                        <span>GLOBAL VIEW</span>
+                      </div>
+                    </button>
+
+                    {/* City Options */}
+                    {locations.map((location) => (
+                      <button
+                        key={location.id}
+                        onClick={() => {
+                          setSelectedCity(location.id);
+                          setDropdownOpen(false);
+                        }}
+                        className={`w-full px-6 py-3 text-left transition-all border-b border-white/10 ${
+                          selectedCity === location.id
+                            ? 'bg-[#F20732] text-white'
+                            : 'text-white/80 hover:bg-white/10 hover:text-white'
+                        }`}
+                      >
+                        <div className="text-xs font-bold font-mono tracking-wider uppercase">
+                          {location.name}
+                        </div>
+                        <div className="text-[9px] text-white/60 font-mono mt-0.5">
+                          {location.code} • {location.region}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Live Indicator */}
               <button
                 onClick={() => setIsLive(!isLive)}
-                className={`px-6 py-4 border-2 font-mono text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-3 ${
+                className={`px-6 py-3 border-2 font-mono text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-3 rounded-lg ${
                   isLive 
                     ? 'border-[#F20732] bg-[#F20732]/10 text-[#F20732]' 
                     : 'border-white/20 text-white hover:border-white/40'
@@ -229,25 +300,22 @@ const StatsPage = () => {
                 )}
                 {isLive ? 'LIVE' : 'STATIC'}
               </button>
-            </div>
-          </div>
 
-          {/* Category Filters */}
-          <div className="flex flex-wrap gap-4">
-            {categories.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-6 py-3 font-mono text-xs font-bold tracking-widest uppercase transition-all duration-300 border-2 flex items-center gap-2 ${
-                  selectedCategory === cat.id
-                    ? 'bg-[#F20732] border-[#F20732] text-white'
-                    : 'bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10'
-                }`}
-              >
-                <cat.Icon size={16} strokeWidth={2.5} />
-                {cat.label}
-              </button>
-            ))}
+              {/* Selected Location Badge */}
+              {selectedCity !== 'all' && (
+                <div className="inline-flex items-center gap-3 px-5 py-3 bg-white/5 border border-white/20 rounded-lg">
+                  <MapPin size={18} className="text-[#F20732]" strokeWidth={2.5} />
+                  <div>
+                    <div className="text-sm font-bold text-white">
+                      {locations.find(l => l.id === selectedCity)?.name}
+                    </div>
+                    <div className="text-[10px] text-gray-400 font-mono tracking-wider">
+                      {locations.find(l => l.id === selectedCity)?.code} • {locations.find(l => l.id === selectedCity)?.region}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -265,7 +333,7 @@ const StatsPage = () => {
               </div>
               <div className="text-right">
                 <div className="text-4xl md:text-5xl font-light tracking-tighter text-[#F20732]">
-                  {trafficData[trafficData.length - 1]?.value.toFixed(1)}
+                  {currentTrafficData[currentTrafficData.length - 1]?.value.toFixed(1)}
                   <span className="text-xl text-gray-400 ml-2">Tbps</span>
                 </div>
                 <div className="text-sm text-green-400 font-mono flex items-center justify-end gap-1 mt-2">
@@ -277,7 +345,7 @@ const StatsPage = () => {
               </div>
             </div>
             
-            <TrafficChart data={trafficData} />
+            <TrafficChart data={currentTrafficData} />
           </div>
         </div>
       </section>

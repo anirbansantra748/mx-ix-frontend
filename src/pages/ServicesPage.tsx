@@ -369,16 +369,6 @@ const ServicesPage = () => {
                 </p>
               </div>
 
-              {/* Category Image */}
-              <div className="mb-16 group relative overflow-hidden">
-                <img 
-                  src={service.image} 
-                  alt={service.category}
-                  className="w-full h-64 md:h-96 object-cover border border-gray-200 group-hover:border-black transition-all duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              </div>
-
               {/* Service Items */}
               <div className="space-y-8">
                 {service.items.map((item, itemIdx) => {
@@ -507,7 +497,7 @@ const ServicesPage = () => {
       </div>
 
       {/* CTA Section */}
-      <section className="relative py-24 bg-black text-white overflow-hidden">
+      {/* <section className="relative py-24 bg-black text-white overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 text-center">
           <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-8">
@@ -525,7 +515,7 @@ const ServicesPage = () => {
             </button>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

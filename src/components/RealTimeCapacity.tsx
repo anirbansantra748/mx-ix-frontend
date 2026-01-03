@@ -49,7 +49,7 @@ const RealTimeCapacity = () => {
         {/* Capacity Display - Centered */}
         <div className="text-center mb-16">
           <span className="text-[#F20732] font-mono text-xs tracking-[0.25em] uppercase">
-            • REAL-TIME CAPACITY •
+            • REAL-TIME TRAFFIC •
           </span>
           <h2 className="text-7xl md:text-9xl font-black text-black mt-6 leading-none tracking-tighter">
             124<span className="text-gray-300">Tbps</span>
