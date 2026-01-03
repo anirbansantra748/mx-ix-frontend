@@ -35,7 +35,9 @@ const AdminPage = () => {
     code: '',
     region: 'AMERICAS',
     asns: 0,
-    sites: 1
+    sites: 1,
+    asnList: [],
+    enabledSites: []
   });
   const [editingLocationId, setEditingLocationId] = useState<string | null>(null);
 
@@ -79,7 +81,9 @@ const AdminPage = () => {
       code: '',
       region: 'AMERICAS',
       asns: 0,
-      sites: 1
+      sites: 1,
+      asnList: [],
+      enabledSites: []
     });
     alert(editingLocationId ? 'Location updated!' : 'Location added!');
   };
@@ -476,7 +480,9 @@ const AdminPage = () => {
                         code: '',
                         region: 'AMERICAS',
                         asns: 0,
-                        sites: 1
+                        sites: 1,
+                        asnList: [],
+                        enabledSites: []
                       });
                     }}
                     className="bg-gray-200 text-black px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest hover:bg-gray-300 transition-all"
