@@ -308,7 +308,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
                     Contact Preferences
                   </h3>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
                     {/* Department Dropdown */}
                     <div>
                       <label htmlFor="department" className="block font-mono text-[9px] text-gray-500 uppercase tracking-widest mb-1.5 font-bold">
@@ -329,34 +329,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
                         }}
                       >
                         <option value="sales">Sales</option>
-                        <option value="services">Technical Services</option>
-                      </select>
-                    </div>
-
-                    {/* Language Dropdown */}
-                    <div>
-                      <label htmlFor="language" className="block font-mono text-[9px] text-gray-500 uppercase tracking-widest mb-1.5 font-bold">
-                        Language *
-                      </label>
-                      <select
-                        id="language"
-                        name="language"
-                        value={formData.language}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-3 py-2.5 bg-white border border-gray-300 focus:border-[#F20732] focus:ring-1 focus:ring-[#F20732] outline-none transition-all duration-200 text-sm text-black appearance-none cursor-pointer"
-                        style={{
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
-                          backgroundRepeat: 'no-repeat',
-                          backgroundPosition: 'right 0.5rem center',
-                          backgroundSize: '1.25rem'
-                        }}
-                      >
-                        {languages.map(lang => (
-                          <option key={lang.value} value={lang.value}>
-                            {lang.flag} {lang.label}
-                          </option>
-                        ))}
+                        <option value="services">Tech Support</option>
                       </select>
                     </div>
                   </div>
@@ -984,7 +957,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
                     <Wrench className="w-4 h-4 text-[#F20732]" strokeWidth={2.5} />
                   )}
                   <span className="font-mono text-xs font-bold tracking-widest uppercase text-[#F20732]">
-                    {formData.department === 'sales' ? 'Sales Team' : 'Technical Services'}
+                    {formData.department === 'sales' ? 'Sales Team' : 'Tech Support'}
                   </span>
                 </div>
 

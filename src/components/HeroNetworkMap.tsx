@@ -2,17 +2,15 @@ import React from 'react';
 
 const HeroNetworkMap: React.FC = () => {
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden">
       {/* High-quality static world map image */}
       <img 
         src="/assets/world-map-dots.png"
         alt="Global Network Map" 
-        className="w-full h-full object-contain"
+        className="w-full h-full object-cover opacity-90"
         style={{ 
-          objectFit: 'contain',
-          objectPosition: 'center',
-          maxWidth: '100%',
-          maxHeight: '100%'
+          objectFit: 'cover',
+          objectPosition: 'center right',
         }}
         onError={(e) => {
           console.error('Failed to load world map image');

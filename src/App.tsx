@@ -182,6 +182,7 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
   };
 
   const navItems = [
+    { id: 'about', label: 'ABOUT' },
     { id: 'services', label: 'SERVICES' },
     { id: 'locations', label: 'LOCATIONS' },
     { id: 'stats', label: 'STATS' },
@@ -400,8 +401,10 @@ function AppContent() {
                 </div>
 
                 {/* Right side - Network Map Visualization */}
-                <div className="hidden lg:block h-[500px] xl:h-[600px] relative">
-                  <HeroNetworkMap />
+                <div className="hidden lg:flex items-center justify-center h-[500px] xl:h-[600px] relative">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <HeroNetworkMap />
+                  </div>
                 </div>
               </div>
             </div>

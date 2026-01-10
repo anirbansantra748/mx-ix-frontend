@@ -20,37 +20,37 @@ const ServicesPage = () => {
       image: "/assets/peering_service_hero_1766400451669.png",
       items: [
         {
-          name: "Internet Peering",
-          icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
-          description: "Connect directly to thousands of networks through our route servers, eliminating expensive transit costs.",
+          name: "Bilateral Peering",
+          icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>,
+          description: "Direct private peering connections between two networks for dedicated, high-performance traffic exchange.",
           benefits: [
-            "Reduced latency by up to 60%",
-            "Save up to 80% on bandwidth costs",
-            "Automated BGP session management",
-            "24/7 network operations support"
+            "Dedicated bandwidth allocation",
+            "Enhanced security with private VLANs",
+            "Customizable traffic policies",
+            "Direct network-to-network connection"
           ],
           features: [
-            "Multi-lateral peering",
-            "Bilateral peering options",
-            "IPv4 & IPv6 support",
-            "Real-time traffic analytics"
+            "Private VLAN connections",
+            "10G to 400G port options",
+            "Custom routing policies",
+            "SLA-backed performance"
           ]
         },
         {
-          name: "Mobile Peering",
-          icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01"/></svg>,
-          description: "Optimize mobile data traffic with dedicated GPRS roaming and 4G/5G offloading capabilities.",
+          name: "Public Peering",
+          icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+          description: "Connect to multiple networks simultaneously through our route servers, maximizing peering opportunities with a single connection.",
           benefits: [
-            "Faster mobile content delivery",
-            "Improved roaming experience",
-            "Reduced international transit costs",
-            "Enhanced QoS for mobile traffic"
+            "Access to 500+ networks",
+            "Reduced latency by up to 60%",
+            "Save up to 80% on bandwidth costs",
+            "24/7 network operations support"
           ],
           features: [
-            "GPRS/3G/4G/5G support",
-            "Direct carrier interconnection",
-            "MMS & SMS optimization",
-            "Mobile CDN integration"
+            "Multi-lateral peering via route servers",
+            "IPv4 & IPv6 support",
+            "Real-time traffic analytics",
+            "Automated BGP session management"
           ]
         }
       ]
@@ -123,9 +123,9 @@ const ServicesPage = () => {
       image: "/assets/access_service_hero_1766400541443.png",
       items: [
         {
-          name: "EasyAccess",
+          name: "Autoprovisioning",
           icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>,
-          description: "Simplified port provisioning for remote networks with automated setup and configuration.",
+          description: "Automated port provisioning for remote networks with zero-touch setup and configuration.",
           benefits: [
             "5-minute port activation",
             "Self-service portal",
@@ -199,23 +199,7 @@ const ServicesPage = () => {
             "Custom integrations"
           ]
         },
-        {
-          name: "BGP Peering Training",
-          icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
-          description: "Expert-led workshops and certification programs on BGP routing and peering optimization.",
-          benefits: [
-            "Industry-recognized certification",
-            "Hands-on lab environment",
-            "Expert instructors",
-            "Ongoing support"
-          ],
-          features: [
-            "Beginner to advanced tracks",
-            "Real-world scenarios",
-            "Virtual & on-site training",
-            "Custom curriculum"
-          ]
-        },
+
         {
           name: "Innovation Services",
           icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,

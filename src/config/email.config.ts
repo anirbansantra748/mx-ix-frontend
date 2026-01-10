@@ -29,7 +29,7 @@ export const buildEmailParams = (formData: any) => {
     from_phone: formData.phone || 'Not provided',
     
     // Department & Language
-    department: formData.department === 'sales' ? 'Sales Team' : 'Technical Services',
+    department: formData.department === 'sales' ? 'Sales Team' : 'Tech Support',
     language: formData.language,
     
     // Service Details (if applicable)

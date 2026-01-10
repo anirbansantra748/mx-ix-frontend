@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   ComposableMap,
   Geographies,
@@ -7,7 +7,7 @@ import {
   Line,
   ZoomableGroup,
 } from "react-simple-maps";
-import { Zap, Network, Clock, Globe2 } from "lucide-react";
+import { Map, Network, Clock, Globe2 } from "lucide-react";
 import { useAdmin } from "../contexts/AdminContext";
 
 const GEO_URL =
@@ -48,12 +48,52 @@ const GlobalFabricMap = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1);
   const [center, setCenter] = useState<[number, number]>([10, 20]);
+  const [cardPosition, setCardPosition] = useState<{ x: number; y: number } | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
 
   const isVisible = (id: string) => activeId === id || hoveredId === id;
 
   const handleReset = () => {
     setZoom(1);
     setCenter([10, 20]);
+    setActiveId(null);
+    setHoveredId(null);
+    setCardPosition(null);
+  };
+
+  // Handle marker hover - capture position for card overlay
+  const handleMarkerHover = (loc: any, e: React.MouseEvent) => {
+    setHoveredId(loc.id);
+    if (mapContainerRef.current) {
+      const rect = mapContainerRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      setCardPosition({ x, y });
+    }
+  };
+
+  // Handle marker leave
+  const handleMarkerLeave = () => {
+    if (!activeId) {
+      setHoveredId(null);
+      setCardPosition(null);
+    }
+  };
+
+  // Handle marker click
+  const handleMarkerClick = (loc: any, e: React.MouseEvent) => {
+    if (activeId === loc.id) {
+      setActiveId(null);
+      setCardPosition(null);
+    } else {
+      setActiveId(loc.id);
+      if (mapContainerRef.current) {
+        const rect = mapContainerRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        setCardPosition({ x, y });
+      }
+    }
   };
 
   // Removed for now - can be enabled via admin panel later
@@ -84,7 +124,7 @@ const GlobalFabricMap = () => {
             </div>
             <div>
               <h2 className="text-5xl font-black text-black tracking-tight leading-none">
-                MX-IX Exchange
+                MX-IX Global Map
               </h2>
               <p className="text-[#F20732] text-xs font-bold tracking-[0.2em] uppercase mt-1">
                 {locations.length} ACTIVE LOCATIONS WORLDWIDE
@@ -135,7 +175,7 @@ const GlobalFabricMap = () => {
           </div>
 
           {/* Map */}
-          <div className="relative">
+          <div className="relative" ref={mapContainerRef}>
             <ComposableMap
               projection="geoMercator"
               className="w-full h-[500px]"
@@ -161,23 +201,6 @@ const GlobalFabricMap = () => {
                   }
                 </Geographies>
 
-                {/* Connection Lines - Disabled for now, can be managed via admin */}
-                {/* {connections.map((conn, idx) => {
-                  const coords = getConnectionCoordinates(conn[0], conn[1]);
-                  if (!coords) return null;
-                  return (
-                    <Line
-                      key={`line-${idx}`}
-                      from={coords.from}
-                      to={coords.to}
-                      stroke="#F20732"
-                      strokeWidth={1.5}
-                      opacity={0.4}
-                      strokeLinecap="round"
-                    />
-                  );
-                })} */}
-
                 {/* Location Markers - Active marker renders last to appear on top */}
                 {locations
                   .sort((a, b) => {
@@ -192,9 +215,9 @@ const GlobalFabricMap = () => {
                   <Marker
                     key={loc.id}
                     coordinates={loc.coordinates}
-                    onMouseEnter={() => setHoveredId(loc.id)}
-                    onMouseLeave={() => setHoveredId(null)}
-                    onClick={() => setActiveId(activeId === loc.id ? null : loc.id)}
+                    onMouseEnter={(e) => handleMarkerHover(loc, e as any)}
+                    onMouseLeave={handleMarkerLeave}
+                    onClick={(e) => handleMarkerClick(loc, e as any)}
                   >
                     <g className="cursor-pointer">
                       {/* Pulse rings on hover */}
@@ -203,7 +226,7 @@ const GlobalFabricMap = () => {
                           <circle
                             r={20}
                             fill="none"
-                            stroke="#F20732"
+                            stroke={loc.status === 'current' ? "#F20732" : "#9CA3AF"}
                             strokeWidth={2}
                             opacity={0.6}
                             className="animate-ping"
@@ -211,7 +234,7 @@ const GlobalFabricMap = () => {
                           <circle
                             r={15}
                             fill="none"
-                            stroke="#F20746"
+                            stroke={loc.status === 'current' ? "#F20746" : "#6B7280"}
                             strokeWidth={1.5}
                             opacity={0.4}
                             className="animate-ping"
@@ -222,13 +245,13 @@ const GlobalFabricMap = () => {
                       
                       {/* Glow circle */}
                       {isVisible(loc.id) && (
-                        <circle r={10} fill="#F20732" opacity={0.3} />
+                        <circle r={10} fill={loc.status === 'current' ? "#F20732" : "#9CA3AF"} opacity={0.3} />
                       )}
                       
                       {/* Main marker */}
                       <circle
                         r={isVisible(loc.id) ? 6 : 5}
-                        fill="#F20732"
+                        fill={loc.status === 'current' ? "#F20732" : "#9CA3AF"}
                         className="transition-all duration-300"
                       />
                       <circle
@@ -237,84 +260,101 @@ const GlobalFabricMap = () => {
                         className="transition-all duration-300"
                       />
                     </g>
-
-                    {/* Info Card - Higher z-index to appear above all markers */}
-                    {isVisible(loc.id) && (
-                      <foreignObject x={15} y={-90} width={200} height={170} style={{ zIndex: 1000 }}>
-                        <div className="relative animate-fadeIn" style={{ position: 'relative', zIndex: 1000 }}>
-                          {/* Glow effect */}
-                          <div className="absolute -inset-1 bg-[#F20732] rounded-lg blur-md opacity-50" />
-                          
-                          {/* Card */}
-                          <div className="relative bg-white border-2 border-gray-200 shadow-2xl rounded-lg overflow-hidden">
-                            {/* Header */}
-                            <div className="bg-white border-b border-gray-200 px-4 py-2">
-                              <p className="text-black text-sm font-black uppercase tracking-tight">
-                                {loc.name}
-                              </p>
-                              <p className="text-gray-600 text-[9px] tracking-wide">
-                                MX-IX Exchange
-                              </p>
-                            </div>
-
-                            {/* Content */}
-                            <div className="px-4 py-3 space-y-1.5">
-                              {/* Connected ASNs - Clickable link */}
-                              <div 
-                                className="flex justify-between text-[10px] cursor-pointer hover:bg-gray-50 px-1 py-0.5 -mx-1 rounded transition-colors group"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  window.dispatchEvent(new CustomEvent('navigateToLocations', { 
-                                    detail: { locationId: loc.id, locationName: loc.name, section: 'asns' } 
-                                  }));
-                                }}
-                              >
-                                <span className="text-gray-600 group-hover:text-[#F20732] transition-colors">Connected ASNs:</span>
-                                <span className="text-black font-bold group-hover:text-[#F20732] transition-colors flex items-center gap-1">
-                                  {loc.asnList?.length || 0}
-                                  <span className="text-gray-400 group-hover:text-[#F20732]">→</span>
-                                </span>
-                              </div>
-                              {/* Enabled sites - Clickable link */}
-                              <div 
-                                className="flex justify-between text-[10px] cursor-pointer hover:bg-gray-50 px-1 py-0.5 -mx-1 rounded transition-colors group"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  window.dispatchEvent(new CustomEvent('navigateToLocations', { 
-                                    detail: { locationId: loc.id, locationName: loc.name, section: 'sites' } 
-                                  }));
-                                }}
-                              >
-                                <span className="text-gray-600 group-hover:text-[#F20732] transition-colors">Enabled sites:</span>
-                                <span className="text-black font-bold group-hover:text-[#F20732] transition-colors flex items-center gap-1">
-                                  {loc.enabledSites?.length || 0}
-                                  <span className="text-gray-400 group-hover:text-[#F20732]">→</span>
-                                </span>
-                              </div>
-                              <p className="text-gray-500 text-[9px] tracking-wide">Cloud providers</p>
-                              
-                              {/* CTA Button */}
-                              <button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  window.dispatchEvent(new CustomEvent('navigateToLocations', { 
-                                    detail: { locationId: loc.id, locationName: loc.name, section: 'overview' } 
-                                  }));
-                                }}
-                                className="w-full mt-2 bg-[#F20732] text-white text-[10px] font-bold uppercase tracking-wider py-2 rounded hover:bg-[#C00628] transition-colors flex items-center justify-center gap-2"
-                              >
-                                VIEW DETAILS
-                                <span className="text-xs">→</span>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </foreignObject>
-                    )}
                   </Marker>
                 ))}
               </ZoomableGroup>
             </ComposableMap>
+
+            {/* Info Card - Rendered outside ComposableMap to maintain fixed size on zoom */}
+            {(activeId || hoveredId) && cardPosition && (() => {
+              const loc = locations.find(l => l.id === (activeId || hoveredId));
+              if (!loc) return null;
+              return (
+                <div
+                  className="absolute z-50 animate-fadeIn pointer-events-auto"
+                  style={{
+                    left: `${cardPosition.x + 15}px`,
+                    top: `${cardPosition.y - 85}px`,
+                  }}
+                >
+                  <div className="relative">
+                    {/* Glow effect */}
+                    <div className={`absolute -inset-1 rounded-lg blur-md opacity-50 ${loc.status === 'current' ? 'bg-[#F20732]' : 'bg-gray-400'}`} />
+                    
+                    {/* Card */}
+                    <div className="relative bg-white border-2 border-gray-200 shadow-2xl rounded-lg overflow-hidden w-[200px]">
+                      {/* Header */}
+                      <div className="bg-white border-b border-gray-200 px-4 py-2">
+                        <div className="flex items-center justify-between">
+                          <p className="text-black text-sm font-black uppercase tracking-tight">
+                            {loc.name}
+                          </p>
+                          {loc.status === 'upcoming' && (
+                            <span className="px-1.5 py-0.5 bg-gray-100 text-gray-500 text-[7px] font-bold uppercase tracking-wider rounded">
+                              Soon
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-gray-600 text-[9px] tracking-wide">
+                          MX-IX Exchange
+                        </p>
+                      </div>
+
+                      {/* Content */}
+                      <div className="px-4 py-3 space-y-1.5">
+                        {/* Connected ASNs - Clickable link */}
+                        <div 
+                          className="flex justify-between text-[10px] cursor-pointer hover:bg-gray-50 px-1 py-0.5 -mx-1 rounded transition-colors group"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.dispatchEvent(new CustomEvent('navigateToLocations', { 
+                              detail: { locationId: loc.id, locationName: loc.name, section: 'asns' } 
+                            }));
+                          }}
+                        >
+                          <span className="text-gray-600 group-hover:text-[#F20732] transition-colors">Connected ASNs:</span>
+                          <span className="text-black font-bold group-hover:text-[#F20732] transition-colors flex items-center gap-1">
+                            {loc.asnList?.length || 0}
+                            <span className="text-gray-400 group-hover:text-[#F20732]">→</span>
+                          </span>
+                        </div>
+                        {/* Enabled sites - Clickable link */}
+                        <div 
+                          className="flex justify-between text-[10px] cursor-pointer hover:bg-gray-50 px-1 py-0.5 -mx-1 rounded transition-colors group"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.dispatchEvent(new CustomEvent('navigateToLocations', { 
+                              detail: { locationId: loc.id, locationName: loc.name, section: 'sites' } 
+                            }));
+                          }}
+                        >
+                          <span className="text-gray-600 group-hover:text-[#F20732] transition-colors">Enabled sites:</span>
+                          <span className="text-black font-bold group-hover:text-[#F20732] transition-colors flex items-center gap-1">
+                            {loc.enabledSites?.length || 0}
+                            <span className="text-gray-400 group-hover:text-[#F20732]">→</span>
+                          </span>
+                        </div>
+                        <p className="text-gray-500 text-[9px] tracking-wide">Cloud providers</p>
+                        
+                        {/* CTA Button */}
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.dispatchEvent(new CustomEvent('navigateToLocations', { 
+                              detail: { locationId: loc.id, locationName: loc.name, section: 'overview' } 
+                            }));
+                          }}
+                          className="w-full mt-2 bg-[#F20732] text-white text-[10px] font-bold uppercase tracking-wider py-2 rounded hover:bg-[#C00628] transition-colors flex items-center justify-center gap-2"
+                        >
+                          VIEW DETAILS
+                          <span className="text-xs">→</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
 
           {/* Bottom stats bar */}
@@ -340,10 +380,10 @@ const GlobalFabricMap = () => {
         {/* Network Stats */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
-            { label: "TOTAL CAPACITY", value: globalFabricStats.totalCapacity, Icon: Zap, color: "#F20732" },
-            { label: "ACTIVE ROUTES", value: globalFabricStats.activeRoutes, Icon: Network, color: "#F20746" },
-            { label: "AVG LATENCY", value: globalFabricStats.avgLatency, Icon: Clock, color: "#A6032F" },
-            { label: "GLOBAL COVERAGE", value: globalFabricStats.globalCoverage, Icon: Globe2, color: "#F20732" },
+            { label: "CONTINENTS", value: "3", Icon: Globe2, color: "#F20732" },
+            { label: "COUNTRIES", value: "5", Icon: Map, color: "#F20746" },
+            { label: "CONNECTED ASNS", value: locations.reduce((acc, loc) => acc + (loc.asnList?.length || 0), 0).toString(), Icon: Network, color: "#A6032F" },
+            { label: "AVG LATENCY", value: "<5ms", Icon: Clock, color: "#F20732" },
           ].map((stat) => (
             <div
               key={stat.label}

@@ -35,9 +35,9 @@ interface LocationsPageProps {
 
 const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPageProps) => {
   const [expandedContinent, setExpandedContinent] = useState<string>('asia');
-  const [selectedLocation, setSelectedLocation] = useState<string>('tyo');
+  const [selectedLocation, setSelectedLocation] = useState<string>('del');
   const [asnSearch, setASNSearch] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'overview' | 'asns' | 'sites'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'asns' | 'sites' | 'pricing' | 'stats'>('overview');
   const { locations: adminLocations } = useAdmin();
 
   // Handle pre-selected location and section from map navigation
@@ -68,173 +68,39 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
   const continents: ContinentData[] = [
     { id: 'asia', name: 'ASIA' },
     { id: 'middle-east', name: 'MIDDLE EAST' },
-    { id: 'africa', name: 'AFRICA' },
     { id: 'europe', name: 'EUROPE' },
-    { id: 'north-america', name: 'NORTH AMERICA' }
+    { id: 'north-america', name: 'NORTH AMERICA' },
+    { id: 'south-america', name: 'SOUTH AMERICA' }
   ];
 
   const locations: LocationData[] = [
+    // Current (Live) Locations - India
     {
-      id: 'tyo',
-      name: 'TOKYO',
-      country: 'Japan',
+      id: 'del',
+      name: 'NEW DELHI',
+      country: 'India',
       continentId: 'asia',
-      region: 'Asia Pacific',
+      region: 'South Asia',
       status: 'active',
-      latency: '1.5',
-      datacenter: 'EQUINIX TY11',
-      address: '3-8-21 Higashi-Shinagawa, Shinagawa-ku, Tokyo 140-0002, Japan',
-      ixName: 'JPNAP',
-      peers: 520,
-      capacity: '180+',
-      portSpeeds: ['1G', '10G', '40G', '100G'],
-      protocols: ['BGP-4', 'IPv4', 'IPv6'],
-      features: [
-        'Japan market gateway',
-        'Ultra-low latency trading',
-        'Disaster recovery ready',
-        'Carrier-dense location',
-        'Premium Japanese networks',
-        'Carrier-class location'
-      ],
-      description: 'Gateway to Japanese enterprise and content networks.',
-      established: '2021',
-      cityImage: '/assets/cities/tokyo.png'
-    },
-    {
-      id: 'sin',
-      name: 'SINGAPORE',
-      country: 'Singapore',
-      continentId: 'asia',
-      region: 'Asia Pacific',
-      status: 'active',
-      latency: '2.1',
-      datacenter: 'GLOBAL SWITCH',
-      address: '18 Tai Seng Street, Singapore 539775',
-      ixName: 'SGIX',
-      peers: 650,
-      capacity: '200+',
-      portSpeeds: ['10G', '40G', '100G'],
-      protocols: ['BGP-4', 'IPv4', 'IPv6', 'MPLS'],
-      features: [
-        'Asia-Pacific gateway',
-        'Low-latency to APAC markets',
-        'Carrier-neutral facility',
-        'Compliance ready (MAS, PDPA)',
-        'Cloud connectivity hub',
-        'Premium APAC networks'
-      ],
-      description: 'Premier APAC location serving the fastest-growing internet markets.',
-      established: '2020',
-      cityImage: '/assets/cities/singapore.png'
-    },
-    {
-      id: 'hkg',
-      name: 'HONG KONG',
-      country: 'Hong Kong',
-      continentId: 'asia',
-      region: 'Asia Pacific',
-      status: 'planned',
-      latency: '1.8',
-      datacenter: 'MEGA-i',
-      address: '7 Chun Ying Street, Tseung Kwan O, Hong Kong',
-      ixName: 'HKIX',
-      peers: 380,
+      latency: '1.6',
+      datacenter: 'NTT DELHI DC',
+      address: 'Sector 142, Noida, Uttar Pradesh 201304, India',
+      ixName: 'DELIX',
+      peers: 320,
       capacity: '150+',
-      portSpeeds: ['10G', '40G', '100G'],
-      protocols: ['BGP-4', 'IPv4', 'IPv6'],
-      features: [
-        'Gateway to Greater China',
-        'Financial hub connectivity',
-        'Low latency to mainland',
-        'Tier 3 datacenter',
-        'Diverse carrier options',
-        'Strategic Asia location'
-      ],
-      description: 'Strategic gateway connecting to Greater China and Southeast Asia.',
-      established: '2024',
-      cityImage: '/assets/cities/hongkong.png'
-    },
-    {
-      id: 'ams',
-      name: 'AMSTERDAM',
-      country: 'Netherlands',
-      continentId: 'europe',
-      region: 'Europe',
-      status: 'active',
-      latency: '0.8',
-      datacenter: 'EQUINIX AM7',
-      address: 'Kuiperbergweg 87, 1101 AG Amsterdam, Netherlands',
-      ixName: 'AMS-IX',
-      peers: 1250,
-      capacity: '400+',
-      portSpeeds: ['1G', '10G', '40G', '100G', '400G'],
+      portSpeeds: ['1G', '10G', '40G', '100G'],
       protocols: ['BGP-4', 'IPv4', 'IPv6', 'MPLS'],
       features: [
-        'Direct peering with 1000+ networks',
-        'Sub-millisecond latency across EU',
-        '24/7 NOC support on-site',
-        'Redundant power & cooling',
-        'DDoS protection included',
-        'Premium European networks'
+        'North India gateway',
+        'Government connectivity hub',
+        'Enterprise connectivity',
+        'Multi-cloud access',
+        'Low-latency trading',
+        'Carrier-dense location'
       ],
-      description: 'Our flagship European presence at the world-renowned AMS-IX.',
-      established: '2019',
-      cityImage: '/assets/cities/amsterdam.png'
-    },
-    {
-      id: 'frk',
-      name: 'FRANKFURT',
-      country: 'Germany',
-      continentId: 'europe',
-      region: 'Europe',
-      status: 'active',
-      latency: '0.9',
-      datacenter: 'INTERXION FRA1',
-      address: 'Hanauer Landstraße 302, 60314 Frankfurt, Germany',
-      ixName: 'DE-CIX',
-      peers: 1100,
-      capacity: '350+',
-      portSpeeds: ['10G', '40G', '100G', '400G'],
-      protocols: ['BGP-4', 'IPv4', 'IPv6', 'MPLS', 'EVPN'],
-      features: [
-        'Largest IX in Europe by traffic',
-        'Direct connection to DE-CIX',
-        'Financial hub connectivity',
-        'Enterprise-grade security',
-        'Green energy powered',
-        'Redundant path protection'
-      ],
-      description: 'Connected to the world\'s largest internet exchange by traffic volume.',
-      established: '2019',
-      cityImage: '/assets/cities/frankfurt.png'
-    },
-    {
-      id: 'nyc',
-      name: 'NEW YORK',
-      country: 'United States',
-      continentId: 'north-america',
-      region: 'North America',
-      status: 'active',
-      latency: '1.2',
-      datacenter: 'TELEHOUSE CHELSEA',
-      address: '85 10th Avenue, New York, NY 10011, USA',
-      ixName: 'NYIIX',
-      peers: 890,
-      capacity: '300+',
-      portSpeeds: ['10G', '40G', '100G', '400G'],
-      protocols: ['BGP-4', 'IPv4', 'IPv6', 'SD-WAN'],
-      features: [
-        'Direct access to major US networks',
-        'Cloud on-ramps (AWS, Azure, GCP)',
-        'Financial services optimized',
-        'Tier 3+ datacenter facility',
-        'Real-time traffic analytics',
-        'Ultra-low latency trading'
-      ],
-      description: 'Strategic North American hub connecting Wall Street to the world.',
-      established: '2020',
-      cityImage: '/assets/cities/newyork.png'
+      description: 'Strategic hub serving North India\'s enterprise and government networks.',
+      established: '2023',
+      cityImage: '/assets/cities/delhi.png'
     },
     {
       id: 'bom',
@@ -244,8 +110,8 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
       region: 'South Asia',
       status: 'active',
       latency: '1.8',
-      datacenter: 'GPX MUMBAI 1',
-      address: 'Powai, Mumbai, Maharashtra 400076, India',
+      datacenter: 'Sify Rabale DC',
+      address: 'MIDC Rabale, Navi Mumbai, Maharashtra 400701, India',
       ixName: 'MBIIX',
       peers: 340,
       capacity: '120+',
@@ -291,32 +157,87 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
       cityImage: '/assets/cities/chennai.png'
     },
     {
-      id: 'del',
-      name: 'DELHI',
+      id: 'ccu',
+      name: 'KOLKATA',
       country: 'India',
       continentId: 'asia',
       region: 'South Asia',
       status: 'active',
-      latency: '1.6',
-      datacenter: 'NTT DELHI DC',
-      address: 'Sector 142, Noida, Uttar Pradesh 201304, India',
-      ixName: 'DELIX',
-      peers: 320,
+      latency: '2.2',
+      datacenter: 'CTRLS KOLKATA',
+      address: 'Sector V, Salt Lake City, Kolkata 700091, India',
+      ixName: 'CCUIX',
+      peers: 180,
+      capacity: '80+',
+      portSpeeds: ['1G', '10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'Eastern India gateway',
+        'BFSI hub connectivity',
+        'Low-latency to Bangladesh',
+        'Enterprise connectivity',
+        'Cloud on-ramps available',
+        'Carrier-neutral facility'
+      ],
+      description: 'Strategic gateway serving Eastern India\'s enterprise and financial networks.',
+      established: '2024',
+      cityImage: '/assets/cities/kolkata.png'
+    },
+    {
+      id: 'hyd',
+      name: 'HYDERABAD',
+      country: 'India',
+      continentId: 'asia',
+      region: 'South Asia',
+      status: 'active',
+      latency: '1.9',
+      datacenter: 'YOTTA HYDERABAD',
+      address: 'HITEC City, Hyderabad 500081, India',
+      ixName: 'HYDIX',
+      peers: 220,
+      capacity: '100+',
+      portSpeeds: ['1G', '10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'Central India gateway',
+        'IT hub connectivity',
+        'Enterprise connectivity',
+        'Cloud on-ramps (AWS, Azure)',
+        'Carrier-neutral facility',
+        'Green energy powered'
+      ],
+      description: 'Key hub serving Hyderabad\'s thriving IT and enterprise sector.',
+      established: '2024',
+      cityImage: '/assets/cities/hyderabad.png'
+    },
+    {
+      id: 'blr',
+      name: 'BANGALORE',
+      country: 'India',
+      continentId: 'asia',
+      region: 'South Asia',
+      status: 'active',
+      latency: '1.7',
+      datacenter: 'NTT BANGALORE DC',
+      address: 'Electronic City, Bangalore 560100, India',
+      ixName: 'BLRIX',
+      peers: 350,
       capacity: '150+',
       portSpeeds: ['1G', '10G', '40G', '100G'],
       protocols: ['BGP-4', 'IPv4', 'IPv6', 'MPLS'],
       features: [
-        'North India gateway',
-        'Government connectivity hub',
+        'Silicon Valley of India',
+        'Tech hub connectivity',
         'Enterprise connectivity',
         'Multi-cloud access',
         'Low-latency trading',
         'Carrier-dense location'
       ],
-      description: 'Strategic hub serving North India\'s enterprise and government networks.',
+      description: 'India\'s tech capital hub serving enterprise and startup networks.',
       established: '2023',
-      cityImage: '/assets/cities/delhi.png'
+      cityImage: '/assets/cities/bangalore.png'
     },
+    // Current (Live) Location - Middle East
     {
       id: 'dxb',
       name: 'DUBAI',
@@ -343,6 +264,172 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
       description: 'Premier Middle East hub connecting MENA region to global networks.',
       established: '2024',
       cityImage: '/assets/cities/dubai.png'
+    },
+    // Upcoming Locations - North America
+    {
+      id: 'lax',
+      name: 'LOS ANGELES',
+      country: 'United States',
+      continentId: 'north-america',
+      region: 'North America',
+      status: 'planned',
+      latency: '-',
+      datacenter: 'EQUINIX LA1',
+      address: 'Los Angeles, CA, USA',
+      ixName: 'LAIIX',
+      peers: 0,
+      capacity: '-',
+      portSpeeds: ['10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'West Coast gateway',
+        'Pacific connectivity',
+        'Content networks hub',
+        'Cloud on-ramps',
+        'Carrier-neutral facility',
+        'Coming soon'
+      ],
+      description: 'Upcoming West Coast presence for Pacific connectivity.',
+      established: 'Coming Soon',
+      cityImage: '/assets/cities/losangeles.png'
+    },
+    {
+      id: 'sjc',
+      name: 'SILICON VALLEY',
+      country: 'United States',
+      continentId: 'north-america',
+      region: 'North America',
+      status: 'planned',
+      latency: '-',
+      datacenter: 'EQUINIX SV1',
+      address: 'San Jose, CA, USA',
+      ixName: 'SJIIX',
+      peers: 0,
+      capacity: '-',
+      portSpeeds: ['10G', '40G', '100G', '400G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'Tech capital access',
+        'Cloud connectivity hub',
+        'Enterprise networks',
+        'Low-latency trading',
+        'Multi-cloud access',
+        'Coming soon'
+      ],
+      description: 'Upcoming presence in the heart of Silicon Valley.',
+      established: 'Coming Soon',
+      cityImage: '/assets/cities/siliconvalley.png'
+    },
+    {
+      id: 'qro',
+      name: 'QUERETARO',
+      country: 'Mexico',
+      continentId: 'north-america',
+      region: 'North America',
+      status: 'planned',
+      latency: '-',
+      datacenter: 'TBD',
+      address: 'Queretaro, Mexico',
+      ixName: 'QROIX',
+      peers: 0,
+      capacity: '-',
+      portSpeeds: ['10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'LATAM gateway',
+        'Mexico connectivity',
+        'Enterprise networks',
+        'Cloud on-ramps',
+        'Carrier-neutral',
+        'Coming soon'
+      ],
+      description: 'Upcoming presence in Mexico\'s growing tech hub.',
+      established: 'Coming Soon',
+      cityImage: '/assets/cities/queretaro.png'
+    },
+    // Upcoming Location - Europe
+    {
+      id: 'vie',
+      name: 'VIENNA',
+      country: 'Austria',
+      continentId: 'europe',
+      region: 'Europe',
+      status: 'planned',
+      latency: '-',
+      datacenter: 'INTERXION VIE1',
+      address: 'Vienna, Austria',
+      ixName: 'VIX',
+      peers: 0,
+      capacity: '-',
+      portSpeeds: ['10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'Central European gateway',
+        'CEE connectivity',
+        'Financial services',
+        'Enterprise networks',
+        'Green energy powered',
+        'Coming soon'
+      ],
+      description: 'Upcoming Central European hub for CEE connectivity.',
+      established: 'Coming Soon',
+      cityImage: '/assets/cities/vienna.png'
+    },
+    // Upcoming Location - South America
+    {
+      id: 'eze',
+      name: 'BUENOS AIRES',
+      country: 'Argentina',
+      continentId: 'south-america',
+      region: 'South America',
+      status: 'planned',
+      latency: '-',
+      datacenter: 'TBD',
+      address: 'Buenos Aires, Argentina',
+      ixName: 'AMSIX-BA',
+      peers: 0,
+      capacity: '-',
+      portSpeeds: ['10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'South America gateway',
+        'LATAM connectivity',
+        'Enterprise networks',
+        'Cloud on-ramps',
+        'Carrier-neutral',
+        'Coming soon'
+      ],
+      description: 'Upcoming South American presence for LATAM connectivity.',
+      established: 'Coming Soon',
+      cityImage: '/assets/cities/buenosaires.png'
+    },
+    // Upcoming Location - Middle East
+    {
+      id: 'fjr',
+      name: 'FUJAIRAH',
+      country: 'United Arab Emirates',
+      continentId: 'middle-east',
+      region: 'Middle East',
+      status: 'planned',
+      latency: '-',
+      datacenter: 'TBD',
+      address: 'Fujairah, UAE',
+      ixName: 'FJRIX',
+      peers: 0,
+      capacity: '-',
+      portSpeeds: ['10G', '40G', '100G'],
+      protocols: ['BGP-4', 'IPv4', 'IPv6'],
+      features: [
+        'Strategic cable landing',
+        'MENA connectivity',
+        'Submarine cable hub',
+        'Enterprise networks',
+        'Low-latency to Asia',
+        'Coming soon'
+      ],
+      description: 'Upcoming submarine cable hub for Middle East and Asia connectivity.',
+      established: 'Coming Soon',
+      cityImage: '/assets/cities/fujairah.png'
     }
   ];
 
@@ -558,38 +645,54 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
 
                   {/* Stats Bar */}
                   <div className="bg-white border-b border-gray-200">
-                    <div className="max-w-5xl mx-auto px-8 py-8">
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div className="text-center">
-                          <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">
-                            Facility Type
+                    <div className="max-w-6xl mx-auto px-8 py-6">
+                      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+                        <div className="text-center p-3 border-r border-gray-100">
+                          <div className="font-mono text-[10px] text-[#F20732] uppercase tracking-widest mb-1">
+                            Connected Networks
                           </div>
-                          <div className="text-lg font-bold text-black">
-                            Tier IV Datacenter
+                          <div className="text-xl font-bold text-black">
+                            {selectedLocationData.peers}+
                           </div>
                         </div>
-                        <div className="text-center">
-                          <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">
+                        <div className="text-center p-3 border-r border-gray-100">
+                          <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-1">
+                            IPv4 Routes
+                          </div>
+                          <div className="text-xl font-bold text-black">
+                            {Math.round(selectedLocationData.peers * 2.4)}K
+                          </div>
+                        </div>
+                        <div className="text-center p-3 border-r border-gray-100">
+                          <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-1">
+                            IPv6 Routes
+                          </div>
+                          <div className="text-xl font-bold text-black">
+                            {Math.round(selectedLocationData.peers * 0.6)}K
+                          </div>
+                        </div>
+                        <div className="text-center p-3 border-r border-gray-100">
+                          <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-1">
                             Capacity
                           </div>
-                          <div className="text-lg font-bold text-black">
-                            {selectedLocationData.capacity} Tbps
+                          <div className="text-xl font-bold text-black">
+                            {selectedLocationData.capacity}+ Tbps
                           </div>
                         </div>
-                        <div className="text-center">
-                          <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">
-                            Interconnections
+                        <div className="text-center p-3 border-r border-gray-100">
+                          <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-1">
+                            Peak Traffic
                           </div>
-                          <div className="text-lg font-bold text-black">
-                            {selectedLocationData.peers}+ Networks
+                          <div className="text-xl font-bold text-black">
+                            {Math.round(parseFloat(selectedLocationData.capacity) * 0.85)} Tbps
                           </div>
                         </div>
-                        <div className="text-center">
-                          <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">
-                            Power
+                        <div className="text-center p-3">
+                          <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-1">
+                            Uptime
                           </div>
-                          <div className="text-lg font-bold text-black">
-                            100% Renewable
+                          <div className="text-xl font-bold text-[#00B341]">
+                            99.99%
                           </div>
                         </div>
                       </div>
@@ -636,6 +739,26 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                             {adminLocations.find(l => l.id === selectedLocationData.id)?.enabledSites?.length || 0}
                           </span>
                         </button>
+                        <button
+                          onClick={() => setActiveTab('pricing')}
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${
+                            activeTab === 'pricing' 
+                              ? 'text-white border-[#F20732] bg-black/30' 
+                              : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
+                          }`}
+                        >
+                          Pricing
+                        </button>
+                        <button
+                          onClick={() => setActiveTab('stats')}
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${
+                            activeTab === 'stats' 
+                              ? 'text-white border-[#F20732] bg-black/30' 
+                              : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
+                          }`}
+                        >
+                          Stats
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -646,78 +769,11 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                     {/* OVERVIEW TAB */}
                     {activeTab === 'overview' && (
                       <>
-                    {/* Key Stats Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                      <div className="bg-white p-6 border-l-4 border-[#F20732] shadow-sm">
-                        <div className="font-mono text-xs text-[#F20732] uppercase tracking-widest mb-2">
-                          Peers
-                        </div>
-                        <div className="text-5xl font-light text-black mb-1">
-                          {selectedLocationData.peers}
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          Connected Networks
-                        </div>
-                      </div>
-
-                      <div className="bg-white p-6 border-l-4 border-black shadow-sm">
-                        <div className="font-mono text-xs text-black uppercase tracking-widest mb-2">
-                          Latency
-                        </div>
-                        <div className="text-5xl font-light text-black mb-1">
-                          {selectedLocationData.latency}<span className="text-2xl">ms</span>
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          Average Response
-                        </div>
-                      </div>
-
-                      <div className="bg-white p-6 border-l-4 border-gray-300 shadow-sm">
-                        <div className="font-mono text-xs text-gray-700 uppercase tracking-widest mb-2">
-                          Total Capacity
-                        </div>
-                        <div className="text-5xl font-light text-black mb-1">
-                          {selectedLocationData.capacity}<span className="text-2xl">+</span>
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          Tbps // Est. {selectedLocationData.established}
-                        </div>
-                      </div>
-                    </div>
-
                     {/* Description */}
                     <div className="mb-12">
                       <p className="text-gray-700 text-lg leading-relaxed">
                         {selectedLocationData.description}
                       </p>
-                    </div>
-
-                    {/* Datacenter Info */}
-                    <div className="bg-white p-8 shadow-sm mb-8 border border-gray-200">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-[#F20732] flex items-center justify-center flex-shrink-0">
-                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
-                          </svg>
-                        </div>
-                        <div className="flex-1">
-                          <div className="font-mono text-xs text-[#F20732] uppercase tracking-widest mb-3">
-                            Datacenter
-                          </div>
-                          <h3 className="text-2xl font-black text-black mb-3">
-                            {selectedLocationData.datacenter}
-                          </h3>
-                          <p className="text-gray-600 mb-4">
-                            {selectedLocationData.address}
-                          </p>
-                          <div className="inline-flex items-center gap-2 bg-gray-100 px-4 py-2">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span className="font-mono text-xs font-bold text-gray-700">
-                              OPERATIONAL // {selectedLocationData.peers.toLocaleString()} ACTIVE PEERS
-                            </span>
-                          </div>
-                        </div>
-                      </div>
                     </div>
 
                     {/* Technical Specs */}
@@ -909,8 +965,149 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                       </div>
                     )}
 
+                    {/* PRICING TAB */}
+                    {activeTab === 'pricing' && (
+                      <div className="space-y-8">
+                        <div className="flex items-center gap-3">
+                          <div className="w-1 h-8 bg-[#F20732]"></div>
+                          <h3 className="text-2xl font-black text-black">
+                            Port Pricing - {selectedLocationData.name}
+                          </h3>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                          {['1G', '10G', '100G'].map((speed, idx) => (
+                            <div key={speed} className={`bg-white border-2 ${idx === 1 ? 'border-[#F20732]' : 'border-gray-200'} p-6 hover:shadow-lg transition-all duration-300`}>
+                              {idx === 1 && (
+                                <div className="inline-block px-3 py-1 bg-[#F20732] text-white text-[10px] font-mono font-bold uppercase tracking-wider mb-4">
+                                  Most Popular
+                                </div>
+                              )}
+                              <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Port Speed</div>
+                              <div className="text-4xl font-black text-black mb-4">{speed}</div>
+                              <div className="space-y-2 mb-6">
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-gray-600">Setup Fee</span>
+                                  <span className="font-bold">Contact Us</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-gray-600">Monthly</span>
+                                  <span className="font-bold">Contact Us</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-gray-600">Commitment</span>
+                                  <span className="font-bold">12 months</span>
+                                </div>
+                              </div>
+                              <button 
+                                onClick={() => {
+                                  const cityName = selectedLocationData.name.charAt(0) + selectedLocationData.name.slice(1).toLowerCase();
+                                  window.dispatchEvent(new CustomEvent('navigateToContact', { 
+                                    detail: { city: cityName, locationId: selectedLocationData.id } 
+                                  }));
+                                }}
+                                className={`w-full py-3 font-mono text-xs font-bold uppercase tracking-wider transition-colors ${
+                                  idx === 1 
+                                    ? 'bg-[#F20732] text-white hover:bg-black' 
+                                    : 'bg-black text-white hover:bg-[#F20732]'
+                                }`}
+                              >
+                                Get Quote
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="bg-gray-50 p-6 border border-gray-200">
+                          <p className="text-sm text-gray-600">
+                            * Prices are indicative and may vary based on location, commitment period, and volume discounts. 
+                            Contact our sales team for a customized quote.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* STATS TAB */}
+                    {activeTab === 'stats' && (
+                      <div className="space-y-8">
+                        <div className="flex items-center gap-3">
+                          <div className="w-1 h-8 bg-[#F20732]"></div>
+                          <h3 className="text-2xl font-black text-black">
+                            Traffic Statistics - {selectedLocationData.name}
+                          </h3>
+                        </div>
+                        
+                        {/* Stats Overview */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                          <div className="bg-white p-6 border-l-4 border-[#F20732] shadow-sm">
+                            <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-2">Peak Traffic</div>
+                            <div className="text-3xl font-light text-black">{Math.round(parseFloat(selectedLocationData.capacity) * 0.85)}<span className="text-lg"> Tbps</span></div>
+                          </div>
+                          <div className="bg-white p-6 border-l-4 border-black shadow-sm">
+                            <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-2">Avg Traffic</div>
+                            <div className="text-3xl font-light text-black">{Math.round(parseFloat(selectedLocationData.capacity) * 0.55)}<span className="text-lg"> Tbps</span></div>
+                          </div>
+                          <div className="bg-white p-6 border-l-4 border-gray-300 shadow-sm">
+                            <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-2">IPv4 Prefixes</div>
+                            <div className="text-3xl font-light text-black">{Math.round(selectedLocationData.peers * 2.4)}<span className="text-lg">K</span></div>
+                          </div>
+                          <div className="bg-white p-6 border-l-4 border-gray-300 shadow-sm">
+                            <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-2">IPv6 Prefixes</div>
+                            <div className="text-3xl font-light text-black">{Math.round(selectedLocationData.peers * 0.6)}<span className="text-lg">K</span></div>
+                          </div>
+                        </div>
+
+                        {/* Traffic Breakdown */}
+                        <div className="bg-white p-8 border border-gray-200">
+                          <h4 className="font-black text-lg text-black mb-6">Traffic Breakdown by Category</h4>
+                          <div className="space-y-4">
+                            {[
+                              { label: 'Content Delivery', percent: 42 },
+                              { label: 'Cloud Providers', percent: 28 },
+                              { label: 'Enterprise', percent: 18 },
+                              { label: 'Gaming & Streaming', percent: 12 }
+                            ].map((item) => (
+                              <div key={item.label}>
+                                <div className="flex justify-between text-sm mb-2">
+                                  <span className="text-gray-700">{item.label}</span>
+                                  <span className="font-bold">{item.percent}%</span>
+                                </div>
+                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                  <div 
+                                    className="h-full bg-[#F20732] transition-all duration-500" 
+                                    style={{ width: `${item.percent}%` }}
+                                  ></div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Uptime History */}
+                        <div className="bg-white p-8 border border-gray-200">
+                          <div className="flex items-center justify-between mb-6">
+                            <h4 className="font-black text-lg text-black">Uptime History (Last 12 Months)</h4>
+                            <span className="px-3 py-1 bg-green-100 text-green-700 font-mono text-xs font-bold rounded">99.99% SLA</span>
+                          </div>
+                          <div className="flex gap-1">
+                            {Array.from({ length: 12 }).map((_, idx) => (
+                              <div 
+                                key={idx} 
+                                className="flex-1 h-12 bg-green-500 rounded-sm hover:bg-green-600 transition-colors cursor-pointer"
+                                title={`Month ${idx + 1}: 99.99% uptime`}
+                              ></div>
+                            ))}
+                          </div>
+                          <div className="flex justify-between mt-2 text-xs text-gray-500 font-mono">
+                            <span>Jan</span>
+                            <span>Dec</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-4 mt-8">
                       <button 
                         onClick={() => {
                           // Navigate to contact page - will be handled by App.tsx setPage

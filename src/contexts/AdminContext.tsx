@@ -58,6 +58,7 @@ export interface Location {
   sites: number;
   asnList: ASN[];
   enabledSites: EnabledSite[];
+  status: 'current' | 'upcoming';
 }
 
 interface AdminContextType {
@@ -93,117 +94,8 @@ const defaultGlobalFabricStats: GlobalFabricStats = {
 };
 
 const defaultLocations: Location[] = [
-  { id: 'nyc', name: 'New York', coordinates: [-74.006, 40.7128], code: 'NYC_CORE', region: 'AMERICAS', asns: 41, sites: 7,
-    asnList: [
-      { asnNumber: 18885, name: 'M2ngage Telecommunications Corp.', macro: '', peeringPolicy: 'Open', status: 'CONNECTING' },
-      { asnNumber: 46475, name: 'Limestone Networks, Inc.', macro: '', peeringPolicy: 'Open', status: 'CONNECTING' },
-      { asnNumber: 209, name: 'CenturyLink Communications, LLC', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
-      { asnNumber: 7018, name: 'AT&T Services, Inc.', macro: '', peeringPolicy: 'Restrictive', status: 'ACTIVE' }
-    ],
-    enabledSites: [
-      { id: 'nyc-1', name: 'CoreSite NY1', provider: 'CoreSite', address: '32 Avenue of the Americas, Manhattan, NYC', status: 'available' },
-      { id: 'nyc-2', name: 'CoreSite Secaucus (NY2)', provider: 'CoreSite', address: '2 Emerson Lane, Secaucus, NJ 07094 USA', status: 'available' },
-      { id: 'nyc-3', name: 'DataBank NYC1/LGA1', provider: 'DataBank', address: '60 Hudson Street, Manhattan, NYC', status: 'available' },
-      { id: 'nyc-4', name: 'DataBank NYC2/LGA2', provider: 'DataBank', address: '111 8th Avenue, Manhattan, NYC', status: 'available' },
-      { id: 'nyc-5', name: 'DataVerge Brooklyn', provider: 'DataVerge', address: '882 3rd Avenue Brooklyn, NY, 11232 USA', status: 'available' },
-      { id: 'nyc-6', name: 'Digital Realty NY JFK10', provider: 'Digital Realty', address: '111 8th Avenue, Manhattan, NYC', status: 'available' },
-      { id: 'nyc-7', name: 'Digital Realty NY JFK12', provider: 'Digital Realty', address: '60 Hudson Street, Manhattan, NYC', status: 'available' }
-    ]
-  },
-  { id: 'ams', name: 'Amsterdam', coordinates: [4.9041, 52.3676], code: 'AMS_IX', region: 'EUROPE', asns: 89, sites: 5,
-    asnList: [
-      { asnNumber: 1103, name: 'SURF B.V.', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
-      { asnNumber: 3356, name: 'Lumen Technologies', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
-      { asnNumber: 6939, name: 'Hurricane Electric LLC', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
-      { asnNumber: 8767, name: 'M247 Europe SRL', macro: '', peeringPolicy: 'Open', status: 'CONNECTING' }
-    ],
-    enabledSites: [
-      { id: 'ams-1', name: 'Equinix AM7', provider: 'Equinix', address: 'Kuiperbergweg 87, 1101 AG Amsterdam', status: 'available' },
-      { id: 'ams-2', name: 'Digital Realty AMS1', provider: 'Digital Realty', address: 'Radarweg 29, 1043 NX Amsterdam', status: 'available' },
-      { id: 'ams-3', name: 'Interxion AMS8', provider: 'Interxion', address: 'Tarnweiweg 10, 1118 DE Schiphol', status: 'available' },
-      { id: 'ams-4', name: 'GlobalSwitch Amsterdam', provider: 'GlobalSwitch', address: 'Naritaweg 151, 1043 BW Amsterdam', status: 'available' },
-      { id: 'ams-5', name: 'NorthC Aalsmeer', provider: 'NorthC', address: 'Dreef 1, 1431 WK Aalsmeer', status: 'coming-soon' }
-    ]
-  },
-  { id: 'frk', name: 'Frankfurt', coordinates: [8.6821, 50.1109], code: 'FRA_HUB', region: 'EUROPE', asns: 94, sites: 5,
-    asnList: [
-      { asnNumber: 3320, name: 'Deutsche Telekom AG', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
-      { asnNumber: 8422, name: 'NetCologne GmbH', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
-      { asnNumber: 20940, name: 'Akamai International B.V.', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' }
-    ],
-    enabledSites: [
-      { id: 'frk-1', name: 'Interxion FRA1', provider: 'Interxion', address: 'Hanauer Landstraße 302, 60314 Frankfurt', status: 'available' },
-      { id: 'frk-2', name: 'Equinix FR5', provider: 'Equinix', address: 'Lärchenstraße 110, 65933 Frankfurt', status: 'available' },
-      { id: 'frk-3', name: 'Digital Realty FRA1', provider: 'Digital Realty', address: 'Lyoner Straße 28, 60528 Frankfurt', status: 'available' },
-      { id: 'frk-4', name: 'NTT Frankfurt 1', provider: 'NTT', address: 'Mainzer Landstraße 250, 60326 Frankfurt', status: 'available' },
-      { id: 'frk-5', name: 'e-shelter Frankfurt', provider: 'e-shelter', address: 'Carl-Benz-Str. 11, 60386 Frankfurt', status: 'coming-soon' }
-    ]
-  },
-  { id: 'bom', name: 'Mumbai', coordinates: [72.8777, 19.076], code: 'BOM_WEST', region: 'ASIA', asns: 34, sites: 3,
-    asnList: [
-      { asnNumber: 9498, name: 'Bharti Airtel Ltd.', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
-      { asnNumber: 45609, name: 'Tata Teleservices (Maharashtra) Limited', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
-      { asnNumber: 55410, name: 'Vodafone Idea Limited', macro: '', peeringPolicy: 'Restrictive', status: 'CONNECTING' }
-    ],
-    enabledSites: [
-      { id: 'bom-1', name: 'GPX Mumbai 1', provider: 'GPX', address: 'Powai, Mumbai 400076', status: 'available' },
-      { id: 'bom-2', name: 'Netmagic DC2', provider: 'Netmagic', address: 'Airoli, Navi Mumbai 400708', status: 'available' },
-      { id: 'bom-3', name: 'STT Mumbai', provider: 'STT GDC', address: 'Navi Mumbai, Maharashtra 400709', status: 'coming-soon' }
-    ]
-  },
-  { id: 'sin', name: 'Singapore', coordinates: [103.8198, 1.3521], code: 'SIN_NODE', region: 'ASIA', asns: 67, sites: 4,
-    asnList: [
-      { asnNumber: 3758, name: 'SingNet Pte Ltd', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
-      { asnNumber: 7473, name: 'Singapore Telecommunications', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
-      { asnNumber: 10026, name: 'StarHub Ltd', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' }
-    ],
-    enabledSites: [
-      { id: 'sin-1', name: 'Global Switch Singapore', provider: 'GlobalSwitch', address: '18 Tai Seng Street, Singapore 539775', status: 'available' },
-      { id: 'sin-2', name: 'Equinix SG1', provider: 'Equinix', address: '20 Ayer Rajah Crescent, Singapore 139964', status: 'available' },
-      { id: 'sin-3', name: 'Digital Realty SIN10', provider: 'Digital Realty', address: '29A International Business Park, Singapore', status: 'available' },
-      { id: 'sin-4', name: 'STT Loyang', provider: 'STT GDC', address: 'Loyang Offshore Supply Base, Singapore', status: 'coming-soon' }
-    ]
-  },
-  { id: 'hkg', name: 'Hong Kong', coordinates: [114.1694, 22.3193], code: 'HKG_EAST', region: 'ASIA', asns: 45, sites: 3,
-    asnList: [
-      { asnNumber: 4637, name: 'PCCW Global', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
-      { asnNumber: 9930, name: 'HKBN Enterprise Solutions', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
-      { asnNumber: 10026, name: 'Pacnet Services', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' }
-    ],
-    enabledSites: [
-      { id: 'hkg-1', name: 'MEGA-i', provider: 'SUNeVision', address: '399 Chai Wan Road, Chai Wan, Hong Kong', status: 'available' },
-      { id: 'hkg-2', name: 'Equinix HK1', provider: 'Equinix', address: '17/F, Sha Tin Industrial Centre, Hong Kong', status: 'available' },
-      { id: 'hkg-3', name: 'Global Switch Hong Kong', provider: 'GlobalSwitch', address: '18 Chun Yat Street, Tseung Kwan O', status: 'available' }
-    ]
-  },
-  { id: 'tyo', name: 'Tokyo', coordinates: [139.6917, 35.6895], code: 'TYO_CNTR', region: 'ASIA', asns: 52, sites: 3,
-    asnList: [
-      { asnNumber: 2516, name: 'KDDI CORPORATION', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
-      { asnNumber: 4713, name: 'NTT Communications Corporation', macro: '', peeringPolicy: 'Restrictive', status: 'ACTIVE' },
-      { asnNumber: 17506, name: 'SOFTBANK CORP.', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' }
-    ],
-    enabledSites: [
-      { id: 'tyo-1', name: 'Equinix TY11', provider: 'Equinix', address: '3-8-21 Higashi-Shinagawa, Tokyo 140-0002', status: 'available' },
-      { id: 'tyo-2', name: 'NTT Tokyo CC2', provider: 'NTT', address: 'Otemachi, Chiyoda-ku, Tokyo', status: 'available' },
-      { id: 'tyo-3', name: 'Digital Realty NRT1', provider: 'Digital Realty', address: 'Inzai, Chiba 270-1609', status: 'coming-soon' }
-    ]
-  },
-  { id: 'maa', name: 'Chennai', coordinates: [80.2707, 13.0827], code: 'MAA_SOUTH', region: 'ASIA', asns: 28, sites: 4,
-    asnList: [
-      { asnNumber: 9498, name: 'Bharti Airtel Ltd.', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
-      { asnNumber: 4755, name: 'Tata Communications Ltd', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
-      { asnNumber: 55410, name: 'Vodafone Idea Limited', macro: '', peeringPolicy: 'Restrictive', status: 'CONNECTING' },
-      { asnNumber: 45820, name: 'BSNL - Bharat Sanchar Nigam Ltd.', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
-      { asnNumber: 17747, name: 'SIFY Technologies Ltd.', macro: '', peeringPolicy: 'Open', status: 'CONNECTING' }
-    ],
-    enabledSites: [
-      { id: 'maa-1', name: 'STT Chennai 1', provider: 'STT GDC', address: 'Ambattur Industrial Estate, Chennai 600058', status: 'available' },
-      { id: 'maa-2', name: 'NTT Chennai DC', provider: 'NTT', address: 'SIPCOT IT Park, Siruseri, Chennai 603103', status: 'available' },
-      { id: 'maa-3', name: 'CtrlS Chennai', provider: 'CtrlS', address: 'Sholinganallur, Chennai 600119', status: 'available' },
-      { id: 'maa-4', name: 'Sify Noida DC', provider: 'Sify', address: 'Navallur, Chennai 600130', status: 'coming-soon' }
-    ]
-  },
-  { id: 'del', name: 'Delhi', coordinates: [77.2090, 28.6139], code: 'DEL_NORTH', region: 'ASIA', asns: 32, sites: 5,
+  // Current (Live) Locations - India
+  { id: 'del', name: 'New Delhi', coordinates: [77.2090, 28.6139], code: 'DEL_NORTH', region: 'ASIA', asns: 32, sites: 5, status: 'current',
     asnList: [
       { asnNumber: 9498, name: 'Bharti Airtel Ltd.', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
       { asnNumber: 4755, name: 'Tata Communications Ltd', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
@@ -219,7 +111,77 @@ const defaultLocations: Location[] = [
       { id: 'del-5', name: 'Yotta Noida', provider: 'Yotta', address: 'Greater Noida, UP 201306', status: 'coming-soon' }
     ]
   },
-  { id: 'dxb', name: 'Dubai', coordinates: [55.2708, 25.2048], code: 'DXB_GULF', region: 'MIDDLE EAST', asns: 25, sites: 4,
+  { id: 'bom', name: 'Mumbai', coordinates: [72.8777, 19.076], code: 'BOM_WEST', region: 'ASIA', asns: 34, sites: 3, status: 'current',
+    asnList: [
+      { asnNumber: 9498, name: 'Bharti Airtel Ltd.', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
+      { asnNumber: 45609, name: 'Tata Teleservices (Maharashtra) Limited', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
+      { asnNumber: 55410, name: 'Vodafone Idea Limited', macro: '', peeringPolicy: 'Restrictive', status: 'CONNECTING' }
+    ],
+    enabledSites: [
+      { id: 'bom-1', name: 'GPX Mumbai 1', provider: 'GPX', address: 'Powai, Mumbai 400076', status: 'available' },
+      { id: 'bom-2', name: 'Netmagic DC2', provider: 'Netmagic', address: 'Airoli, Navi Mumbai 400708', status: 'available' },
+      { id: 'bom-3', name: 'STT Mumbai', provider: 'STT GDC', address: 'Navi Mumbai, Maharashtra 400709', status: 'coming-soon' }
+    ]
+  },
+  { id: 'maa', name: 'Chennai', coordinates: [80.2707, 13.0827], code: 'MAA_SOUTH', region: 'ASIA', asns: 28, sites: 4, status: 'current',
+    asnList: [
+      { asnNumber: 9498, name: 'Bharti Airtel Ltd.', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
+      { asnNumber: 4755, name: 'Tata Communications Ltd', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
+      { asnNumber: 55410, name: 'Vodafone Idea Limited', macro: '', peeringPolicy: 'Restrictive', status: 'CONNECTING' },
+      { asnNumber: 45820, name: 'BSNL - Bharat Sanchar Nigam Ltd.', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
+      { asnNumber: 17747, name: 'SIFY Technologies Ltd.', macro: '', peeringPolicy: 'Open', status: 'CONNECTING' }
+    ],
+    enabledSites: [
+      { id: 'maa-1', name: 'STT Chennai 1', provider: 'STT GDC', address: 'Ambattur Industrial Estate, Chennai 600058', status: 'available' },
+      { id: 'maa-2', name: 'NTT Chennai DC', provider: 'NTT', address: 'SIPCOT IT Park, Siruseri, Chennai 603103', status: 'available' },
+      { id: 'maa-3', name: 'CtrlS Chennai', provider: 'CtrlS', address: 'Sholinganallur, Chennai 600119', status: 'available' },
+      { id: 'maa-4', name: 'Sify Navallur DC', provider: 'Sify', address: 'Navallur, Chennai 600130', status: 'coming-soon' }
+    ]
+  },
+  { id: 'ccu', name: 'Kolkata', coordinates: [88.3639, 22.5726], code: 'CCU_EAST', region: 'ASIA', asns: 18, sites: 3, status: 'current',
+    asnList: [
+      { asnNumber: 9498, name: 'Bharti Airtel Ltd.', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
+      { asnNumber: 4755, name: 'Tata Communications Ltd', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
+      { asnNumber: 45820, name: 'BSNL - Bharat Sanchar Nigam Ltd.', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' }
+    ],
+    enabledSites: [
+      { id: 'ccu-1', name: 'CtrlS Kolkata', provider: 'CtrlS', address: 'Sector V, Salt Lake City, Kolkata 700091', status: 'available' },
+      { id: 'ccu-2', name: 'Sify Kolkata DC', provider: 'Sify', address: 'Rajarhat, Kolkata 700156', status: 'available' },
+      { id: 'ccu-3', name: 'GPX Kolkata', provider: 'GPX', address: 'Newtown, Kolkata 700135', status: 'coming-soon' }
+    ]
+  },
+  { id: 'hyd', name: 'Hyderabad', coordinates: [78.4867, 17.3850], code: 'HYD_CENTRAL', region: 'ASIA', asns: 22, sites: 4, status: 'current',
+    asnList: [
+      { asnNumber: 9498, name: 'Bharti Airtel Ltd.', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
+      { asnNumber: 4755, name: 'Tata Communications Ltd', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
+      { asnNumber: 55836, name: 'Reliance Jio Infocomm Limited', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
+      { asnNumber: 45820, name: 'BSNL - Bharat Sanchar Nigam Ltd.', macro: '', peeringPolicy: 'Open', status: 'CONNECTING' }
+    ],
+    enabledSites: [
+      { id: 'hyd-1', name: 'Yotta Hyderabad', provider: 'Yotta', address: 'HITEC City, Hyderabad 500081', status: 'available' },
+      { id: 'hyd-2', name: 'CtrlS Hyderabad', provider: 'CtrlS', address: 'Nanakramguda, Hyderabad 500032', status: 'available' },
+      { id: 'hyd-3', name: 'NTT Hyderabad DC', provider: 'NTT', address: 'Gachibowli, Hyderabad 500032', status: 'available' },
+      { id: 'hyd-4', name: 'Amazon Hyderabad', provider: 'AWS', address: 'Kondapur, Hyderabad 500084', status: 'coming-soon' }
+    ]
+  },
+  { id: 'blr', name: 'Bangalore', coordinates: [77.5946, 12.9716], code: 'BLR_SOUTH', region: 'ASIA', asns: 35, sites: 5, status: 'current',
+    asnList: [
+      { asnNumber: 9498, name: 'Bharti Airtel Ltd.', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
+      { asnNumber: 4755, name: 'Tata Communications Ltd', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
+      { asnNumber: 55836, name: 'Reliance Jio Infocomm Limited', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
+      { asnNumber: 17747, name: 'SIFY Technologies Ltd.', macro: '', peeringPolicy: 'Open', status: 'ACTIVE' },
+      { asnNumber: 45820, name: 'BSNL - Bharat Sanchar Nigam Ltd.', macro: '', peeringPolicy: 'Open', status: 'CONNECTING' }
+    ],
+    enabledSites: [
+      { id: 'blr-1', name: 'NTT Bangalore DC', provider: 'NTT', address: 'Electronic City, Bangalore 560100', status: 'available' },
+      { id: 'blr-2', name: 'CtrlS Bangalore', provider: 'CtrlS', address: 'Whitefield, Bangalore 560066', status: 'available' },
+      { id: 'blr-3', name: 'STT Bangalore', provider: 'STT GDC', address: 'Marathahalli, Bangalore 560037', status: 'available' },
+      { id: 'blr-4', name: 'Equinix MB1', provider: 'Equinix', address: 'Mahadevapura, Bangalore 560048', status: 'available' },
+      { id: 'blr-5', name: 'Microsoft Bangalore', provider: 'Azure', address: 'Bellandur, Bangalore 560103', status: 'coming-soon' }
+    ]
+  },
+  // Current (Live) Location - Middle East
+  { id: 'dxb', name: 'Dubai', coordinates: [55.2708, 25.2048], code: 'DXB_GULF', region: 'MIDDLE EAST', asns: 25, sites: 4, status: 'current',
     asnList: [
       { asnNumber: 5384, name: 'Emirates Telecommunications Corporation (Etisalat)', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
       { asnNumber: 8966, name: 'Emirates Integrated Telecommunications Company (du)', macro: '', peeringPolicy: 'Selective', status: 'ACTIVE' },
@@ -233,6 +195,34 @@ const defaultLocations: Location[] = [
       { id: 'dxb-3', name: 'Gulf Data Hub', provider: 'GDH', address: 'Sheikh Zayed Road, Dubai, UAE', status: 'available' },
       { id: 'dxb-4', name: 'Moro Hub', provider: 'Moro', address: 'DWTC, Dubai, UAE', status: 'coming-soon' }
     ]
+  },
+  // Upcoming Locations - North America
+  { id: 'lax', name: 'Los Angeles', coordinates: [-118.2437, 34.0522], code: 'LAX_WEST', region: 'NORTH AMERICA', asns: 0, sites: 0, status: 'upcoming',
+    asnList: [],
+    enabledSites: []
+  },
+  { id: 'sjc', name: 'Silicon Valley', coordinates: [-121.8863, 37.3382], code: 'SJC_VALLEY', region: 'NORTH AMERICA', asns: 0, sites: 0, status: 'upcoming',
+    asnList: [],
+    enabledSites: []
+  },
+  // Upcoming Location - Europe
+  { id: 'vie', name: 'Vienna', coordinates: [16.3738, 48.2082], code: 'VIE_EU', region: 'EUROPE', asns: 0, sites: 0, status: 'upcoming',
+    asnList: [],
+    enabledSites: []
+  },
+  // Upcoming Location - Latin America
+  { id: 'qro', name: 'Queretaro', coordinates: [-100.3899, 20.5888], code: 'QRO_MX', region: 'NORTH AMERICA', asns: 0, sites: 0, status: 'upcoming',
+    asnList: [],
+    enabledSites: []
+  },
+  { id: 'eze', name: 'Buenos Aires', coordinates: [-58.3816, -34.6037], code: 'EZE_SA', region: 'SOUTH AMERICA', asns: 0, sites: 0, status: 'upcoming',
+    asnList: [],
+    enabledSites: []
+  },
+  // Upcoming Location - Middle East
+  { id: 'fjr', name: 'Fujairah', coordinates: [56.3414, 25.1288], code: 'FJR_UAE', region: 'MIDDLE EAST', asns: 0, sites: 0, status: 'upcoming',
+    asnList: [],
+    enabledSites: []
   }
 ];
 
@@ -258,7 +248,28 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const [locations, setLocations] = useState<Location[]>(() => {
     const saved = localStorage.getItem('mx-ix-locations');
-    return saved ? JSON.parse(saved) : defaultLocations;
+    const version = localStorage.getItem('mx-ix-locations-version');
+    const currentVersion = '2'; // Increment this when locations data changes significantly
+    
+    // If version mismatch or no saved data, use defaults
+    if (version !== currentVersion || !saved) {
+      localStorage.setItem('mx-ix-locations-version', currentVersion);
+      localStorage.removeItem('mx-ix-locations');
+      return defaultLocations;
+    }
+    
+    try {
+      const parsed = JSON.parse(saved);
+      // Check if data has required fields (status field for new data)
+      if (parsed.length > 0 && parsed[0].status === undefined) {
+        localStorage.setItem('mx-ix-locations-version', currentVersion);
+        localStorage.removeItem('mx-ix-locations');
+        return defaultLocations;
+      }
+      return parsed;
+    } catch {
+      return defaultLocations;
+    }
   });
 
   // Persist to localStorage
