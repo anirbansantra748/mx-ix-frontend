@@ -36,20 +36,20 @@ const GlobalFabricMap = () => {
   const isVisible = (id: string) => activeId === id || hoveredId === id;
 
   return (
-    <section className="relative w-full bg-black py-24 overflow-hidden">
+    <section className="relative w-full bg-black py-16 md:py-24 overflow-hidden">
       {/* Background Textures & Gradients */}
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
       <div className="absolute inset-0 bg-gradient-to-br from-[#F20732]/20 via-transparent to-transparent"></div>
       
-      <div className="max-w-[1600px] mx-auto px-6 relative z-10">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 relative z-10">
         {/* Header */}
-        <div className="inline-flex items-center gap-3 mb-10">
+        <div className="inline-flex items-center gap-3 mb-6 md:mb-10">
           <div className="w-2 h-2 rounded-full bg-[#F20732] animate-pulse" />
           <span className="font-mono text-xs font-bold tracking-[0.2em] text-[#F20732] uppercase">
             Global Network
           </span>
         </div>
-        <h2 className="text-white text-5xl md:text-7xl font-black tracking-tighter mb-12">
+        <h2 className="text-white text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter mb-8 md:mb-12">
           Global <span className="text-[#F20732]">Locations</span>
         </h2>
 
@@ -57,7 +57,7 @@ const GlobalFabricMap = () => {
         <div className="relative bg-[#0b0b0b] border border-[#1a1a1a] overflow-hidden">
           <ComposableMap
             projection="geoMercator"
-            className="w-full h-[520px]"
+            className="w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[520px]"
             projectionConfig={{ scale: 130 }}
           >
             <Geographies geography={GEO_URL}>
@@ -85,16 +85,16 @@ const GlobalFabricMap = () => {
                   setActiveId(activeId === loc.id ? null : loc.id)
                 }
               >
-                {/* Larger invisible hit area for easier hovering */}
+                {/* Larger invisible hit area for easier hovering/tapping */}
                 <circle
-                  r={16}
+                  r={20}
                   fill="transparent"
                   className="cursor-pointer"
                 />
 
-                {/* Visible Dot */}
+                {/* Visible Dot - Larger on mobile */}
                 <circle
-                  r={4}
+                  r={6}
                   fill="#F20732"
                   className="cursor-pointer pointer-events-none"
                 />
@@ -102,39 +102,40 @@ const GlobalFabricMap = () => {
                 {/* Pulse */}
                 {isVisible(loc.id) && (
                   <circle
-                    r={10}
+                    r={12}
                     fill="none"
                     stroke="#F20732"
-                    strokeWidth={1}
+                    strokeWidth={1.5}
                     className="animate-ping pointer-events-none"
                   />
                 )}
 
-                {/* Info Card */}
+                {/* Info Card - Compact for mobile */}
                 {isVisible(loc.id) && (
                   <foreignObject 
-                    x={10} 
-                    y={-35} 
-                    width={160} 
-                    height={90}
+                    x={-55} 
+                    y={-75} 
+                    width={110} 
+                    height={70}
                     onMouseEnter={() => setHoveredId(loc.id)}
                     onMouseLeave={() => setHoveredId(null)}
+                    className="overflow-visible"
                   >
                     <div className="relative bg-white border border-black shadow-xl cursor-pointer">
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#F20732]" />
-                      <div className="pl-4 pr-4 py-3">
-                        <p className="text-[9px] tracking-widest text-gray-500">
+                      <div className="pl-2 pr-2 py-2">
+                        <p className="text-[7px] tracking-widest text-gray-500 uppercase">
                           LOCATION
                         </p>
-                        <p className="text-sm font-black uppercase text-black leading-tight">
+                        <p className="text-[10px] font-black uppercase text-black leading-tight">
                           {loc.name}
                         </p>
 
-                        <div className="mt-2 flex justify-between items-center">
-                          <span className="font-mono text-[10px] text-gray-700">
+                        <div className="mt-1.5 flex justify-between items-center">
+                          <span className="font-mono text-[7px] text-gray-700">
                             {loc.code}
                           </span>
-                          <span className="text-[10px] font-bold text-[#F20732]">
+                          <span className="text-[7px] font-bold text-[#F20732]">
                             ONLINE
                           </span>
                         </div>
@@ -147,7 +148,7 @@ const GlobalFabricMap = () => {
           </ComposableMap>
 
           {/* Footer */}
-          <div className="absolute bottom-4 left-4 text-[9px] text-gray-500 tracking-widest font-mono">
+          <div className="absolute bottom-2 left-2 md:bottom-4 md:left-4 text-[8px] md:text-[9px] text-gray-500 tracking-widest font-mono">
             MERCATOR · GLOBAL NETWORK
           </div>
         </div>

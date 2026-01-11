@@ -2,10 +2,10 @@ import React from 'react';
 
 const AboutPage: React.FC = () => {
   return (
-    <section className="relative min-h-screen pt-32 pb-20 bg-white">
+    <section className="relative min-h-screen pt-24 md:pt-32 pb-12 md:pb-20 bg-white">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] bg-[size:64px_64px]"></div>
       
-      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
         {/* Header */}
         <div className="mb-16">
           <div className="inline-flex items-center gap-3 mb-6">
@@ -15,11 +15,11 @@ const AboutPage: React.FC = () => {
             </span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-6 text-black">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-6 text-black">
             ABOUT <span className="text-[#F20732]">MX-IX</span>
           </h1>
           
-          <p className="max-w-2xl text-gray-500 text-lg leading-relaxed border-l-2 border-gray-100 pl-6">
+          <p className="max-w-2xl text-gray-500 text-base md:text-lg leading-relaxed border-l-2 border-gray-100 pl-4 md:pl-6">
             We're redefining the physical layer of the internet with AI-governed infrastructure 
             that predicts and adapts to network demands in real-time.
           </p>
@@ -45,7 +45,7 @@ const AboutPage: React.FC = () => {
                 businesses of all sizes.
               </p>
             </div>
-            <div className="bg-gray-50 border border-gray-200 p-12 relative group hover:border-black transition-all duration-300">
+            <div className="bg-gray-50 border border-gray-200 p-8 md:p-12 relative group hover:border-black transition-all duration-300">
               <div className="absolute top-0 left-0 w-full h-1 bg-[#F20732] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
               <div className="space-y-8">
                 <div>
@@ -70,7 +70,7 @@ const AboutPage: React.FC = () => {
               Technology First
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white border border-gray-200 p-8 hover:border-black transition-all duration-300 group relative overflow-hidden hover-trigger">
+              <div className="bg-white border border-gray-200 p-6 md:p-8 hover:border-black transition-all duration-300 group relative overflow-hidden hover-trigger">
                 <div className="absolute top-0 left-0 w-full h-1 bg-[#F20732] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                 <div className="mb-4">
                   <svg className="w-12 h-12 text-[#F20732]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -115,7 +115,7 @@ const AboutPage: React.FC = () => {
           </div>
 
           {/* Values */}
-          <div className="bg-black text-white p-12 md:p-16 relative overflow-hidden">
+          <div className="bg-black text-white p-8 md:p-12 lg:p-16 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
             <div className="relative z-10">
               <h2 className="text-4xl font-black tracking-tighter mb-8">Our Values</h2>

@@ -32,6 +32,8 @@ input,
 select,
 textarea {
   color: #000000 !important;
+  /* Prevent zoom on iOS when input is focused */
+  font-size: 16px;
 }
 
 input::placeholder,
@@ -113,3 +115,27 @@ textarea::placeholder {
   scrollbar-width: none;  /* Firefox */
 }
 
+/* Disable custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  body {
+    cursor: auto !important;
+  }
+  
+  a, button, input, select, textarea {
+    cursor: auto !important;
+  }
+}
+
+/* Mobile-specific utilities */
+@media (max-width: 768px) {
+  /* Ensure minimum touch target size */
+  button, a, input[type="button"], input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent text size adjustment on orientation change */
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+}

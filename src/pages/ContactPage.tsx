@@ -266,10 +266,10 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
   };
 
   return (
-    <section className="relative min-h-screen pt-32 pb-20 bg-white">
+    <section className="relative min-h-screen pt-24 md:pt-32 pb-12 md:pb-20 bg-white">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] bg-[size:64px_64px]"></div>
       
-      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
         {/* Header */}
         <div className="mb-16">
           <div className="inline-flex items-center gap-3 mb-6">
@@ -279,11 +279,11 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
             </span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-6 text-black">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-6 text-black">
             REQUEST A <span className="text-[#F20732]">PORT</span>
           </h1>
           
-          <p className="max-w-2xl text-gray-500 text-lg leading-relaxed border-l-2 border-gray-100 pl-6">
+          <p className="max-w-2xl text-gray-500 text-base md:text-lg leading-relaxed border-l-2 border-gray-100 pl-4 md:pl-6">
             Connect your network to our global infrastructure. Fill out the form below and our 
             technical team will reach out within 24 hours to get you started.
           </p>
@@ -293,10 +293,10 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Form - Takes 2 columns */}
           <div className="lg:col-span-2">
-            <div className="bg-white border-2 border-gray-200 p-8 md:p-12 hover:border-black transition-all duration-300 relative group">
+            <div className="bg-white border-2 border-gray-200 p-6 md:p-8 lg:p-12 hover:border-black transition-all duration-300 relative group">
               <div className="absolute top-0 left-0 w-full h-2 bg-[#F20732] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
               
-              <h2 className="text-3xl font-black tracking-tighter mb-8 text-black">
+              <h2 className="text-2xl md:text-3xl font-black tracking-tighter mb-6 md:mb-8 text-black">
                 Port Request Form
               </h2>
               
@@ -320,7 +320,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
                         value={formData.department}
                         onChange={handleChange}
                         required
-                        className="w-full px-3 py-2.5 bg-white border border-gray-300 focus:border-[#F20732] focus:ring-1 focus:ring-[#F20732] outline-none transition-all duration-200 text-sm text-black appearance-none cursor-pointer"
+                        className="w-full px-3 py-3 md:py-2.5 bg-white border border-gray-300 focus:border-[#F20732] focus:ring-1 focus:ring-[#F20732] outline-none transition-all duration-200 text-base md:text-sm text-black appearance-none cursor-pointer min-h-[44px]"
                         style={{
                           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
                           backgroundRepeat: 'no-repeat',
@@ -348,7 +348,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 focus:border-black focus:bg-white outline-none transition-all duration-300 font-mono text-sm text-black rounded-md"
+                      className="w-full px-4 py-3 md:py-3 bg-gray-50 border-2 border-gray-200 focus:border-black focus:bg-white outline-none transition-all duration-300 font-mono text-base md:text-sm text-black rounded-md min-h-[44px]"
                       placeholder="John Doe"
                     />
                   </div>

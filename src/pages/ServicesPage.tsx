@@ -289,7 +289,7 @@ const ServicesPage = () => {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-[#F20732]/20 via-transparent to-transparent"></div>
         
-        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
           <div className="inline-flex items-center gap-3 mb-6">
             <div className="w-2 h-2 rounded-full bg-[#F20732] animate-pulse"></div>
             <span className="font-mono text-xs font-bold tracking-[0.2em] text-[#F20732] uppercase">
@@ -297,11 +297,11 @@ const ServicesPage = () => {
             </span>
           </div>
           
-          <h1 className="text-6xl md:text-8xl font-black leading-tight tracking-tighter mb-8">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-black leading-tight tracking-tighter mb-8">
             OUR <span className="text-[#F20732]">SERVICES</span>
           </h1>
           
-          <p className="max-w-3xl text-gray-300 text-xl leading-relaxed mb-12">
+          <p className="max-w-3xl text-gray-300 text-lg md:text-xl leading-relaxed mb-12">
             Comprehensive infrastructure solutions engineered for performance, security, 
             and global scale. From peering to cloud connectivity, we provide the foundation 
             for your network's success.
@@ -334,7 +334,7 @@ const ServicesPage = () => {
         
         {services.map((service, idx) => (
           <section key={idx} id={service.id} className="relative py-24 scroll-mt-20">
-            <div className="max-w-7xl mx-auto px-6 md:px-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
               {/* Category Header */}
               <div className="mb-16">
                 <div className="flex items-center gap-6 mb-8">
@@ -367,7 +367,7 @@ const ServicesPage = () => {
                       {/* Service Header - Always Visible */}
                       <button
                         onClick={() => toggleService(serviceId)}
-                        className="w-full p-8 md:p-12 flex items-start gap-6 text-left hover-trigger"
+                      className="w-full p-6 md:p-8 lg:p-12 flex flex-col md:flex-row items-start gap-6 text-left hover-trigger"
                       >
                         <div className="flex-shrink-0 p-4 bg-gray-50 group-hover:bg-[#F20732] group-hover:text-white transition-all duration-500">
                           {item.icon}

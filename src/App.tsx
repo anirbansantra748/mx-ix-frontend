@@ -141,6 +141,7 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
   const [scrolled, setScrolled] = useState(false);
   const [isDarkNav, setIsDarkNav] = useState(false);
   const [isLogoRotating, setIsLogoRotating] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -170,8 +171,21 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
     };
   }, []);
 
+  // Close mobile menu when clicking outside or on navigation
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   const handleLogoClick = () => {
     setPage('home');
+    setIsMobileMenuOpen(false);
   };
 
   const handleLogoHover = () => {
@@ -179,6 +193,11 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
       setIsLogoRotating(true);
       setTimeout(() => setIsLogoRotating(false), 3000);
     }
+  };
+
+  const handleNavClick = (pageId: string) => {
+    setPage(pageId);
+    setIsMobileMenuOpen(false);
   };
 
   const navItems = [
@@ -190,12 +209,16 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
 
   // Adjust colors based on dark mode and scroll state
   const getNavBg = () => {
+    // When mobile menu is open, always use solid white background
+    if (isMobileMenuOpen) return 'bg-white border-b border-gray-200';
     if (isDarkNav && !scrolled) return 'bg-black/50 backdrop-blur-md border-b border-white/10';
     if (scrolled) return 'bg-white/95 backdrop-blur-md border-b border-gray-200';
     return 'bg-transparent';
   };
 
   const getTextColor = () => {
+    // When mobile menu is open, always use black text for visibility
+    if (isMobileMenuOpen) return 'text-black';
     return isDarkNav && !scrolled ? 'text-white' : 'text-black';
   };
 
@@ -216,17 +239,19 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
   };
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${getNavBg()} ${scrolled ? 'py-3' : 'py-8'}`}>
-      <div className="max-w-[1920px] mx-auto px-6 md:px-12 flex items-center justify-between h-14">
-        <div className="flex-shrink-0 flex items-center justify-start z-50 min-w-[200px]">
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${getNavBg()} ${scrolled ? 'py-3' : 'py-6 md:py-8'}`}>
+      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 md:px-12 flex items-center justify-between h-14">
+        {/* Logo */}
+        <div className="flex-shrink-0 flex items-center justify-start z-50">
           <button onClick={handleLogoClick} onMouseEnter={handleLogoHover} className="flex items-center gap-1.5 hover-trigger group">
             <div className="flex items-center gap-1.5">
                 <OrbitalLogoAdvanced isAnimating={false} />
-                <span className={`font-bold tracking-tight text-2xl hidden md:block ${getTextColor()}`}>MX-IX</span>
+                <span className={`font-bold tracking-tight text-xl sm:text-2xl ${getTextColor()}`}>MX-IX</span>
             </div>
           </button>
         </div>
 
+        {/* Desktop Navigation */}
         <div className="hidden lg:flex flex-1 items-center justify-center px-4">
            <div className={`flex items-center gap-12 px-12 py-3 rounded-full border shadow-sm transition-all duration-300 hover:shadow-md ${getNavItemBg()}`}>
             {navItems.map((item) => (
@@ -245,8 +270,9 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
           </div>
         </div>
 
-        <div className="flex-shrink-0 flex items-center justify-end gap-6 z-50 min-w-[200px]">
-          <div className="hidden lg:flex items-center gap-2">
+        {/* Desktop Status & Connect Button */}
+        <div className="hidden lg:flex flex-shrink-0 items-center justify-end gap-6 z-50 min-w-[200px]">
+          <div className="flex items-center gap-2">
             <div className="relative flex items-center">
               <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
               <div className="w-1.5 h-1.5 bg-green-500 rounded-full absolute animate-ping"></div>
@@ -260,7 +286,70 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
             Connect <span className="text-sm leading-none mb-0.5 group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
+
+        {/* Mobile Hamburger Button */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className={`lg:hidden z-[80] p-2 rounded-md transition-colors ${getTextColor()}`}
+          aria-label="Toggle menu"
+        >
+          <div className="w-6 h-5 flex flex-col justify-between">
+            <span className={`block h-0.5 w-full bg-current transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+            <span className={`block h-0.5 w-full bg-current transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
+            <span className={`block h-0.5 w-full bg-current transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+          </div>
+        </button>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <>
+          {/* Backdrop - higher z-index than nav bar to cover everything */}
+          <div 
+            className="fixed inset-0 bg-black/90 z-[60] lg:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          ></div>
+          
+          {/* Mobile Menu Panel - highest z-index */}
+          <div className="fixed top-0 right-0 h-full w-[280px] shadow-2xl z-[70] lg:hidden animate-in slide-in-from-right duration-300 border-l-2 border-gray-200" style={{ backgroundColor: '#ffffff', backdropFilter: 'none' }}>
+            <div className="flex flex-col h-full pt-24 pb-8 px-6">
+              {/* Navigation Items */}
+              <nav className="flex-1 space-y-2">
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavClick(item.id)}
+                    className={`w-full text-left px-4 py-4 rounded-lg font-mono text-sm font-bold tracking-wider uppercase transition-all duration-300 ${
+                      currentPage === item.id
+                        ? 'bg-[#F20732] text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+
+              {/* Status Indicator */}
+              <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-lg mb-4">
+                <div className="relative flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-green-500 rounded-full absolute animate-ping"></div>
+                </div>
+                <span className="text-[10px] font-mono font-bold tracking-wider text-green-600">SYSTEMS OPERATIONAL</span>
+              </div>
+
+              {/* Connect Button */}
+              <button
+                onClick={() => handleNavClick('contact')}
+                className="w-full bg-[#F20732] text-white px-6 py-4 font-mono text-xs font-bold tracking-[0.2em] hover:bg-black transition-colors flex items-center justify-center gap-3 group shadow-lg shadow-[#F20732]/20 uppercase rounded-lg"
+              >
+                Connect <span className="text-sm leading-none group-hover:translate-x-1 transition-transform">→</span>
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </nav>
   );
 };
@@ -301,7 +390,7 @@ const Footer = ({ setPage }: { setPage: (p: string) => void }) => (
         </div>
         
         <div className="lg:col-span-4 flex flex-col lg:items-end justify-between h-full space-y-8 lg:text-right pt-2">
-           <div className="w-16 h-16 bg-black flex items-center justify-center lg:self-end"><span className="text-white font-bold text-xl">MX</span></div>
+           <div className="w-16 h-16 bg-black flex items-center justify-center lg:self-end"><span className="text-white font-bold text-sm">MX-IX</span></div>
            
            <div className="space-y-4">
               <div>
