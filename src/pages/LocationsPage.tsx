@@ -465,7 +465,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
         {/* Red Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#F20732]/20 via-transparent to-transparent"></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10 pt-24 md:pt-32 pb-12 md:pb-20">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 pt-32 pb-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left: Text Content */}
             <div>
@@ -478,11 +478,11 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
               </div>
 
               {/* Main Heading */}
-              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-6">
+              <h1 className="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-6">
                 OUR GLOBAL <span className="text-[#F20732]">LOCATIONS</span>
               </h1>
 
-              <p className="text-gray-300 text-base md:text-lg leading-relaxed max-w-xl mb-8">
+              <p className="text-gray-300 text-lg leading-relaxed max-w-xl mb-8">
                 Strategic Points of Presence across the globe, ensuring ultra-low latency 
                 and maximum uptime for your critical infrastructure.
               </p>
@@ -539,7 +539,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
         <div className="max-w-[1920px] mx-auto">
           <div className="flex flex-col lg:flex-row min-h-screen">
             {/* LEFT SIDEBAR - Continent/City Navigation */}
-            <aside className="lg:w-96 bg-white border-r-2 border-gray-300 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto shadow-lg scrollbar-hide overflow-x-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <aside className="lg:w-96 bg-white border-r-2 border-gray-300 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto shadow-lg scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               <div className="p-8 border-b-2 border-gray-200 bg-gradient-to-br from-white to-gray-50">
                 <div className="inline-flex items-center gap-2 mb-3">
                   <div className="w-1.5 h-1.5 bg-[#F20732] rounded-full"></div>
@@ -646,7 +646,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                   {/* Stats Bar */}
                   <div className="bg-white border-b border-gray-200">
                     <div className="max-w-6xl mx-auto px-8 py-6">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                         <div className="text-center p-3 border-r border-gray-100">
                           <div className="font-mono text-[10px] text-[#F20732] uppercase tracking-widest mb-1">
                             Connected Networks
@@ -701,11 +701,11 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
 
                   {/* Tab Navigation */}
                   <div className="bg-gradient-to-r from-gray-800 to-gray-900 border-b border-gray-700">
-                    <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-                      <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                    <div className="max-w-5xl mx-auto px-8">
+                      <div className="flex items-center gap-0">
                         <button
                           onClick={() => setActiveTab('overview')}
-                          className={`px-3 sm:px-6 py-4 font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 whitespace-nowrap ${
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${
                             activeTab === 'overview' 
                               ? 'text-white border-[#F20732] bg-black/30' 
                               : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
@@ -715,35 +715,33 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                         </button>
                         <button
                           onClick={() => setActiveTab('asns')}
-                          className={`px-3 sm:px-6 py-4 font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 flex items-center gap-1 sm:gap-2 whitespace-nowrap ${
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 flex items-center gap-2 ${
                             activeTab === 'asns' 
                               ? 'text-white border-[#F20732] bg-black/30' 
                               : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
                           }`}
                         >
-                          <span className="hidden sm:inline">Connected Networks</span>
-                          <span className="sm:hidden">Networks</span>
-                          <span className={`px-1.5 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] ${activeTab === 'asns' ? 'bg-[#F20732]' : 'bg-gray-700'}`}>
+                          Connected Networks
+                          <span className={`px-2 py-0.5 rounded text-[10px] ${activeTab === 'asns' ? 'bg-[#F20732]' : 'bg-gray-700'}`}>
                             {adminLocations.find(l => l.id === selectedLocationData.id)?.asnList?.length || 0}
                           </span>
                         </button>
                         <button
                           onClick={() => setActiveTab('sites')}
-                          className={`px-3 sm:px-6 py-4 font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 flex items-center gap-1 sm:gap-2 whitespace-nowrap ${
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 flex items-center gap-2 ${
                             activeTab === 'sites' 
                               ? 'text-white border-[#F20732] bg-black/30' 
                               : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
                           }`}
                         >
-                          <span className="hidden sm:inline">Enabled Sites</span>
-                          <span className="sm:hidden">Sites</span>
-                          <span className={`px-1.5 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] ${activeTab === 'sites' ? 'bg-[#F20732]' : 'bg-gray-700'}`}>
+                          Enabled Sites
+                          <span className={`px-2 py-0.5 rounded text-[10px] ${activeTab === 'sites' ? 'bg-[#F20732]' : 'bg-gray-700'}`}>
                             {adminLocations.find(l => l.id === selectedLocationData.id)?.enabledSites?.length || 0}
                           </span>
                         </button>
                         <button
                           onClick={() => setActiveTab('pricing')}
-                          className={`px-3 sm:px-6 py-4 font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 whitespace-nowrap ${
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${
                             activeTab === 'pricing' 
                               ? 'text-white border-[#F20732] bg-black/30' 
                               : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
@@ -753,7 +751,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                         </button>
                         <button
                           onClick={() => setActiveTab('stats')}
-                          className={`px-3 sm:px-6 py-4 font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 whitespace-nowrap ${
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${
                             activeTab === 'stats' 
                               ? 'text-white border-[#F20732] bg-black/30' 
                               : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
@@ -869,14 +867,14 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
 
                         {/* ASN Table */}
                         <div className="bg-white p-8 shadow-sm border border-gray-200 mb-12">
-                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                            <h3 className="text-xl sm:text-2xl font-black text-black">Network ASNs</h3>
+                          <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-2xl font-black text-black">Network ASNs</h3>
                             <input
                               type="text"
-                              placeholder="Search..."
+                              placeholder="Search ASN or name..."
                               value={asnSearch}
                               onChange={(e) => setASNSearch(e.target.value)}
-                              className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#F20732] font-mono text-sm min-h-[44px]"
+                              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#F20732] font-mono text-sm"
                             />
                           </div>
                           
