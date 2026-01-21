@@ -27,18 +27,31 @@ body {
   box-sizing: border-box;
 }
 
-/* Ensure form inputs have black text */
-input,
-select,
-textarea {
-  color: #000000 !important;
-  /* Prevent zoom on iOS when input is focused */
-  font-size: 16px;
-}
+@layer base {
+  /* Admin panel inputs - white text on dark backgrounds */
+  .admin-panel input,
+  .admin-panel textarea,
+  .admin-panel select {
+    color: white !important;
+    caret-color: white !important;
+  }
 
-input::placeholder,
-textarea::placeholder {
-  color: #9ca3af !important;
+  .admin-panel input::placeholder,
+  .admin-panel textarea::placeholder {
+    color: rgb(100 116 139) !important; /* slate-500 */
+  }
+
+  .admin-panel input:disabled,
+  .admin-panel textarea:disabled,
+  .admin-panel select:disabled {
+    color: white !important;
+    opacity: 0.6;
+  }
+
+  .admin-panel select option {
+    background-color: rgb(2 6 23); /* slate-950 */
+    color: white;
+  }
 }
 
 /* Floating animations for metric cards */

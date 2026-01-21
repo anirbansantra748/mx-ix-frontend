@@ -4,11 +4,13 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import ServicesPage from './pages/ServicesPage';
 import AdminPage from './pages/AdminPage';
+import AdminDashboard from './pages/AdminDashboard';
 import StatsPage from './pages/StatsPage';
 import RealTimeCapacity from './components/RealTimeCapacity';
 import GlobalFabric from './components/GlobalFabric';
 import HeroNetworkMap from './components/HeroNetworkMap';
 import OrbitalLogoAdvanced from './components/OrbitalLogoAdvanced';
+import NotFoundPage from './pages/NotFoundPage';
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
 
 
@@ -415,10 +417,33 @@ const Footer = ({ setPage }: { setPage: (p: string) => void }) => (
 
 function AppContent() {
   const { networkStats, locations } = useAdmin();
-  const [page, setPage] = useState('home');
+  
+  // Initialize page from URL hash
+  const getPageFromHash = () => {
+    const hash = window.location.hash.replace('#', '');
+    return hash || 'home';
+  };
+  
+  const [page, setPage] = useState(getPageFromHash);
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [selectedLocationId, setSelectedLocationId] = useState<string>('');
   const [selectedSection, setSelectedSection] = useState<string>('overview');
+
+  // Listen for hash changes
+  useEffect(() => {
+    const handleHashChange = () => {
+      const newPage = getPageFromHash();
+      setPage(newPage);
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Update URL hash when page changes
+  const handleSetPage = (newPage: string) => {
+    window.location.hash = newPage === 'home' ? '' : newPage;
+    setPage(newPage);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -556,15 +581,9 @@ function AppContent() {
       case 'contact':
         return <ContactPage preSelectedCity={selectedCity} />;
       case 'admin':
-        return <AdminPage />;
+        return <AdminDashboard />;
       default:
-        return (
-          <section className="relative min-h-screen pt-24 md:pt-20 flex flex-col border-b border-gray-200 bg-white z-10 overflow-hidden">
-            <div className="flex-1 w-full max-w-[1920px] mx-auto px-6 md:px-12 flex flex-col justify-center relative z-10 py-12">
-              <h1 className="text-6xl font-black text-black">Page Not Found</h1>
-            </div>
-          </section>
-        );
+        return <NotFoundPage />;
     }
   };
 
@@ -573,13 +592,15 @@ function AppContent() {
       
       <div className="fixed inset-0 z-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-200 via-transparent to-transparent"></div>
       
-      <Navigation currentPage={page} setPage={setPage} />
+      {/* Hide navigation on admin page - admin has its own header */}
+      {page !== 'admin' && <Navigation currentPage={page} setPage={handleSetPage} />}
       
       <main className="relative z-10 min-h-screen">
         {renderPage()}
       </main>
       
-      <Footer setPage={setPage} />
+      {/* Hide footer on admin page */}
+      {page !== 'admin' && <Footer setPage={handleSetPage} />}
     </div>
   );
 }

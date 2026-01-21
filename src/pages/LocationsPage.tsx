@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../contexts/AdminContext';
+import { grafanaApi } from '../services/api';
 import type { ASN, EnabledSite } from '../contexts/AdminContext';
 
 interface LocationData {
@@ -15,6 +16,7 @@ interface LocationData {
   ixName: string;
   peers: number;
   capacity: string;
+  uptime?: string;
   portSpeeds: string[];
   protocols: string[];
   features: string[];
@@ -38,42 +40,23 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
   const [selectedLocation, setSelectedLocation] = useState<string>('del');
   const [asnSearch, setASNSearch] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'overview' | 'asns' | 'sites' | 'pricing' | 'stats'>('overview');
-  const { locations: adminLocations } = useAdmin();
+  const { locations: adminLocations, continents: adminContinents } = useAdmin();
+  
+  // Grafana live traffic data
+  const [grafanaTraffic, setGrafanaTraffic] = useState<{
+    peakTraffic: number;
+    avgTraffic: number;
+    isLive: boolean;
+    loading: boolean;
+  }>({
+    peakTraffic: 0,
+    avgTraffic: 0,
+    isLive: false,
+    loading: false,
+  });
 
-  // Handle pre-selected location and section from map navigation
-  useEffect(() => {
-    if (preSelectedLocation) {
-      setSelectedLocation(preSelectedLocation);
-      // Find the continent for this location and expand it
-      const location = locations.find(l => l.id === preSelectedLocation);
-      if (location) {
-        setExpandedContinent(location.continentId);
-      }
-    }
-    if (preSelectedSection) {
-      if (preSelectedSection === 'asns') setActiveTab('asns');
-      else if (preSelectedSection === 'sites') setActiveTab('sites');
-      else setActiveTab('overview');
-    }
-  }, [preSelectedLocation, preSelectedSection]);
-
-  // Add dark-nav class for navbar visibility
-  useEffect(() => {
-    document.body.classList.add('dark-nav');
-    return () => {
-      document.body.classList.remove('dark-nav');
-    };
-  }, []);
-
-  const continents: ContinentData[] = [
-    { id: 'asia', name: 'ASIA' },
-    { id: 'middle-east', name: 'MIDDLE EAST' },
-    { id: 'europe', name: 'EUROPE' },
-    { id: 'north-america', name: 'NORTH AMERICA' },
-    { id: 'south-america', name: 'SOUTH AMERICA' }
-  ];
-
-  const locations: LocationData[] = [
+  // Hardcoded fallback data (used only if adminLocations is empty)
+  const hardcodedLocations: LocationData[] = [
     // Current (Live) Locations - India
     {
       id: 'del',
@@ -433,6 +416,78 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
     }
   ];
 
+  // Use live locations from AdminContext (from database)
+  // Fallback to hardcoded data only if admin context is empty
+  const locations = adminLocations.length > 0 ? adminLocations : hardcodedLocations;
+
+  // Use live continents from AdminContext
+  const hardcodedContinents: ContinentData[] = [
+    { id: 'asia', name: 'ASIA' },
+    { id: 'middle-east', name: 'MIDDLE EAST' },
+    { id: 'europe', name: 'EUROPE' },
+    { id: 'north-america', name: 'NORTH AMERICA' },
+    { id: 'south-america', name: 'SOUTH AMERICA' }
+  ];
+  
+  const continents = adminContinents.length > 0 
+    ? adminContinents.map(c => ({ id: c.id, name: c.name.toUpperCase() }))
+    : hardcodedContinents;
+
+  // Handle pre-selected location and section from map navigation
+  useEffect(() => {
+    if (preSelectedLocation) {
+      setSelectedLocation(preSelectedLocation);
+      // Find the continent for this location and expand it
+      const location = locations.find(l => l.id === preSelectedLocation);
+      if (location) {
+        setExpandedContinent(location.continentId);
+      }
+    }
+    if (preSelectedSection) {
+      if (preSelectedSection === 'asns') setActiveTab('asns');
+      else if (preSelectedSection === 'sites') setActiveTab('sites');
+      else setActiveTab('overview');
+    }
+  }, [preSelectedLocation, preSelectedSection, locations]);
+
+  // Add dark-nav class for navbar visibility
+  useEffect(() => {
+    document.body.classList.add('dark-nav');
+    return () => {
+      document.body.classList.remove('dark-nav');
+    };
+  }, []);
+
+  // Fetch Grafana traffic data when Stats tab is active
+  useEffect(() => {
+    if (activeTab !== 'stats') return;
+
+    const fetchGrafanaData = async () => {
+      setGrafanaTraffic(prev => ({ ...prev, loading: true }));
+      try {
+        const result = await grafanaApi.getTraffic();
+        if (result.success && result.data) {
+          setGrafanaTraffic({
+            peakTraffic: result.data.peakTraffic,
+            avgTraffic: result.data.avgTraffic,
+            isLive: result.data.source === 'grafana',
+            loading: false,
+          });
+        } else {
+          setGrafanaTraffic(prev => ({ ...prev, isLive: false, loading: false }));
+        }
+      } catch (error) {
+        console.error('Failed to fetch Grafana data:', error);
+        setGrafanaTraffic(prev => ({ ...prev, isLive: false, loading: false }));
+      }
+    };
+
+    fetchGrafanaData();
+    const interval = setInterval(fetchGrafanaData, 10000); // Refresh every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [activeTab]);
+
   const getCitiesInContinent = (continentId: string) => {
     return locations.filter(l => l.continentId === continentId);
   };
@@ -692,7 +747,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                             Uptime
                           </div>
                           <div className="text-xl font-bold text-[#00B341]">
-                            99.99%
+                            {selectedLocationData.uptime || '99.99%'}
                           </div>
                         </div>
                       </div>
@@ -1035,17 +1090,53 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                           <h3 className="text-2xl font-black text-black">
                             Traffic Statistics - {selectedLocationData.name}
                           </h3>
+                          {grafanaTraffic.isLive && (
+                            <div className="flex items-center gap-2 px-3 py-1 bg-green-100 rounded-full">
+                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                              <span className="text-xs font-mono font-bold text-green-700 uppercase">Live from Grafana</span>
+                            </div>
+                          )}
                         </div>
                         
                         {/* Stats Overview */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                           <div className="bg-white p-6 border-l-4 border-[#F20732] shadow-sm">
                             <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-2">Peak Traffic</div>
-                            <div className="text-3xl font-light text-black">{Math.round(parseFloat(selectedLocationData.capacity) * 0.85)}<span className="text-lg"> Tbps</span></div>
+                            {grafanaTraffic.loading ? (
+                              <div className="text-3xl font-light text-gray-400 animate-pulse">Loading...</div>
+                            ) : (
+                              <>
+                                <div className="text-3xl font-light text-black">
+                                  {grafanaTraffic.isLive 
+                                    ? grafanaTraffic.peakTraffic 
+                                    : Math.round(parseFloat(selectedLocationData.capacity) * 0.85)
+                                  }
+                                  <span className="text-lg"> Tbps</span>
+                                </div>
+                                {!grafanaTraffic.isLive && (
+                                  <div className="text-xs text-gray-400 mt-1">Calculated</div>
+                                )}
+                              </>
+                            )}
                           </div>
                           <div className="bg-white p-6 border-l-4 border-black shadow-sm">
                             <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-2">Avg Traffic</div>
-                            <div className="text-3xl font-light text-black">{Math.round(parseFloat(selectedLocationData.capacity) * 0.55)}<span className="text-lg"> Tbps</span></div>
+                            {grafanaTraffic.loading ? (
+                              <div className="text-3xl font-light text-gray-400 animate-pulse">Loading...</div>
+                            ) : (
+                              <>
+                                <div className="text-3xl font-light text-black">
+                                  {grafanaTraffic.isLive 
+                                    ? grafanaTraffic.avgTraffic 
+                                    : Math.round(parseFloat(selectedLocationData.capacity) * 0.55)
+                                  }
+                                  <span className="text-lg"> Tbps</span>
+                                </div>
+                                {!grafanaTraffic.isLive && (
+                                  <div className="text-xs text-gray-400 mt-1">Calculated</div>
+                                )}
+                              </>
+                            )}
                           </div>
                           <div className="bg-white p-6 border-l-4 border-gray-300 shadow-sm">
                             <div className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-2">IPv4 Prefixes</div>

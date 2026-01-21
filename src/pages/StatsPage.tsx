@@ -5,7 +5,9 @@ import {
   Network, 
   Zap, 
   MapPin,
-  ChevronDown 
+  ChevronDown,
+  Wifi,
+  WifiOff
 } from 'lucide-react';
 import { 
   networkStats, 
@@ -17,7 +19,15 @@ import {
   TrafficDataPoint,
   getCityStats 
 } from '../config/stats.config';
+import { grafanaApi } from '../services/api';
 import { useAdmin } from '../contexts/AdminContext';
+
+interface GrafanaStatus {
+  connected: boolean;
+  message: string;
+  version?: string;
+  source?: string;
+}
 
 const StatsPage = () => {
   const { locations } = useAdmin();
@@ -26,6 +36,8 @@ const StatsPage = () => {
   const [currentTrafficData, setCurrentTrafficData] = useState<TrafficDataPoint[]>(trafficData);
   const [isLive, setIsLive] = useState(statsConfig.enableRealTimeUpdates);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [grafanaStatus, setGrafanaStatus] = useState<GrafanaStatus>({ connected: false, message: 'Checking...' });
+  const [realTraffic, setRealTraffic] = useState<{ current: number; peak: number; inbound: number; outbound: number } | null>(null);
 
   // Set dark nav class
   useEffect(() => {
@@ -33,6 +45,43 @@ const StatsPage = () => {
     return () => {
       document.body.classList.remove('dark-nav');
     };
+  }, []);
+
+  // Fetch Grafana status and real traffic data
+  useEffect(() => {
+    const fetchGrafanaData = async () => {
+      try {
+        // Fetch status
+        const statusResult = await grafanaApi.getStatus();
+        if (statusResult.success && statusResult.data) {
+          setGrafanaStatus({
+            connected: statusResult.data.connected,
+            message: statusResult.data.message,
+            version: (statusResult.data as any).version,
+          });
+        }
+
+        // Fetch real traffic
+        const trafficResult = await grafanaApi.getTraffic();
+        if (trafficResult.success && trafficResult.data) {
+          const data = trafficResult.data as any;
+          setRealTraffic({
+            current: data.currentTraffic || 0,
+            peak: data.peakTraffic || 0,
+            inbound: data.details?.inbound || 0,
+            outbound: data.details?.outbound || 0,
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch Grafana data:', error);
+        setGrafanaStatus({ connected: false, message: 'Connection failed' });
+      }
+    };
+
+    fetchGrafanaData();
+    // Refresh every 10 seconds
+    const interval = setInterval(fetchGrafanaData, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   // Handle city selection
@@ -301,6 +350,19 @@ const StatsPage = () => {
                 {isLive ? 'LIVE' : 'STATIC'}
               </button>
 
+              {/* Grafana Connection Status */}
+              <div className={`px-6 py-3 border-2 font-mono text-xs font-bold tracking-widest uppercase flex items-center gap-3 rounded-lg ${
+                grafanaStatus.connected 
+                  ? 'border-green-500/50 bg-green-500/10 text-green-400' 
+                  : 'border-yellow-500/50 bg-yellow-500/10 text-yellow-400'
+              }`}>
+                {grafanaStatus.connected ? <Wifi size={16} /> : <WifiOff size={16} />}
+                <span>{grafanaStatus.connected ? 'GRAFANA CONNECTED' : 'SIMULATED DATA'}</span>
+                {grafanaStatus.version && (
+                  <span className="text-[10px] opacity-70">v{grafanaStatus.version}</span>
+                )}
+              </div>
+
               {/* Selected Location Badge */}
               {selectedCity !== 'all' && (
                 <div className="inline-flex items-center gap-3 px-5 py-3 bg-white/5 border border-white/20 rounded-lg">
@@ -323,24 +385,69 @@ const StatsPage = () => {
       {/* Traffic Chart Section */}
       <section className="relative py-16 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
+          {/* Real-Time Grafana Traffic Cards */}
+          {grafanaStatus.connected && realTraffic && (
+            <div className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-gradient-to-br from-green-500/10 to-transparent border border-green-500/30 p-6 rounded-lg">
+                <div className="text-green-400 font-mono text-xs uppercase tracking-widest mb-2">Live Traffic</div>
+                <div className="text-4xl font-light tracking-tighter text-white">
+                  {realTraffic.current.toFixed(2)}
+                  <span className="text-xl text-gray-400 ml-1">Gbps</span>
+                </div>
+                <div className="text-xs text-green-400 font-mono mt-1">From Grafana/Zabbix</div>
+              </div>
+              <div className="bg-gradient-to-br from-blue-500/10 to-transparent border border-blue-500/30 p-6 rounded-lg">
+                <div className="text-blue-400 font-mono text-xs uppercase tracking-widest mb-2">Inbound</div>
+                <div className="text-4xl font-light tracking-tighter text-white">
+                  {realTraffic.inbound.toFixed(2)}
+                  <span className="text-xl text-gray-400 ml-1">Gbps</span>
+                </div>
+                <div className="text-xs text-blue-400 font-mono mt-1">↓ Bits Received</div>
+              </div>
+              <div className="bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/30 p-6 rounded-lg">
+                <div className="text-purple-400 font-mono text-xs uppercase tracking-widest mb-2">Outbound</div>
+                <div className="text-4xl font-light tracking-tighter text-white">
+                  {realTraffic.outbound.toFixed(2)}
+                  <span className="text-xl text-gray-400 ml-1">Gbps</span>
+                </div>
+                <div className="text-xs text-purple-400 font-mono mt-1">↑ Bits Sent</div>
+              </div>
+              <div className="bg-gradient-to-br from-[#F20732]/10 to-transparent border border-[#F20732]/30 p-6 rounded-lg">
+                <div className="text-[#F20732] font-mono text-xs uppercase tracking-widest mb-2">Peak (24h)</div>
+                <div className="text-4xl font-light tracking-tighter text-white">
+                  {realTraffic.peak.toFixed(2)}
+                  <span className="text-xl text-gray-400 ml-1">Gbps</span>
+                </div>
+                <div className="text-xs text-[#F20732] font-mono mt-1">Maximum observed</div>
+              </div>
+            </div>
+          )}
+
           <div className="bg-gradient-to-br from-white/5 to-transparent border border-white/10 p-8 md:p-12">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-3xl md:text-4xl font-black tracking-tighter mb-2">
                   Traffic Overview
                 </h2>
-                <p className="text-gray-400 font-mono text-sm">Last 24 Hours</p>
+                <p className="text-gray-400 font-mono text-sm">
+                  {grafanaStatus.connected ? 'Live from LVSB SW-01 & MB2 SW-01' : 'Last 24 Hours (Simulated)'}
+                </p>
               </div>
               <div className="text-right">
                 <div className="text-4xl md:text-5xl font-light tracking-tighter text-[#F20732]">
-                  {currentTrafficData[currentTrafficData.length - 1]?.value.toFixed(1)}
-                  <span className="text-xl text-gray-400 ml-2">Tbps</span>
+                  {grafanaStatus.connected && realTraffic 
+                    ? realTraffic.current.toFixed(1)
+                    : currentTrafficData[currentTrafficData.length - 1]?.value.toFixed(1)
+                  }
+                  <span className="text-xl text-gray-400 ml-2">
+                    {grafanaStatus.connected ? 'Gbps' : 'Tbps'}
+                  </span>
                 </div>
                 <div className="text-sm text-green-400 font-mono flex items-center justify-end gap-1 mt-2">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
                   </svg>
-                  +12.3% from yesterday
+                  {grafanaStatus.connected ? 'Real-time from Grafana' : '+12.3% from yesterday'}
                 </div>
               </div>
             </div>

@@ -13,6 +13,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { useAdmin } from '../contexts/AdminContext';
+import { contactsApi } from '../services/api';
 
 interface ContactPageProps {
   preSelectedCity?: string;
@@ -116,32 +117,44 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
     message: string;
   }>({ type: null, message: '' });
 
-  // Contact information based on department and language
-  const contactInfo: AllContacts = {
-    sales: {
-      english: { phone: '+1 (555) 100-2000', email: 'sales@mx-ix.com' },
-      spanish: { phone: '+34 (91) 100-2000', email: 'ventas@mx-ix.com' },
-      german: { phone: '+49 (30) 100-2000', email: 'vertrieb@mx-ix.com' },
-      japanese: { phone: '+81 (3) 100-2000', email: 'sales.jp@mx-ix.com' }
-    },
-    services: {
-      english: { phone: '+1 (555) 100-3000', email: 'support@mx-ix.com' },
-      spanish: { phone: '+34 (91) 100-3000', email: 'soporte@mx-ix.com' },
-      german: { phone: '+49 (30) 100-3000', email: 'support.de@mx-ix.com' },
-      japanese: { phone: '+81 (3) 100-3000', email: 'support.jp@mx-ix.com' }
-    }
-  };
+  // Contact information - fetched from API
+  const [contactInfo, setContactInfo] = useState<{
+    sales: ContactInfo;
+    services: ContactInfo;
+  }>({
+    sales: { phone: '+1 (555) 100-2000', email: 'sales@mx-ix.com' },
+    services: { phone: '+1 (555) 100-3000', email: 'support@mx-ix.com' }
+  });
 
-  const languages = [
-    { value: 'english', label: 'English', flag: 'EN' },
-    { value: 'spanish', label: 'Español', flag: 'ES' },
-    { value: 'german', label: 'Deutsch', flag: 'DE' },
-    { value: 'japanese', label: '日本語', flag: 'JP' }
-  ];
+  // Fetch contacts from API on mount
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        const response = await contactsApi.getAll();
+        if (response.success && response.data) {
+          // Backend now guarantees lowercase department names
+          const salesContact = response.data.find(c => c.department === 'sales');
+          const supportContact = response.data.find(c => c.department === 'support');
+          
+          setContactInfo({
+            sales: salesContact 
+              ? { phone: salesContact.phone, email: salesContact.email }
+              : { phone: '+1 (555) 100-2000', email: 'sales@mx-ix.com' },
+            services: supportContact 
+              ? { phone: supportContact.phone, email: supportContact.email }
+              : { phone: '+1 (555) 100-3000', email: 'support@mx-ix.com' }
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch contacts:', error);
+      }
+    };
+    fetchContacts();
+  }, []);
 
   // Get current contact info based on selection
   const getCurrentContact = () => {
-    return contactInfo[formData.department][formData.language];
+    return contactInfo[formData.department];
   };
 
   // Service types for Sales form
@@ -171,7 +184,11 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
     { value: 'me-south-1', label: 'Middle East (UAE)' }
   ];
 
-  const portSpeeds = ['1G', '10G', '40G', '100G', '400G'];
+  // Get port speeds from selected location (dynamic based on admin panel)
+  const getPortSpeedsForLocation = (locationId: string) => {
+    const location = adminLocations.find(l => l.id === locationId);
+    return location?.portSpeeds || ['1G', '10G', '40G', '100G', '400G']; // Fallback to default
+  };
   
   const rackSizes = ['Quarter Rack', 'Half Rack', 'Full Rack', 'Multiple Racks'];
   
@@ -640,7 +657,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
                                 className="w-full px-4 py-3 bg-white border-2 border-gray-200 focus:border-black outline-none transition-all duration-300 font-mono text-sm text-black rounded-md"
                               >
                                 <option value="">Select speed</option>
-                                {portSpeeds.map(speed => (
+                                {getPortSpeedsForLocation(formData.location).map(speed => (
                                   <option key={speed} value={speed}>{speed}</option>
                                 ))}
                               </select>
@@ -744,7 +761,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
                             className="w-full px-4 py-3 bg-white border-2 border-gray-200 focus:border-black outline-none transition-all duration-300 font-mono text-sm text-black rounded-md"
                           >
                             <option value="">Select speed</option>
-                            {portSpeeds.map(speed => (
+                            {getPortSpeedsForLocation(formData.location).map(speed => (
                               <option key={speed} value={speed}>{speed}</option>
                             ))}
                           </select>
@@ -961,13 +978,6 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
                   </span>
                 </div>
 
-                {/* Language Badge */}
-                <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full mb-6 ml-2">
-                  <span className="text-lg">{languages.find(l => l.value === formData.language)?.flag}</span>
-                  <span className="font-mono text-xs font-bold tracking-widest uppercase text-gray-300">
-                    {languages.find(l => l.value === formData.language)?.label}
-                  </span>
-                </div>
 
                 <div className="space-y-5 text-sm">
                   <div className="group/item">

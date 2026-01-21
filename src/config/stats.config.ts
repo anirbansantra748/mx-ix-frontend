@@ -187,36 +187,63 @@ export const trafficData = generateMockTrafficData();
 
 // Configuration for real-time updates
 export const statsConfig = {
-  // API endpoint when available - set to null for mock data
-  apiEndpoint: null as string | null, // 'https://api.mx-ix.com/stats' when ready
+  // API endpoint - now using grafanaApi
+  apiEndpoint: '/api/grafana/realtime' as string | null,
   
   // Update interval in milliseconds
-  updateInterval: 30000, // 30 seconds
+  updateInterval: 5000, // 5 seconds for real-time feel
   
-  // WebSocket URL when available  apiEndpoint: null as string | null,
+  // WebSocket URL when available
   websocketUrl: null as string | null, // 'wss://api.mx-ix.com/realtime' when ready
   
   // Enable/disable real-time updates
-  enableRealTimeUpdates: false, // Set to true when API is ready
+  enableRealTimeUpdates: true, // Now enabled with grafanaApi
   
   // Enable/disable mock data animation
-  enableMockAnimation: true // Set to false when using real data
+  enableMockAnimation: true // Fallback animation
 };
 
-// Function to fetch stats from API (placeholder)
+// Import grafanaApi for real-time data
+import { grafanaApi } from '../services/api';
+
+// Function to fetch stats from API
 export const fetchNetworkStats = async (): Promise<NetworkStat[]> => {
-  if (statsConfig.apiEndpoint) {
-    try {
-      const response = await fetch(statsConfig.apiEndpoint);
-      if (!response.ok) throw new Error('Failed to fetch stats');
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching network stats:', error);
-      return networkStats; // Fallback to mock data
+  try {
+    // Fetch real-time metrics from Grafana proxy
+    const response = await grafanaApi.getRealTimeMetrics();
+    
+    if (response.success && response.data) {
+      const metrics = response.data;
+      
+      // Update the network stats with real-time data
+      return networkStats.map(stat => {
+        switch (stat.id) {
+          case 'total_traffic':
+            return { ...stat, value: metrics.traffic.current };
+          case 'peak_traffic':
+            return { ...stat, value: metrics.traffic.peak };
+          case 'active_as':
+            return { ...stat, value: metrics.connections.active };
+          case 'avg_latency':
+            return { ...stat, value: metrics.latency.global };
+          case 'uptime':
+            return { ...stat, value: metrics.uptime };
+          default:
+            // Add slight variation for other stats
+            return {
+              ...stat,
+              value: typeof stat.value === 'number' 
+                ? stat.value + (Math.random() * 2 - 1)
+                : stat.value
+            };
+        }
+      });
     }
+  } catch (error) {
+    console.error('Error fetching network stats from grafanaApi:', error);
   }
   
-  // Return mock data with slight variations to simulate real-time
+  // Fallback to mock data with slight variations
   if (statsConfig.enableMockAnimation) {
     return networkStats.map(stat => ({
       ...stat,
