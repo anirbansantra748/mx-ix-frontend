@@ -363,6 +363,14 @@ export const contactsApi = {
     }),
 };
 
+export const statsApi = {
+  get: () => apiCall<any>('/stats'),
+  update: (data: any) => apiCall<any>('/stats', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  }),
+};
+
 export default {
   auth: authApi,
   services: servicesApi,
@@ -372,5 +380,6 @@ export default {
   globalFabricStats: globalFabricStatsApi,
   grafana: grafanaApi,
   contacts: contactsApi,
+  stats: statsApi,
 };
 

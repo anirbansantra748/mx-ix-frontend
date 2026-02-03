@@ -20,6 +20,7 @@ import {
   getCityStats 
 } from '../config/stats.config';
 import { grafanaApi } from '../services/api';
+import api from '../services/api';
 import { useAdmin } from '../contexts/AdminContext';
 
 interface GrafanaStatus {
@@ -98,6 +99,73 @@ const StatsPage = () => {
       }
     }
   }, [selectedCity, locations]);
+
+  // Fetch global stats from backend
+  useEffect(() => {
+    const fetchGlobalStats = async () => {
+      try {
+        const response = await api.stats.get();
+        
+        if (response.success && response.data) {
+          const backendStats = response.data;
+          
+          // Convert backend stats to NetworkStat format
+          const convertedStats: NetworkStat[] = [
+            {
+              id: 'total_capacity',
+              label: 'Total Capacity',
+              value: backendStats.totalCapacity.value,
+              unit: backendStats.totalCapacity.unit,
+              format: 'number',
+              category: 'network',
+              trend: backendStats.totalCapacity.trend,
+              trendValue: backendStats.totalCapacity.trendValue
+            },
+            {
+              id: 'peak_traffic',
+              label: 'Peak Traffic (24h)',
+              value: backendStats.peakTraffic.value,
+              unit: backendStats.peakTraffic.unit,
+              trend: backendStats.peakTraffic.trend,
+              trendValue: backendStats.peakTraffic.trendValue,
+              format: 'decimal',
+              category: 'traffic'
+            },
+            {
+              id: 'total_peers',
+              label: 'Connected Networks',
+              value: backendStats.connectedNetworks.value,
+              unit: backendStats.connectedNetworks.unit,
+              trend: backendStats.connectedNetworks.trend,
+              trendValue: backendStats.connectedNetworks.trendValue,
+              format: 'number',
+              category: 'network'
+            },
+            {
+              id: 'ipv4_prefixes',
+              label: 'IPv4 Prefixes',
+              value: backendStats.ipv4Prefixes.value,
+              unit: backendStats.ipv4Prefixes.unit,
+              trend: backendStats.ipv4Prefixes.trend,
+              trendValue: backendStats.ipv4Prefixes.trendValue,
+              format: 'number',
+              category: 'network'
+            }
+          ];
+          
+          // Only update if we're viewing "all" (global stats)
+          if (selectedCity === 'all') {
+            setStats(convertedStats);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch global stats from backend:', error);
+        // Keep using the default stats from config if fetch fails
+      }
+    };
+
+    fetchGlobalStats();
+  }, [selectedCity]);
 
   // Real-time updates
   useEffect(() => {

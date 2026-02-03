@@ -725,36 +725,74 @@ const LocationsAdminPanel: React.FC<LocationsAdminPanelProps> = ({ embedded = fa
                       className="text-xs bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded"
                     >+ Add Price</button>
                  </div>
-                 <div className="space-y-2 max-h-40 overflow-y-auto">
+                 <div className="space-y-2 max-h-60 overflow-y-auto">
                     {editingLocation.pricing?.map((price, idx) => (
-                      <div key={idx} className="flex gap-2 items-center bg-slate-900 p-2 rounded text-sm">
-                         <input 
-                          value={price.portSpeed} 
-                          placeholder="Speed"
-                          onChange={e => {
-                            const newPricing = [...(editingLocation.pricing || [])];
-                            newPricing[idx].portSpeed = e.target.value;
-                            setEditingLocation({...editingLocation, pricing: newPricing});
-                          }}
-                          className="w-24 bg-transparent border border-slate-700 rounded px-1"
-                        />
-                         <input 
-                          type="number"
-                          value={price.monthlyPrice || ''} 
-                          placeholder="Monthly"
-                          onChange={e => {
-                            const newPricing = [...(editingLocation.pricing || [])];
-                            const val = e.target.value === '' ? 0 : parseFloat(e.target.value);
-                            newPricing[idx].monthlyPrice = isNaN(val) ? 0 : val;
-                            setEditingLocation({...editingLocation, pricing: newPricing});
-                          }}
-                          className="w-24 bg-transparent border border-slate-700 rounded px-1"
-                        />
-                        <span className="text-slate-500 text-xs">/mo</span>
+                      <div key={idx} className="grid grid-cols-5 gap-2 items-center bg-slate-900 p-3 rounded text-sm">
+                         <div>
+                          <label className="block text-xs text-slate-500 mb-1">Port Speed</label>
+                          <select
+                           value={price.portSpeed} 
+                           onChange={e => {
+                             const newPricing = [...(editingLocation.pricing || [])];
+                             newPricing[idx].portSpeed = e.target.value;
+                             setEditingLocation({...editingLocation, pricing: newPricing});
+                           }}
+                           className="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white"
+                         >
+                           <option value="1G">1G</option>
+                           <option value="10G">10G</option>
+                           <option value="40G">40G</option>
+                           <option value="100G">100G</option>
+                           <option value="400G">400G</option>
+                         </select>
+                         </div>
+                         <div>
+                          <label className="block text-xs text-slate-500 mb-1">Setup Fee</label>
+                          <input 
+                           type="number"
+                           value={price.setupFee || 0} 
+                           placeholder="0"
+                           onChange={e => {
+                             const newPricing = [...(editingLocation.pricing || [])];
+                             const val = e.target.value === '' ? 0 : parseFloat(e.target.value);
+                             newPricing[idx].setupFee = isNaN(val) ? 0 : val;
+                             setEditingLocation({...editingLocation, pricing: newPricing});
+                           }}
+                           className="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white"
+                         />
+                         </div>
+                         <div>
+                          <label className="block text-xs text-slate-500 mb-1">Monthly</label>
+                          <input 
+                           type="number"
+                           value={price.monthlyPrice || ''} 
+                           placeholder="0"
+                           onChange={e => {
+                             const newPricing = [...(editingLocation.pricing || [])];
+                             const val = e.target.value === '' ? 0 : parseFloat(e.target.value);
+                             newPricing[idx].monthlyPrice = isNaN(val) ? 0 : val;
+                             setEditingLocation({...editingLocation, pricing: newPricing});
+                           }}
+                           className="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white"
+                         />
+                         </div>
+                         <div>
+                          <label className="block text-xs text-slate-500 mb-1">Currency</label>
+                          <input 
+                           value={price.currency || 'USD'} 
+                           placeholder="USD"
+                           onChange={e => {
+                             const newPricing = [...(editingLocation.pricing || [])];
+                             newPricing[idx].currency = e.target.value;
+                             setEditingLocation({...editingLocation, pricing: newPricing});
+                           }}
+                           className="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white"
+                         />
+                         </div>
                         <button onClick={() => {
                           const newPricing = editingLocation.pricing?.filter((_, i) => i !== idx);
                           setEditingLocation({...editingLocation, pricing: newPricing});
-                        }} className="text-red-400"><X size={14}/></button>
+                        }} className="text-red-400 hover:bg-red-400/10 p-2 rounded mt-5"><X size={16}/></button>
                       </div>
                     ))}
                  </div>

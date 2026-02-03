@@ -23,6 +23,7 @@ interface LocationData {
   description: string;
   established: string;
   cityImage: string;
+  pricing?: { portSpeed: string; monthlyPrice: number; setupFee: number; currency: string }[];
 }
 
 interface ContinentData {
@@ -450,6 +451,17 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
     }
   }, [preSelectedLocation, preSelectedSection, locations]);
 
+  // Ensure a valid location is selected on load or when locations change
+  useEffect(() => {
+    if (locations.length > 0) {
+      const currentExists = locations.find(l => l.id === selectedLocation);
+      if (!currentExists) {
+        setSelectedLocation(locations[0].id);
+        setExpandedContinent(locations[0].continentId);
+      }
+    }
+  }, [locations, selectedLocation]);
+
   // Add dark-nav class for navbar visibility
   useEffect(() => {
     document.body.classList.add('dark-nav');
@@ -731,7 +743,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                             Capacity
                           </div>
                           <div className="text-xl font-bold text-black">
-                            {selectedLocationData.capacity}+ Tbps
+                            {selectedLocationData.capacity.replace(/Tbps/gi, '').trim()} Tbps
                           </div>
                         </div>
                         <div className="text-center p-3 border-r border-gray-100">
@@ -1030,55 +1042,73 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                           </h3>
                         </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                          {['1G', '10G', '100G'].map((speed, idx) => (
-                            <div key={speed} className={`bg-white border-2 ${idx === 1 ? 'border-[#F20732]' : 'border-gray-200'} p-6 hover:shadow-lg transition-all duration-300`}>
-                              {idx === 1 && (
-                                <div className="inline-block px-3 py-1 bg-[#F20732] text-white text-[10px] font-mono font-bold uppercase tracking-wider mb-4">
-                                  Most Popular
+                        {selectedLocationData.pricing && selectedLocationData.pricing.length > 0 ? (
+                          <>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                              {selectedLocationData.pricing.map((priceTier, idx) => (
+                                <div key={idx} className="bg-white border-2 border-gray-200 hover:border-[#F20732] p-6 hover:shadow-lg transition-all duration-300">
+                                  <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Port Speed</div>
+                                  <div className="text-4xl font-black text-black mb-4">{priceTier.portSpeed}</div>
+                                  <div className="space-y-2 mb-6">
+                                    <div className="flex justify-between text-sm">
+                                      <span className="text-gray-600">Setup Fee</span>
+                                      <span className="font-bold">
+                                        {priceTier.setupFee > 0 
+                                          ? `${priceTier.currency || 'USD'} ${priceTier.setupFee.toLocaleString()}` 
+                                          : 'Free'}
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between text-sm">
+                                      <span className="text-gray-600">Monthly</span>
+                                      <span className="font-bold">
+                                        {priceTier.monthlyPrice > 0 
+                                          ? `${priceTier.currency || 'USD'} ${priceTier.monthlyPrice.toLocaleString()}/mo` 
+                                          : 'Contact Us'}
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between text-sm">
+                                      <span className="text-gray-600">Commitment</span>
+                                      <span className="font-bold">12 months</span>
+                                    </div>
+                                  </div>
+                                  <button 
+                                    onClick={() => {
+                                      const cityName = selectedLocationData.name.charAt(0) + selectedLocationData.name.slice(1).toLowerCase();
+                                      window.dispatchEvent(new CustomEvent('navigateToContact', { 
+                                        detail: { city: cityName, locationId: selectedLocationData.id } 
+                                      }));
+                                    }}
+                                    className="w-full py-3 bg-black text-white hover:bg-[#F20732] font-mono text-xs font-bold uppercase tracking-wider transition-colors"
+                                  >
+                                    Get Quote
+                                  </button>
                                 </div>
-                              )}
-                              <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-2">Port Speed</div>
-                              <div className="text-4xl font-black text-black mb-4">{speed}</div>
-                              <div className="space-y-2 mb-6">
-                                <div className="flex justify-between text-sm">
-                                  <span className="text-gray-600">Setup Fee</span>
-                                  <span className="font-bold">Contact Us</span>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                  <span className="text-gray-600">Monthly</span>
-                                  <span className="font-bold">Contact Us</span>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                  <span className="text-gray-600">Commitment</span>
-                                  <span className="font-bold">12 months</span>
-                                </div>
-                              </div>
-                              <button 
-                                onClick={() => {
-                                  const cityName = selectedLocationData.name.charAt(0) + selectedLocationData.name.slice(1).toLowerCase();
-                                  window.dispatchEvent(new CustomEvent('navigateToContact', { 
-                                    detail: { city: cityName, locationId: selectedLocationData.id } 
-                                  }));
-                                }}
-                                className={`w-full py-3 font-mono text-xs font-bold uppercase tracking-wider transition-colors ${
-                                  idx === 1 
-                                    ? 'bg-[#F20732] text-white hover:bg-black' 
-                                    : 'bg-black text-white hover:bg-[#F20732]'
-                                }`}
-                              >
-                                Get Quote
-                              </button>
+                              ))}
                             </div>
-                          ))}
-                        </div>
-                        
-                        <div className="bg-gray-50 p-6 border border-gray-200">
-                          <p className="text-sm text-gray-600">
-                            * Prices are indicative and may vary based on location, commitment period, and volume discounts. 
-                            Contact our sales team for a customized quote.
-                          </p>
-                        </div>
+                            
+                            <div className="bg-gray-50 p-6 border border-gray-200">
+                              <p className="text-sm text-gray-600">
+                                * Prices are indicative and may vary based on location, commitment period, and volume discounts. 
+                                Contact our sales team for a customized quote.
+                              </p>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="bg-gray-50 p-8 border border-gray-200 text-center">
+                            <p className="text-gray-600 mb-4">Pricing information is not yet available for this location.</p>
+                            <button 
+                              onClick={() => {
+                                const cityName = selectedLocationData.name.charAt(0) + selectedLocationData.name.slice(1).toLowerCase();
+                                window.dispatchEvent(new CustomEvent('navigateToContact', { 
+                                  detail: { city: cityName, locationId: selectedLocationData.id } 
+                                }));
+                              }}
+                              className="px-6 py-3 bg-[#F20732] text-white hover:bg-black font-mono text-xs font-bold uppercase tracking-wider transition-colors"
+                            >
+                              Contact Sales
+                            </button>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -1093,7 +1123,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                           {grafanaTraffic.isLive && (
                             <div className="flex items-center gap-2 px-3 py-1 bg-green-100 rounded-full">
                               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              <span className="text-xs font-mono font-bold text-green-700 uppercase">Live from Grafana</span>
+                              <span className="text-xs font-mono font-bold text-green-700 uppercase">Live</span>
                             </div>
                           )}
                         </div>

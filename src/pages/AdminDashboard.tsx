@@ -15,6 +15,7 @@ import { authApi, servicesApi, locationsApi } from '../services/api';
 import ServicesAdminPanel from './ServicesAdminPanel';
 import LocationsAdminPanel from './LocationsAdminPanel';
 import ContactsAdminPanel from './ContactsAdminPanel';
+import StatsAdminPanel from './StatsAdminPanel';
 
 type AdminSection = 'dashboard' | 'services' | 'locations' | 'stats' | 'contacts' | 'homepage';
 
@@ -168,7 +169,7 @@ const AdminDashboard: React.FC = () => {
       case 'locations':
         return <LocationsAdminPanel embedded onBack={() => setCurrentSection('dashboard')} />;
       case 'stats':
-        return <ComingSoon title="Stats Admin" onBack={() => setCurrentSection('dashboard')} />;
+        return <StatsAdminPanel />;
       case 'contacts':
         return <ContactsAdminPanel embedded onBack={() => setCurrentSection('dashboard')} />;
       case 'homepage':
