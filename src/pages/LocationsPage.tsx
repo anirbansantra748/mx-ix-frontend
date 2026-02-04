@@ -24,6 +24,7 @@ interface LocationData {
   established: string;
   cityImage: string;
   pricing?: { portSpeed: string; monthlyPrice: number; setupFee: number; currency: string }[];
+  routeServers?: { name: string; asn: number; ipv4: string; ipv6: string }[];
 }
 
 interface ContinentData {
@@ -40,7 +41,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
   const [expandedContinent, setExpandedContinent] = useState<string>('asia');
   const [selectedLocation, setSelectedLocation] = useState<string>('del');
   const [asnSearch, setASNSearch] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'overview' | 'asns' | 'sites' | 'pricing' | 'stats'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'asns' | 'sites' | 'pricing' | 'route-servers' | 'stats'>('overview');
   const { locations: adminLocations, continents: adminContinents } = useAdmin();
   
   // Grafana live traffic data
@@ -84,7 +85,11 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
       ],
       description: 'Strategic hub serving North India\'s enterprise and government networks.',
       established: '2023',
-      cityImage: '/assets/cities/delhi.png'
+      cityImage: '/assets/cities/delhi.png',
+      routeServers: [
+        { name: 'RS1', asn: 49378, ipv4: '103.77.108.200', ipv6: '2001:df2:1900:2::200' },
+        { name: 'RS2', asn: 49378, ipv4: '103.77.108.240', ipv6: '2001:df2:1900:2::240' }
+      ]
     },
     {
       id: 'bom',
@@ -111,7 +116,11 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
       ],
       description: 'Strategic gateway serving India\'s largest financial and commercial center.',
       established: '2022',
-      cityImage: '/assets/cities/mumbai.png'
+      cityImage: '/assets/cities/mumbai.png',
+      routeServers: [
+        { name: 'RS1', asn: 49378, ipv4: '103.77.109.11', ipv6: '2001:df2:1900:2::11' },
+        { name: 'RS2', asn: 49378, ipv4: '103.77.109.12', ipv6: '2001:df2:1900:2::12' }
+      ]
     },
     {
       id: 'maa',
@@ -816,6 +825,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                         >
                           Pricing
                         </button>
+
                         <button
                           onClick={() => setActiveTab('stats')}
                           className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${
@@ -1111,6 +1121,8 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                         )}
                       </div>
                     )}
+
+
 
                     {/* STATS TAB */}
                     {activeTab === 'stats' && (

@@ -798,6 +798,81 @@ const LocationsAdminPanel: React.FC<LocationsAdminPanelProps> = ({ embedded = fa
                  </div>
               </div>
 
+              {/* Route Servers */}
+              <div className="space-y-2">
+                 <div className="flex justify-between items-center bg-slate-700/50 p-2 rounded">
+                    <h4 className="text-white font-medium flex items-center gap-2"><Shield size={16}/> Route Servers</h4>
+                    <button 
+                      onClick={() => setEditingLocation({ ...editingLocation, routeServers: [...(editingLocation.routeServers || []), { name: `RS${(editingLocation.routeServers?.length || 0) + 1}`, asn: '49378', ipv4: '', ipv6: '' }]})}
+                      className="text-xs bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded"
+                    >+ Add Route Server</button>
+                 </div>
+                 <div className="space-y-2 max-h-60 overflow-y-auto">
+                    {editingLocation.routeServers?.map((rs, idx) => (
+                      <div key={idx} className="grid grid-cols-5 gap-2 items-center bg-slate-900 p-3 rounded text-sm">
+                         <div>
+                          <label className="block text-xs text-slate-500 mb-1">Name</label>
+                          <input 
+                           value={rs.name} 
+                           placeholder="RS1"
+                           onChange={e => {
+                             const newRS = [...(editingLocation.routeServers || [])];
+                             newRS[idx].name = e.target.value;
+                             setEditingLocation({...editingLocation, routeServers: newRS});
+                           }}
+                           className="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white"
+                         />
+                         </div>
+                         <div>
+                          <label className="block text-xs text-slate-500 mb-1">ASN</label>
+                          <input 
+                           value={rs.asn} 
+                           placeholder="49378"
+                           onChange={e => {
+                             const newRS = [...(editingLocation.routeServers || [])];
+                             newRS[idx].asn = e.target.value;
+                             setEditingLocation({...editingLocation, routeServers: newRS});
+                           }}
+                           className="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white"
+                         />
+                         </div>
+                         <div className="col-span-2 grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="block text-xs text-slate-500 mb-1">IPv4</label>
+                            <input 
+                             value={rs.ipv4 || ''} 
+                             placeholder="192.168.1.1"
+                             onChange={e => {
+                               const newRS = [...(editingLocation.routeServers || [])];
+                               newRS[idx].ipv4 = e.target.value;
+                               setEditingLocation({...editingLocation, routeServers: newRS});
+                             }}
+                             className="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-mono text-xs"
+                           />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-slate-500 mb-1">IPv6</label>
+                            <input 
+                             value={rs.ipv6 || ''} 
+                             placeholder="2001:db8::1"
+                             onChange={e => {
+                               const newRS = [...(editingLocation.routeServers || [])];
+                               newRS[idx].ipv6 = e.target.value;
+                               setEditingLocation({...editingLocation, routeServers: newRS});
+                             }}
+                             className="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-mono text-xs"
+                           />
+                          </div>
+                         </div>
+                        <button onClick={() => {
+                          const newRS = editingLocation.routeServers?.filter((_, i) => i !== idx);
+                          setEditingLocation({...editingLocation, routeServers: newRS});
+                        }} className="text-red-400 hover:bg-red-400/10 p-2 rounded mt-5"><X size={16}/></button>
+                      </div>
+                    ))}
+                 </div>
+              </div>
+
             </div>
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-slate-500 bg-slate-800/30 rounded-lg border-2 border-dashed border-slate-700 p-12">

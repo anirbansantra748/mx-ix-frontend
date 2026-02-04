@@ -169,7 +169,7 @@ const AdminDashboard: React.FC = () => {
       case 'locations':
         return <LocationsAdminPanel embedded onBack={() => setCurrentSection('dashboard')} />;
       case 'stats':
-        return <StatsAdminPanel />;
+        return <StatsAdminPanel embedded onBack={() => setCurrentSection('dashboard')} />;
       case 'contacts':
         return <ContactsAdminPanel embedded onBack={() => setCurrentSection('dashboard')} />;
       case 'homepage':

@@ -9,10 +9,14 @@ export const emailConfig = {
   
   // Recipient email addresses - Update these when client provides them
   // Currently set to YOUR email for testing
+  // recipients: {
+  //   sales: 'anirbansantra748@gmail.com',
+  //   services: 'anirbansantra748@gmail.com',
+  // },
   recipients: {
-    sales: 'anirbansantra748@gmail.com',
-    services: 'anirbansantra748@gmail.com',
-  },
+  sales: 'sales@mx-ix.com',      // Changed from personal email
+  services: 'support@mx-ix.com',  // Changed from personal email
+},
   
   // Email template configuration
   fromName: 'MX-IX Contact Form',

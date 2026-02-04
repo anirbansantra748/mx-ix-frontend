@@ -380,10 +380,35 @@ const GlobalFabricMap = () => {
         {/* Network Stats */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
-            { label: "CONTINENTS", value: "3", Icon: Globe2, color: "#F20732" },
-            { label: "COUNTRIES", value: "5", Icon: Map, color: "#F20746" },
-            { label: "CONNECTED ASNS", value: locations.reduce((acc, loc) => acc + (loc.asnList?.length || 0), 0).toString(), Icon: Network, color: "#A6032F" },
-            { label: "AVG LATENCY", value: "<5ms", Icon: Clock, color: "#F20732" },
+            { 
+              label: "CONTINENTS", 
+              value: new Set(locations.filter(l => l.continentId).map(l => l.continentId.trim())).size.toString(), 
+              Icon: Globe2, 
+              color: "#F20732" 
+            },
+            { 
+              label: "COUNTRIES", 
+              value: (() => {
+                const countries = new Set(locations.filter(l => l.country && l.country.trim() !== '').map(l => l.country!.trim()));
+                console.log('Active Countries List:', Array.from(countries));
+                console.log('All Locations with Country:', locations.map(l => ({ name: l.name, country: l.country })));
+                return countries.size.toString();
+              })(), 
+              Icon: Map, 
+              color: "#F20746" 
+            },
+            { 
+              label: "CONNECTED ASNS", 
+              value: locations.reduce((acc, loc) => acc + (loc.asnList?.length || 0), 0).toString(), 
+              Icon: Network, 
+              color: "#A6032F" 
+            },
+            { 
+              label: "AVG LATENCY", 
+              value: globalFabricStats?.avgLatency || "<5ms", 
+              Icon: Clock, 
+              color: "#F20732" 
+            },
           ].map((stat) => (
             <div
               key={stat.label}

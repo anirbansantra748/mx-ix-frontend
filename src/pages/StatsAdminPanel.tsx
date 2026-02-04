@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, RefreshCw } from 'lucide-react';
+import { Save, RefreshCw, ChevronLeft } from 'lucide-react';
 import api from '../services/api';
 
 interface StatValue {
@@ -16,7 +16,12 @@ interface GlobalStatsData {
   ipv4Prefixes: StatValue;
 }
 
-const StatsAdminPanel = () => {
+interface StatsAdminPanelProps {
+  embedded?: boolean;
+  onBack?: () => void;
+}
+
+const StatsAdminPanel: React.FC<StatsAdminPanelProps> = ({ embedded = false, onBack }) => {
   const [stats, setStats] = useState<GlobalStatsData>({
     totalCapacity: { value: 450, unit: 'Tbps' },
     peakTraffic: { value: 156.2, unit: 'Tbps', trend: 'up', trendValue: '+8.1%' },
@@ -84,9 +89,20 @@ const StatsAdminPanel = () => {
     <div className="min-h-screen bg-black text-white pt-32 pb-20">
       <div className="max-w-5xl mx-auto px-6">
         <div className="mb-12">
-          <h1 className="text-5xl font-black tracking-tighter mb-4">
-            Global <span className="text-[#F20732]">Stats</span> Admin
-          </h1>
+          <div className="flex items-center gap-4 mb-4">
+            {embedded && onBack && (
+              <button 
+                onClick={onBack}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                title="Back to Dashboard"
+              >
+                <ChevronLeft size={32} />
+              </button>
+            )}
+            <h1 className="text-5xl font-black tracking-tighter">
+              Global <span className="text-[#F20732]">Stats</span> Admin
+            </h1>
+          </div>
           <p className=" text-gray-400">Manage global network statistics displayed on the stats page</p>
         </div>
 
