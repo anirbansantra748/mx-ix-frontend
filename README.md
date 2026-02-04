@@ -1,219 +1,109 @@
-# MX-IX Frontend
+# MX-IX Frontend - Infrastructure Evolved
 
-> **Premium Internet Exchange Platform** - A world-class web interface for MX-IX global network infrastructure.
+## Project Summary / Overview
 
-[![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+MX-IX (Matrix Internet Exchange) is a next-generation Internet Exchange platform designed to redefine the physical layer of the internet. This frontend control panel provides real-time visibility into the global network fabric, offering advanced telemetry, automated provisioning, and a "God-mode" view of the infrastructure.
 
-## 🌟 Overview
+The interface is built with a "sci-fi industrial" aesthetic, utilizing a stark black, white, and red color palette, glassmorphism effects, and fluid animations to convey a sense of precision and high-tech capability. It serves both public users (marketing, service discovery) and internal administrators (network management, stats overrides).
 
-MX-IX Frontend is a cutting-edge web application showcasing a premium Internet Exchange (IX) platform with interactive global network visualization, real-time capacity monitoring, and comprehensive service offerings. Built with modern web technologies, it delivers an exceptional user experience with smooth animations, responsive design, and professional aesthetics.
-
-## ✨ Key Features
-
-### 🗺️ **Interactive Global Map**
-- **Premium visualization** of worldwide exchange locations
-- **Real-time location cards** with glassmorphic design
-- **Animated markers** with multi-layer effects and SVG filters
-- **Dynamic statistics** display (capacity, routes, latency, coverage)
-- **Responsive map interactions** with hover and click states
-
-### 📊 **Real-Time Capacity Monitor**
-- **Animated traffic visualization** with gradient effects
-- **Live feed indicators** with pulsing animations
-- **124 Tbps capacity display** with premium styling
-
-### 🌐 **Location Management**
-- **Interactive location selector** with detailed facility information
-- **Tier IV datacenter specifications**
-- **Network interconnection stats** (400+ networks)
-- **Power and latency metrics**
-
-### 🛠️ **Services Catalog**
-- **Five service categories**: Peering, Private Connectivity, Access, Infrastructure & Consultancy, Cloud & Security
-- **Animated service cards** with tech borders and corner brackets
-- **Hover effects** with smooth transitions
-- **Sticky sidebar navigation** for easy browsing
-
-## 🚀 Tech Stack
-
-| Technology | Purpose |
-|------------|---------|
-| **React 18** | UI framework with hooks and modern patterns |
-| **TypeScript** | Type-safe development |
-| **Vite** | Lightning-fast build tool and dev server |
-| **Tailwind CSS** | Utility-first CSS framework |
-| **React Simple Maps** | Interactive map visualization |
-| **React Router** | Client-side routing |
-
-## 📦 Installation
-
-### Prerequisites
-- Node.js 18.x or higher
-- npm or yarn package manager
-
-### Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/Wonder-Creative-Studio/MX-IX_frontend.git
-
-# Navigate to project directory
-cd MX-IX_frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-The application will be available at `http://localhost:5173`
-
-## 🛠️ Available Scripts
-
-```bash
-# Development server with hot reload
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build locally
-npm run preview
-
-# Type checking
-npm run type-check
-
-# Lint code
-npm run lint
-```
-
-## 📁 Project Structure
-
-```
-MX-IX_frontend/
-├── public/              # Static assets
-│   └── assets/         # Images, logos
-├── src/
-│   ├── components/     # Reusable UI components
-│   │   ├── GlobalFabric.tsx
-│   │   ├── GlobalFabricMap.tsx
-│   │   └── RealTimeCapacity.tsx
-│   ├── pages/          # Page components
-│   │   ├── AboutPage.tsx
-│   │   ├── AdminPanel.tsx
-│   │   ├── ContactPage.tsx
-│   │   ├── LocationsPage.tsx
-│   │   └── ServicesPage.tsx
-│   ├── shared/         # Shared utilities
-│   │   └── hooks.ts
-│   ├── App.tsx         # Main application component
-│   ├── main.tsx        # Application entry point
-│   └── index.css       # Global styles
-├── index.html          # HTML template
-├── package.json        # Dependencies and scripts
-├── tsconfig.json       # TypeScript configuration
-├── tailwind.config.js  # Tailwind CSS configuration
-└── vite.config.ts      # Vite configuration
-```
-
-## 🎨 Design System
-
-### Color Palette
-```css
-Primary Red:    #F20732
-Deep Red:       #A6032F
-Bright Red:     #F20746
-Off White:      #F2F2F2
-Pure Black:     #0D0D0D
-Dark Grays:     #1a1a1a - #1f1f1f
-```
-
-### Typography
-- **Headings**: Black weight (900), tight tracking
-- **Body**: Regular to semibold weights
-- **Monospace**: Code, labels, and technical data
-
-### Animations
-- Fade in effects for cards
-- Pulse animations for active states
-- Shimmer effects on hover
-- Smooth transitions (300-700ms)
-
-## 🌐 Browser Support
-
-- Chrome/Edge (latest)
-- Firefox (latest)
-- Safari (latest)
-- Modern mobile browsers
-
-## 📝 Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-VITE_API_URL=your_api_url_here
-VITE_APP_TITLE=MX-IX
-```
-
-## 🚢 Deployment
-
-### Build for Production
-
-```bash
-npm run build
-```
-
-The optimized build will be in the `dist/` directory, ready for deployment to any static hosting service:
-
-- **Vercel**: Connect your GitHub repository
-- **Netlify**: Deploy from Git or drag & drop
-- **AWS S3 + CloudFront**: Upload dist folder
-- **GitHub Pages**: Use gh-pages branch
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is proprietary and confidential.
-
-## 👥 Team
-
-**Wonder Creative Studio** - Development Team
+Key capabilities include:
+*   **Global Visualization**: Interactive maps and 3D globes showing Point of Presence (PoP) locations.
+*   **Real-time Telemetry**: Live traffic graphs and capacity indicators integrated with Grafana/Zabbix.
+*   **Service Catalog**: Detailed breakdown of peering, cloud connect, and colocation services.
+*   **Admin Control**: A secured dashboard for managing location data and overriding global statistics.
 
 ---
 
-## 🎯 Roadmap
+## Features (Per Page)
 
-- [ ] Add user authentication
-- [ ] Implement dark mode toggle
-- [ ] Add multi-language support
-- [ ] Integrate real-time data feeds
-- [ ] Add network health monitoring dashboard
-- [ ] Implement advanced filtering and search
+### 1. Global Components
+*   **Navigation Bar**: Responsive design with glassmorphism effects transparent-to-white on scroll. Includes a "System Status" pulsing indicator.
+*   **Mobile Menu**: Slide-in overlay with full navigation and resource links.
+*   **Footer**: Rich layout with carbon fibre texture background, "System Optimal" indicator, and quick links.
+*   **Custom Cursor**: A "red circle follower" reactive cursor that expands on hover, enhancing the immersive feel.
 
-## 📞 Support
+### 2. Home Page (`/`)
+*   **Hero Section**: Split layout featuring a large typographic statement ("INFRA STRUCTURE EVOLVED") and an interactive Network Map.
+*   **Stats Strip**: 3-column grid displaying Location count, Connected Data Centers, and Total Capacity with hover interactions.
+*   **Real-Time Capacity**: A dedicated section simulating (or displaying live) traffic waves and throughput metrics.
+*   **Global Fabric**: An interactive map visualization showing the layout of the global network.
 
-For support and inquiries:
-- **Email**: support@mx-ix.com
-- **Website**: https://mx-ix.com
-- **GitHub Issues**: [Report a bug](https://github.com/Wonder-Creative-Studio/MX-IX_frontend/issues)
+### 3. Services Page (`/services`)
+*   **Hero Section**: Static carbon fibre background with a stats overlay.
+*   **Service Catalog**: Accordion-style list of services (Peering, Cloud Connect, etc.).
+*   **Split View Details**: Expanding a service reveals key benefits and technical specifications side-by-side.
+
+### 4. Locations Page (`/locations`)
+*   **Hero Section**: Features a static globe image and a "Global Presence" badge.
+*   **Main Interface**: A split-screen layout.
+    *   **Left**: Accordion sidebar grouped by continent for selecting cities.
+    *   **Right**: Detail panel showing connected networks, routes, and a specific Traffic Graph for the selected city.
+*   **Data Source**: Hybrid model using hardcoded fallbacks and dynamic data from the Admin Context.
+
+### 5. Stats Page (`/stats`)
+*   **Hero Section**: Controls for toggling between "Live" and "Simulated" data sources.
+*   **Traffic Overview**: Gradient-styled cards for Inbound, Outbound, and Peak traffic.
+*   **Main Graph**: Large area chart visualizing network throughput.
+*   **Detailed Metrics**: Grid showing Packet Loss, Jitter, and Latency with trend indicators.
+
+### 6. About Page (`/about`)
+*   **Hero Section**: Simple "Our Story" header.
+*   **Timeline**: Visual stats for "Founded", "Countries", and "Clients".
+*   **Technology Cards**: Grid layout highlighting AI Routing, Low Latency, and Security features.
+
+### 7. Contact Page (`/contact`)
+*   **Dynamic Form**: A smart form that adapts based on the selected department (Sales vs. Tech Support).
+*   **Conditional Fields**: Dropdowns change based on service type (e.g., Cloud Connect shows AWS/Azure options; Peering shows ASN fields).
+*   **Email Integration**: Connected via `emailjs` for direct submission.
+
+### 8. Admin Pages (`/admin`)
+*   **Dashboard**: Secure login and overview stats.
+*   **Locations Panel**: Full CRUD (Create, Read, Update, Delete) capabilities for managing global locations.
+*   **Stats Controls**: Manual override fields to adjust "Global Latency" or "Active Nodes" for marketing purposes.
 
 ---
 
-<div align="center">
-  <strong>Built with ❤️ by Wonder Creative Studio</strong>
-  <br/>
-  <sub>Powering the future of global network connectivity.</sub>
-</div>
+## Design System
+
+### Fonts & Typography
+The typography is designed to be technical, legible, and impactful.
+*   **Primary Font**: `Inter` (Google Fonts) - Used for body text, UI elements, and headings.
+*   **Monospace Font**: System Monospace / `JetBrains Mono` style - Used for technical data, stats, and "code-like" labels.
+
+### Color Codes
+*   **Brand Red**: `#F20732` (Primary Accent - Alerts, Hovers, "Live" indicators)
+*   **Background**: `#FFFFFF` (White - Main Clean Look), `#000000` (Black - Footer, High Contast)
+*   **Grays**: Slate scale (Tailwind `slate-500` to `slate-950`) for technical text and dark mode elements.
+*   **Status Green**: `#22c55e` (Tailwind `green-500`) for "Operational" status.
+
+### Icons & Illustrations
+*   **Icon Set**: `lucide-react` (Feather icons) - Clean, stroke-based icons.
+*   **Custom Graphics**:
+    *   `HeroNetworkMap`: Custom dot-matrix world map.
+    *   Carbon Fibre Patterns: CSS-based or texture overlays (`transparenttextures.com`).
+
+---
+
+## Environment Details
+
+### Tech Stack
+*   **Framework**: [React](https://react.dev/) (v18+)
+*   **Build Tool**: [Vite](https://vitejs.dev/)
+*   **Language**: [TypeScript](https://www.typescriptlang.org/)
+*   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+*   **Animation**: CSS Keyframes + React Hooks for JS animations.
+*   **Maps**: `react-simple-maps`
+
+### Dependencies
+*   `lucide-react`: Iconography.
+*   `@emailjs/browser`: Contact form submission.
+*   `react-router-dom` (implied): Navigation handling.
+
+---
+
+## GitHub Repository
+[Wonder-Creative-Studio/MX-IX_frontend](https://github.com/Wonder-Creative-Studio/MX-IX_frontend)
+
+---
+
+> **Note**: This documentation reflects the current state of the frontend architecture. For backend integration details, refer to the separate backend documentation.
