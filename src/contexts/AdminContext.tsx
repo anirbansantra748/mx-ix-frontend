@@ -82,7 +82,7 @@ export interface Location {
   pricing?: PricingTier[];
   routeServers?: {
     name: string;
-    asn: number;
+    asn: string;
     ipv4: string;
     ipv6: string;
   }[];
