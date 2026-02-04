@@ -25,6 +25,19 @@ async function apiCall<T>(
     const result = await response.json();
     
     if (!response.ok) {
+      // Handle token expiration (401 Unauthorized)
+      if (response.status === 401) {
+        // Clear tokens
+        localStorage.removeItem('mx-ix-admin-token');
+        localStorage.removeItem('mx-ix-admin-auth');
+        
+        // Redirect to login by reloading the page
+        // This will force the auth check to fail and show login screen
+        window.location.reload();
+        
+        return { success: false, error: 'Session expired. Please login again.' };
+      }
+      
       return { success: false, error: result.error || 'Request failed' };
     }
 
@@ -185,6 +198,13 @@ export interface PricingTier {
   currency: string;
 }
 
+export interface RouteServer {
+  name: string;
+  asn: string;
+  ipv4: string;
+  ipv6: string;
+}
+
 export interface Location {
   id: string;
   name: string;
@@ -212,6 +232,7 @@ export interface Location {
   established?: string;
   cityImage?: string;
   pricing?: PricingTier[];
+  routeServers?: RouteServer[];
 }
 
 export const locationsApi = {
@@ -363,6 +384,14 @@ export const contactsApi = {
     }),
 };
 
+export const statsApi = {
+  get: () => apiCall<any>('/stats'),
+  update: (data: any) => apiCall<any>('/stats', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  }),
+};
+
 export default {
   auth: authApi,
   services: servicesApi,
@@ -372,5 +401,6 @@ export default {
   globalFabricStats: globalFabricStatsApi,
   grafana: grafanaApi,
   contacts: contactsApi,
+  stats: statsApi,
 };
 

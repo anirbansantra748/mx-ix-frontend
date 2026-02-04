@@ -6,6 +6,7 @@ import ServicesPage from './pages/ServicesPage';
 import AdminPage from './pages/AdminPage';
 import AdminDashboard from './pages/AdminDashboard';
 import StatsPage from './pages/StatsPage';
+import TechnicalPage from './pages/TechnicalPage';
 import RealTimeCapacity from './components/RealTimeCapacity';
 import GlobalFabric from './components/GlobalFabric';
 import HeroNetworkMap from './components/HeroNetworkMap';
@@ -209,6 +210,12 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
     { id: 'stats', label: 'STATS' },
   ];
 
+  const resourceItems = [
+    { id: 'technical', label: 'Technical Requirements', type: 'internal' },
+    { id: 'status', label: 'Status Page', type: 'external', url: 'https://status.mx-ix.com' },
+    { id: 'lg', label: 'Looking Glass', type: 'external', url: 'http://lg.mx-ix.com/' },
+  ];
+
   // Adjust colors based on dark mode and scroll state
   const getNavBg = () => {
     // When mobile menu is open, always use solid white background
@@ -255,7 +262,7 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex flex-1 items-center justify-center px-4">
-           <div className={`flex items-center gap-12 px-12 py-3 rounded-full border shadow-sm transition-all duration-300 hover:shadow-md ${getNavItemBg()}`}>
+           <div className={`flex items-center gap-8 xl:gap-12 px-8 xl:px-12 py-3 rounded-full border shadow-sm transition-all duration-300 hover:shadow-md ${getNavItemBg()}`}>
             {navItems.map((item) => (
               <button
                 key={item.id}
@@ -269,6 +276,49 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
                 <span className={`absolute -bottom-1 left-0 w-full h-[2px] bg-[#F20732] transform origin-left transition-transform duration-300 ease-out ${currentPage === item.id ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
               </button>
             ))}
+
+            {/* Resources Dropdown */}
+            <div className="relative group/dropdown">
+                 <button
+                    className={`
+                      text-[11px] font-mono font-bold tracking-[0.15em] uppercase transition-all duration-300 hover-trigger relative
+                      ${getNavItemTextColor(currentPage === 'technical')} flex items-center gap-1
+                    `}
+                  >
+                    RESOURCES
+                    <svg className="w-3 h-3 transition-transform duration-300 group-hover/dropdown:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                  </button>
+
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300">
+                      <div className="w-48 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden py-1">
+                          {resourceItems.map((item) => (
+                              item.type === 'internal' ? (
+                                  <button
+                                      key={item.id}
+                                      onClick={() => {
+                                        setPage(item.id);
+                                        // Close dropdown by removing focus or moving mouse (handled by CSS hover)
+                                      }}
+                                      className="w-full text-left px-4 py-3 text-[10px] font-mono font-bold uppercase tracking-wider text-gray-700 hover:bg-gray-50 hover:text-[#F20732] transition-colors"
+                                  >
+                                      {item.label}
+                                  </button>
+                              ) : (
+                                  <a
+                                      key={item.id}
+                                      href={item.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="block w-full text-left px-4 py-3 text-[10px] font-mono font-bold uppercase tracking-wider text-gray-700 hover:bg-gray-50 hover:text-[#F20732] transition-colors"
+                                  >
+                                      {item.label}
+                                  </a>
+                              )
+                          ))}
+                      </div>
+                  </div>
+            </div>
+
           </div>
         </div>
 
@@ -330,6 +380,37 @@ const Navigation = ({ currentPage, setPage }: { currentPage: string, setPage: (p
                     {item.label}
                   </button>
                 ))}
+
+                 {/* Mobile Resources */}
+                 <div className="pt-2 pb-2 border-t border-gray-100">
+                    <p className="px-4 text-[10px] font-mono text-gray-400 uppercase tracking-widest mb-2">Resources</p>
+                    {resourceItems.map((item) => (
+                       item.type === 'internal' ? (
+                            <button
+                                key={item.id}
+                                onClick={() => handleNavClick(item.id)}
+                                className={`w-full text-left px-4 py-3 rounded-lg font-mono text-sm font-bold tracking-wider uppercase transition-all duration-300 ${
+                                currentPage === item.id
+                                    ? 'bg-[#F20732] text-white'
+                                    : 'text-gray-700 hover:bg-gray-100'
+                                }`}
+                            >
+                                {item.label}
+                            </button>
+                       ) : (
+                           <a
+                                key={item.id}
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block w-full text-left px-4 py-3 rounded-lg font-mono text-sm font-bold tracking-wider uppercase text-gray-700 hover:bg-gray-100 transition-all duration-300"
+                            >
+                                {item.label}
+                            </a>
+                       )
+                    ))}
+                 </div>
+
               </nav>
 
               {/* Status Indicator */}
@@ -580,6 +661,8 @@ function AppContent() {
         return <StatsPage />;
       case 'contact':
         return <ContactPage preSelectedCity={selectedCity} />;
+      case 'technical':
+        return <TechnicalPage />;
       case 'admin':
         return <AdminDashboard />;
       default:

@@ -49,11 +49,11 @@ const AboutPage: React.FC = () => {
               <div className="absolute top-0 left-0 w-full h-1 bg-[#F20732] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
               <div className="space-y-8">
                 <div>
-                  <div className="text-5xl font-light tracking-tighter text-black mb-2">2016</div>
+                  <div className="text-5xl font-light tracking-tighter text-black mb-2">2026</div>
                   <div className="font-mono text-xs text-gray-400 uppercase tracking-widest">Founded</div>
                 </div>
                 <div>
-                  <div className="text-5xl font-light tracking-tighter text-black mb-2">50+</div>
+                  <div className="text-5xl font-light tracking-tighter text-black mb-2">2+</div>
                   <div className="font-mono text-xs text-gray-400 uppercase tracking-widest">Countries</div>
                 </div>
                 <div>

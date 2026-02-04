@@ -80,6 +80,12 @@ export interface Location {
   established?: string;
   cityImage?: string;
   pricing?: PricingTier[];
+  routeServers?: {
+    name: string;
+    asn: number;
+    ipv4: string;
+    ipv6: string;
+  }[];
 }
 
 interface AdminContextType {

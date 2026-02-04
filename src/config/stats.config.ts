@@ -27,16 +27,14 @@ export interface LocationStats {
 
 // Mock data - replace with real API data
 export const networkStats: NetworkStat[] = [
-  // Traffic Stats
+  // Essential Stats Only
   {
-    id: 'total_traffic',
-    label: 'Total Traffic',
-    value: 124.5,
+    id: 'total_capacity',
+    label: 'Total Capacity',
+    value: 450,
     unit: 'Tbps',
-    trend: 'up',
-    trendValue: '+12.3%',
-    format: 'decimal',
-    category: 'traffic'
+    format: 'number',
+    category: 'network'
   },
   {
     id: 'peak_traffic',
@@ -49,40 +47,12 @@ export const networkStats: NetworkStat[] = [
     category: 'traffic'
   },
   {
-    id: 'avg_traffic',
-    label: 'Average Traffic',
-    value: 98.7,
-    unit: 'Tbps',
-    format: 'decimal',
-    category: 'traffic'
-  },
-  
-  // Network Stats
-  {
     id: 'total_peers',
     label: 'Connected Networks',
     value: 4921,
     unit: 'Peers',
     trend: 'up',
     trendValue: '+47',
-    format: 'number',
-    category: 'network'
-  },
-  {
-    id: 'active_ports',
-    label: 'Active Ports',
-    value: 12847,
-    unit: 'Ports',
-    trend: 'up',
-    trendValue: '+152',
-    format: 'number',
-    category: 'network'
-  },
-  {
-    id: 'total_capacity',
-    label: 'Total Capacity',
-    value: 450,
-    unit: 'Tbps',
     format: 'number',
     category: 'network'
   },
@@ -94,73 +64,6 @@ export const networkStats: NetworkStat[] = [
     trend: 'stable',
     format: 'number',
     category: 'network'
-  },
-  {
-    id: 'ipv6_prefixes',
-    label: 'IPv6 Prefixes',
-    value: 145678,
-    unit: 'Routes',
-    trend: 'up',
-    trendValue: '+2.1%',
-    format: 'number',
-    category: 'network'
-  },
-  
-  // Performance Stats
-  {
-    id: 'avg_latency',
-    label: 'Global Latency',
-    value: 0.4,
-    unit: 'ms',
-    trend: 'down',
-    trendValue: '-0.1ms',
-    format: 'decimal',
-    category: 'performance'
-  },
-  {
-    id: 'uptime',
-    label: 'Network Uptime',
-    value: 99.99,
-    unit: '%',
-    trend: 'stable',
-    format: 'decimal',
-    category: 'performance'
-  },
-  {
-    id: 'packet_loss',
-    label: 'Packet Loss',
-    value: 0.001,
-    unit: '%',
-    trend: 'down',
-    trendValue: '-0.0002%',
-    format: 'decimal',
-    category: 'performance'
-  },
-  
-  // Geographic Stats
-  {
-    id: 'locations',
-    label: 'Global Locations',
-    value: 6,
-    unit: 'Cities',
-    format: 'number',
-    category: 'geographic'
-  },
-  {
-    id: 'countries',
-    label: 'Countries Served',
-    value: 45,
-    unit: 'Countries',
-    format: 'number',
-    category: 'geographic'
-  },
-  {
-    id: 'continents',
-    label: 'Continents',
-    value: 5,
-    unit: 'Regions',
-    format: 'number',
-    category: 'geographic'
   }
 ];
 
@@ -291,16 +194,13 @@ export const getCityStats = (locationId: string, locationName: string, locationC
   const multipliers = cityStatsMultipliers[locationId] || { traffic: 1, peers: 1, latency: 1 };
   
   const cityStats: NetworkStat[] = [
-    // Traffic Stats
     {
-      id: 'total_traffic',
-      label: 'Total Traffic',
-      value: parseFloat((124.5 * multipliers.traffic).toFixed(1)),
+      id: 'total_capacity',
+      label: 'Total Capacity',
+      value: Math.floor(450 * multipliers.traffic),
       unit: 'Tbps',
-      trend: 'up',
-      trendValue: '+12.3%',
-      format: 'decimal',
-      category: 'traffic'
+      format: 'number',
+      category: 'network'
     },
     {
       id: 'peak_traffic',
@@ -313,40 +213,12 @@ export const getCityStats = (locationId: string, locationName: string, locationC
       category: 'traffic'
     },
     {
-      id: 'avg_traffic',
-      label: 'Average Traffic',
-      value: parseFloat((98.7 * multipliers.traffic).toFixed(1)),
-      unit: 'Tbps',
-      format: 'decimal',
-      category: 'traffic'
-    },
-    
-    // Network Stats
-    {
       id: 'total_peers',
       label: 'Connected Networks',
       value: Math.floor(4921 * multipliers.peers),
       unit: 'Peers',
       trend: 'up',
       trendValue: '+47',
-      format: 'number',
-      category: 'network'
-    },
-    {
-      id: 'active_ports',
-      label: 'Active Ports',
-      value: Math.floor(12847 * multipliers.peers),
-      unit: 'Ports',
-      trend: 'up',
-      trendValue: '+152',
-      format: 'number',
-      category: 'network'
-    },
-    {
-      id: 'total_capacity',
-      label: 'Total Capacity',
-      value: Math.floor(450 * multipliers.traffic),
-      unit: 'Tbps',
       format: 'number',
       category: 'network'
     },
@@ -358,73 +230,6 @@ export const getCityStats = (locationId: string, locationName: string, locationC
       trend: 'stable',
       format: 'number',
       category: 'network'
-    },
-    {
-      id: 'ipv6_prefixes',
-      label: 'IPv6 Prefixes',
-      value: Math.floor(145678 * multipliers.peers),
-      unit: 'Routes',
-      trend: 'up',
-      trendValue: '+2.1%',
-      format: 'number',
-      category: 'network'
-    },
-    
-    // Performance Stats
-    {
-      id: 'avg_latency',
-      label: 'Global Latency',
-      value: parseFloat((0.4 * multipliers.latency).toFixed(2)),
-      unit: 'ms',
-      trend: multipliers.latency > 1 ? 'up' : 'down',
-      trendValue: multipliers.latency > 1 ? '+0.1ms' : '-0.1ms',
-      format: 'decimal',
-      category: 'performance'
-    },
-    {
-      id: 'uptime',
-      label: 'Network Uptime',
-      value: 99.99,
-      unit: '%',
-      trend: 'stable',
-      format: 'decimal',
-      category: 'performance'
-    },
-    {
-      id: 'packet_loss',
-      label: 'Packet Loss',
-      value: parseFloat((0.001 * multipliers.latency).toFixed(4)),
-      unit: '%',
-      trend: 'down',
-      trendValue: '-0.0002%',
-      format: 'decimal',
-      category: 'performance'
-    },
-    
-    // Geographic Stats (specific to this location)
-    {
-      id: 'locations',
-      label: 'Nearby Locations',
-      value: Math.floor(Math.random() * 3) + 2,
-      unit: 'Cities',
-      format: 'number',
-      category: 'geographic'
-    },
-    {
-      id: 'countries',
-      label: 'Countries Served',
-      value: Math.floor(45 * multipliers.peers),
-      unit: 'Countries',
-      format: 'number',
-      category: 'geographic'
-    },
-    {
-      id: 'continents',
-      label: 'Continents',
-      value: Math.floor(5 * multipliers.peers * 0.8),
-      unit: 'Regions',
-      format: 'number',
-      category: 'geographic'
     }
   ];
 
