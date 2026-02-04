@@ -215,5 +215,5 @@ For support and inquiries:
 <div align="center">
   <strong>Built with ❤️ by Wonder Creative Studio</strong>
   <br/>
-  <sub>Powering the future of global network connectivity</sub>
+  <sub>Powering the future of global network connectivity.</sub>
 </div>
