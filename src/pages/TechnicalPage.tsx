@@ -124,7 +124,7 @@ const TechnicalPage = () => {
             TECHNICAL <span className="text-[#F20732]">REQUIREMENTS</span>
           </h1>
           <p className="text-gray-300 text-lg leading-relaxed max-w-xl mb-8">
-            Security policies, BGP configuration, and operational standards for the IX shared Layer 2 infrastructure.
+            Security policies, BGP configuration, and operational standards for the shared Layer 2 infrastructure.
           </p>
         </div>
       </section>
@@ -154,7 +154,7 @@ const TechnicalPage = () => {
                 </h3>
                 <div className="bg-gray-50 p-8 rounded-lg border border-gray-100">
                     <p className="text-gray-700 leading-relaxed">
-                         IX aims to ensure the Members reliable and uninterrupted Service as well as to limit the risks of deliberate or accidental mistakes, defective equipment or lack of speed of certain Member to reflect the quality of the others.
+                     aims to ensure the Members reliable and uninterrupted Service as well as to limit the risks of deliberate or accidental mistakes, defective equipment or lack of speed of certain Member to reflect the quality of the others.
                     </p>
                 </div>
             </div>
@@ -165,7 +165,7 @@ const TechnicalPage = () => {
                     IP Traffic Exchange
                     <div className="h-px flex-1 bg-gray-200"></div>
                 </h3>
-                <p className="text-gray-700 mb-6">IP traffic should be exchanged between  IX members using BGP protocol by the following ways:</p>
+                <p className="text-gray-700 mb-6">IP traffic should be exchanged between members using BGP protocol by the following ways:</p>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                     <div className="bg-white border border-gray-200 p-6 rounded-lg hover:shadow-lg transition-shadow">
@@ -176,7 +176,7 @@ const TechnicalPage = () => {
                     <div className="bg-white border border-gray-200 p-6 rounded-lg hover:shadow-lg transition-shadow">
                         <div className="w-10 h-10 bg-[#F20732] text-white flex items-center justify-center font-bold text-xl mb-4">02</div>
                         <h4 className="font-bold text-lg mb-2">Bilateral BGP Sessions</h4>
-                        <p className="text-gray-600 text-sm">Between  IX Members / Content providers with their mutual agreements.</p>
+                        <p className="text-gray-600 text-sm">Between Members / Content providers with their mutual agreements.</p>
                     </div>
                 </div>
             </div>
