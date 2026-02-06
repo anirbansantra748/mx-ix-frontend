@@ -390,8 +390,7 @@ const GlobalFabricMap = () => {
               label: "COUNTRIES", 
               value: (() => {
                 const countries = new Set(locations.filter(l => l.country && l.country.trim() !== '').map(l => l.country!.trim()));
-                console.log('Active Countries List:', Array.from(countries));
-                console.log('All Locations with Country:', locations.map(l => ({ name: l.name, country: l.country })));
+
                 return countries.size.toString();
               })(), 
               Icon: Map, 

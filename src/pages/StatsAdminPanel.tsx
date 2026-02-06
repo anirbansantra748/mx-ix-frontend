@@ -58,9 +58,7 @@ const StatsAdminPanel: React.FC<StatsAdminPanelProps> = ({ embedded = false, onB
     try {
       setLoading(true);
       setMessage('');
-      console.log('Saving stats:', stats);
       const response = await api.stats.update(stats);
-      console.log('Save response:', response);
       if (response.success) {
         setMessage('Stats updated successfully!');
         setTimeout(() => setMessage(''), 3000);

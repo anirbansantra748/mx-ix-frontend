@@ -222,7 +222,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ preSelectedCity }) => {
         emailConfig.publicKey
       );
 
-      console.log('Email sent successfully:', response);
+
       
       setSubmitStatus({
         type: 'success',
