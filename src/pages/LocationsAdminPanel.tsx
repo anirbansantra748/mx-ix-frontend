@@ -686,31 +686,57 @@ const LocationsAdminPanel: React.FC<LocationsAdminPanelProps> = ({ embedded = fa
                  </div>
                  <div className="space-y-2 max-h-40 overflow-y-auto">
                     {editingLocation.enabledSites?.map((site, idx) => (
-                      <div key={idx} className="flex gap-2 items-center bg-slate-900 p-2 rounded text-sm">
-                         <input 
-                          value={site.name} 
-                          placeholder="Name"
-                          onChange={e => {
-                            const newSites = [...editingLocation.enabledSites];
-                            newSites[idx].name = e.target.value;
+                      <div key={idx} className="bg-slate-900 p-3 rounded text-sm space-y-2">
+                        <div className="flex gap-2">
+                          <input 
+                            value={site.name} 
+                            placeholder="Name"
+                            onChange={e => {
+                              const newSites = [...(editingLocation.enabledSites || [])];
+                              newSites[idx].name = e.target.value;
+                              setEditingLocation({...editingLocation, enabledSites: newSites});
+                            }}
+                            className="flex-1 bg-transparent border border-slate-700 rounded px-2 py-1 text-slate-300 placeholder:text-slate-600 focus:border-blue-500 focus:outline-none"
+                          />
+                          <input 
+                            value={site.provider} 
+                            placeholder="Provider"
+                            onChange={e => {
+                              const newSites = [...(editingLocation.enabledSites || [])];
+                              newSites[idx].provider = e.target.value;
+                              setEditingLocation({...editingLocation, enabledSites: newSites});
+                            }}
+                            className="w-1/3 bg-transparent border border-slate-700 rounded px-2 py-1 text-slate-300 placeholder:text-slate-600 focus:border-blue-500 focus:outline-none"
+                          />
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          <input 
+                            value={site.address || ''} 
+                            placeholder="Address"
+                            onChange={e => {
+                              const newSites = [...(editingLocation.enabledSites || [])];
+                              newSites[idx] = { ...newSites[idx], address: e.target.value };
+                              setEditingLocation({...editingLocation, enabledSites: newSites});
+                            }}
+                            className="flex-1 bg-transparent border border-slate-700 rounded px-2 py-1 text-slate-300 placeholder:text-slate-600 focus:border-blue-500 focus:outline-none"
+                          />
+                          <select
+                            value={site.status || 'available'}
+                            onChange={e => {
+                              const newSites = [...(editingLocation.enabledSites || [])];
+                              newSites[idx] = { ...newSites[idx], status: e.target.value as 'available' | 'coming-soon' };
+                              setEditingLocation({...editingLocation, enabledSites: newSites});
+                            }}
+                            className="w-32 bg-transparent border border-slate-700 rounded px-2 py-1 text-slate-300 focus:border-blue-500 focus:outline-none"
+                          >
+                            <option value="available">Available</option>
+                            <option value="coming-soon">Coming Soon</option>
+                          </select>
+                          <button onClick={() => {
+                            const newSites = editingLocation.enabledSites?.filter((_, i) => i !== idx);
                             setEditingLocation({...editingLocation, enabledSites: newSites});
-                          }}
-                          className="flex-1 bg-transparent border border-slate-700 rounded px-1"
-                        />
-                         <input 
-                          value={site.provider} 
-                          placeholder="Provider"
-                          onChange={e => {
-                            const newSites = [...editingLocation.enabledSites];
-                            newSites[idx].provider = e.target.value;
-                            setEditingLocation({...editingLocation, enabledSites: newSites});
-                          }}
-                          className="w-32 bg-transparent border border-slate-700 rounded px-1"
-                        />
-                        <button onClick={() => {
-                          const newSites = editingLocation.enabledSites.filter((_, i) => i !== idx);
-                          setEditingLocation({...editingLocation, enabledSites: newSites});
-                        }} className="text-red-400"><X size={14}/></button>
+                          }} className="text-red-400 hover:text-red-300 p-1"><X size={14}/></button>
+                        </div>
                       </div>
                     ))}
                  </div>
