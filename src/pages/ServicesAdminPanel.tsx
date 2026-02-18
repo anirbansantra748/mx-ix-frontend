@@ -1,25 +1,170 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Plus, 
-  Trash2, 
-  Edit2, 
-  Save, 
-  X, 
-  ChevronDown, 
+import {
+  Plus,
+  Trash2,
+  Edit2,
+  Save,
+  X,
+  ChevronDown,
   ChevronUp,
   ChevronLeft,
   Loader2,
   AlertCircle,
   CheckCircle2,
   LogOut,
-  RefreshCw
+  RefreshCw,
+  ExternalLink,
+  Search
 } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { authApi, servicesApi, Service, ServiceItem } from '../services/api';
+
+const SUGGESTED_ICONS = [
+  'server', 'database', 'cloud', 'shield', 'shield-check', 'globe', 'wifi', 'zap',
+  'activity', 'cpu', 'lock', 'users', 'mail', 'phone', 'map-pin', 'clock',
+  'calendar', 'file-text', 'settings', 'search', 'monitor', 'smartphone',
+  'hard-drive', 'network', 'layers', 'box', 'truck', 'credit-card', 'key',
+  'anchor', 'archive', 'arrow-right', 'bar-chart', 'bell', 'bluetooth',
+  'book', 'bookmark', 'briefcase', 'camera', 'check', 'check-circle',
+  'chevron-right', 'clipboard', 'code', 'command', 'compass', 'copy',
+  'credit-card', 'crop', 'crosshair', 'disc', 'download', 'edit',
+  'external-link', 'eye', 'file', 'filter', 'flag', 'folder', 'gift',
+  'grid', 'hash', 'heart', 'help-circle', 'home', 'image', 'inbox',
+  'info', 'layout', 'life-buoy', 'link', 'list', 'loader', 'log-in',
+  'log-out', 'menu', 'message-circle', 'message-square', 'mic',
+  'minus', 'more-horizontal', 'more-vertical', 'mouse-pointer', 'move',
+  'music', 'navigation', 'package', 'paperclip', 'pause', 'percent',
+  'pie-chart', 'play', 'plus', 'plus-circle', 'power', 'printer',
+  'radio', 'refresh-cw', 'repeat', 'save', 'scissors', 'send',
+  'share', 'share-2', 'shopping-bag', 'shopping-cart', 'shuffle',
+  'sidebar', 'skip-back', 'skip-forward', 'slash', 'sliders',
+  'smartphone', 'smile', 'speaker', 'square', 'star', 'stop-circle',
+  'sun', 'sunrise', 'sunset', 'tablet', 'tag', 'target', 'terminal',
+  'thermometer', 'thumbs-down', 'thumbs-up', 'toggle-left',
+  'toggle-right', 'tool', 'trash', 'trash-2', 'trello', 'trending-down',
+  'trending-up', 'triangle', 'truck', 'tv', 'twitch', 'twitter',
+  'type', 'umbrella', 'underline', 'unlock', 'upload', 'upload-cloud',
+  'user', 'user-check', 'user-minus', 'user-plus', 'user-x', 'users',
+  'video', 'voicemail', 'volume', 'volume-1', 'volume-2', 'volume-x',
+  'watch', 'wifi', 'wifi-off', 'wind', 'x', 'x-circle', 'x-octagon',
+  'x-square', 'youtube', 'zap', 'zap-off', 'zoom-in', 'zoom-out'
+];
 
 interface ServicesAdminPanelProps {
   embedded?: boolean;
   onBack?: () => void;
 }
+
+// Helper to get icon component dynamically
+const getIconComponent = (iconName: string) => {
+  if (!iconName) return null;
+  const pascalCase = iconName.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+  return (LucideIcons as any)[pascalCase] || null;
+};
+
+const IconPicker: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const filteredIcons = SUGGESTED_ICONS.filter(icon =>
+    icon.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const SelectedIcon = getIconComponent(value);
+
+  return (
+    <div className="relative">
+      <label className="block text-sm font-medium text-gray-300 mb-1">
+        Icon (from <a href="https://lucide.dev/icons" target="_blank" rel="noopener noreferrer" className="text-[#F20732] hover:underline">Lucide</a>)
+      </label>
+
+      {/* Trigger Button */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#F20732] hover:bg-gray-650 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-gray-600 rounded flex items-center justify-center text-gray-300">
+            {SelectedIcon ? <SelectedIcon className="w-5 h-5" /> : <span className="text-xs">None</span>}
+          </div>
+          <span className="text-gray-200">{value || 'Select an icon...'}</span>
+        </div>
+        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {/* Dropdown */}
+      {isOpen && (
+        <div className="absolute z-50 mt-2 w-full bg-gray-800 border border-gray-600 rounded-lg shadow-xl max-h-80 flex flex-col">
+          {/* Search */}
+          <div className="p-3 border-b border-gray-700 sticky top-0 bg-gray-800 rounded-t-lg">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search icons..."
+                className="w-full pl-9 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#F20732]"
+                autoFocus
+              />
+            </div>
+            {/* Custom Input Option */}
+            <div className="mt-2 flex gap-2">
+              <input
+                type="text"
+                value={value}
+                onChange={e => onChange(e.target.value)}
+                placeholder="Or type custom name..."
+                className="flex-1 px-2 py-1 bg-gray-900 border border-gray-700 rounded text-xs text-gray-300 focus:outline-none focus:border-[#F20732]"
+              />
+            </div>
+          </div>
+
+          {/* Grid */}
+          <div className="flex-1 overflow-y-auto p-2">
+            <div className="grid grid-cols-5 gap-2">
+              {filteredIcons.map(iconName => {
+                const Icon = getIconComponent(iconName);
+                if (!Icon) return null;
+                return (
+                  <button
+                    key={iconName}
+                    type="button"
+                    onClick={() => {
+                      onChange(iconName);
+                      setIsOpen(false);
+                    }}
+                    className={`
+                      aspect-square flex flex-col items-center justify-center gap-1 rounded-lg hover:bg-gray-700 transition-all
+                      ${value === iconName ? 'bg-[#F20732]/20 border border-[#F20732] text-[#F20732]' : 'text-gray-400 hover:text-white border border-transparent'}
+                    `}
+                    title={iconName}
+                  >
+                    <Icon className="w-5 h-5" />
+                  </button>
+                );
+              })}
+            </div>
+            {filteredIcons.length === 0 && (
+              <div className="text-center py-4 text-gray-500 text-sm">
+                No icons found. <br /> Try typing a custom name above.
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Backdrop to close */}
+      {isOpen && (
+        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
+      )}
+    </div>
+  );
+};
 
 const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = false, onBack }) => {
   // Auth state - skip if embedded (already logged in from dashboard)
@@ -34,12 +179,12 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  
+
   // UI state
   const [expandedService, setExpandedService] = useState<string | null>(null);
   const [editingService, setEditingService] = useState<string | null>(null);
   const [editingItem, setEditingItem] = useState<{ serviceId: string; index: number } | null>(null);
-  
+
   // New service form
   const [showNewService, setShowNewService] = useState(false);
   const [newService, setNewService] = useState({
@@ -56,6 +201,7 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
     description: '',
     benefits: '',
     features: '',
+    icon: '',
   });
 
   // Check auth on mount
@@ -84,7 +230,7 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
     e.preventDefault();
     setLoginLoading(true);
     setLoginError('');
-    
+
     const result = await authApi.login(email, password);
     if (result.success) {
       setIsLoggedIn(true);
@@ -147,7 +293,7 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
   const handleDeleteService = async (serviceId: string) => {
     const service = services.find(s => s.id === serviceId);
     const serviceName = service?.category || serviceId;
-    
+
     const confirmed = window.confirm(
       `⚠️ Delete Service Category?\n\n` +
       `Are you sure you want to delete "${serviceName}"?\n\n` +
@@ -156,12 +302,12 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
       `• All ${service?.items.length || 0} service item(s) under it\n\n` +
       `This action cannot be undone.`
     );
-    
+
     if (!confirmed) return;
-    
+
     try {
       const res = await servicesApi.delete(serviceId);
-      
+
       if (res.success) {
         setServices(services.filter(s => s.id !== serviceId));
         showSuccessMessage(`✅ "${serviceName}" deleted successfully!`);
@@ -188,13 +334,13 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
       description: newItem.description,
       benefits: newItem.benefits.split('\n').filter(b => b.trim()),
       features: newItem.features.split('\n').filter(f => f.trim()),
-      icon: '',
+      icon: newItem.icon,
       order: 0,
     });
 
     if (result.success) {
       loadServices();
-      setNewItem({ name: '', description: '', benefits: '', features: '' });
+      setNewItem({ name: '', description: '', benefits: '', features: '', icon: '' });
       setShowNewItem(null);
       showSuccessMessage('Item added successfully!');
     } else {
@@ -219,18 +365,18 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
     const service = services.find(s => s.id === serviceId);
     const item = service?.items[itemIndex];
     const itemName = item?.name || 'this item';
-    
+
     const confirmed = window.confirm(
       `⚠️ Delete Service Item?\n\n` +
       `Are you sure you want to delete "${itemName}"?\n\n` +
       `This action cannot be undone.`
     );
-    
+
     if (!confirmed) return;
-    
+
     try {
       const result = await servicesApi.deleteItem(serviceId, itemIndex);
-      
+
       if (result.success) {
         loadServices();
         showSuccessMessage(`✅ "${itemName}" deleted successfully!`);
@@ -308,7 +454,7 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             {embedded && onBack && (
-              <button 
+              <button
                 onClick={onBack}
                 className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
               >
@@ -461,9 +607,9 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
               </div>
             ) : (
               services.map(service => (
-                <div key={service.id} className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                <div key={service.id} className="bg-gray-800 rounded-xl border border-gray-700">
                   {/* Service Header */}
-                  <div className="p-4 flex items-center justify-between">
+                  <div className="p-4 flex items-center justify-between rounded-t-xl">
                     <button
                       onClick={() => setExpandedService(expandedService === service.id ? null : service.id)}
                       className="flex items-center gap-4 flex-1 text-left"
@@ -515,8 +661,8 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
                   {/* Edit Service Form */}
                   {editingService === service.id && (
                     <div className="px-4 pb-4 border-t border-gray-700 pt-4">
-                      <ServiceEditForm 
-                        service={service} 
+                      <ServiceEditForm
+                        service={service}
                         onSave={(updates) => handleUpdateService(service.id, updates)}
                         onCancel={() => setEditingService(null)}
                       />
@@ -586,6 +732,12 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
                                 />
                               </div>
                             </div>
+                            <div className="mt-4">
+                              <IconPicker
+                                value={newItem.icon}
+                                onChange={(val) => setNewItem({ ...newItem, icon: val })}
+                              />
+                            </div>
                           </div>
                           <div className="flex gap-2 mt-4">
                             <button
@@ -610,7 +762,7 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
                           <p className="text-gray-500 text-sm text-center py-4">No items yet. Add one above.</p>
                         ) : (
                           service.items.map((item, index) => (
-                            <div key={index} className="bg-gray-700/50 rounded-lg overflow-hidden">
+                            <div key={index} className="bg-gray-700/50 rounded-lg">
                               {/* Item row (collapsed or header when editing) */}
                               {editingItem?.serviceId === service.id && editingItem?.index === index ? (
                                 <ItemEditForm
@@ -627,7 +779,7 @@ const ServicesAdminPanel: React.FC<ServicesAdminPanelProps> = ({ embedded = fals
                                     <div className="flex-1 min-w-0">
                                       <h5 className="font-medium text-white">{item.name}</h5>
                                       <p className="text-gray-400 text-sm mt-1">{item.description}</p>
-                                      
+
                                       {/* Benefits & Features Preview */}
                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                                         <div>
@@ -773,9 +925,10 @@ const ItemEditForm: React.FC<{
   const [description, setDescription] = useState(item.description);
   const [benefits, setBenefits] = useState(item.benefits.join('\n'));
   const [features, setFeatures] = useState(item.features.join('\n'));
+  const [icon, setIcon] = useState(item.icon || '');
 
   return (
-    <div className="p-4 bg-gray-600/50">
+    <div className="p-4 bg-gray-600/50 rounded-lg">
       <h5 className="font-medium mb-4 flex items-center gap-2">
         <Edit2 className="w-4 h-4 text-[#F20732]" />
         Editing: {item.name}
@@ -821,6 +974,12 @@ const ItemEditForm: React.FC<{
             />
           </div>
         </div>
+        <div className="col-span-1 md:col-span-2">
+          <IconPicker
+            value={icon}
+            onChange={setIcon}
+          />
+        </div>
       </div>
       <div className="flex gap-2 mt-4">
         <button
@@ -829,6 +988,7 @@ const ItemEditForm: React.FC<{
             description,
             benefits: benefits.split('\n').filter(b => b.trim()),
             features: features.split('\n').filter(f => f.trim()),
+            icon,
           })}
           className="flex items-center gap-2 px-4 py-2 bg-green-600 rounded-lg hover:bg-green-700 transition-colors text-sm"
         >
