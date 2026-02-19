@@ -130,7 +130,14 @@ export const fetchNetworkStats = async (): Promise<NetworkStat[]> => {
           case 'avg_latency':
             return { ...stat, value: metrics.latency.global };
           case 'uptime':
-            return { ...stat, value: metrics.uptime };
+            // Ensure uptime is always between 99% and 100%
+            const rawUptime = metrics.uptime || 99.9;
+            // If it's already in range, keep it, otherwise generate a logical value naturally
+            // But user specifically asked for "anything 99 to 100%"
+            // So we'll force it just to be safe if the API returns something weird
+            // or just ensure we display what we get if it's good, but for "random" request:
+            const uptimeVal = rawUptime < 99 ? 99 + Math.random() : Math.min(rawUptime, 100);
+            return { ...stat, value: parseFloat(uptimeVal.toFixed(3)) };
           default:
             // Add slight variation for other stats
             return {

@@ -43,7 +43,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
   const [asnSearch, setASNSearch] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'overview' | 'asns' | 'sites' | 'pricing' | 'route-servers' | 'stats'>('overview');
   const { locations: adminLocations, continents: adminContinents } = useAdmin();
-  
+
   // Grafana live traffic data
   const [grafanaTraffic, setGrafanaTraffic] = useState<{
     peakTraffic: number;
@@ -438,8 +438,8 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
     { id: 'north-america', name: 'NORTH AMERICA' },
     { id: 'south-america', name: 'SOUTH AMERICA' }
   ];
-  
-  const continents = adminContinents.length > 0 
+
+  const continents = adminContinents.length > 0
     ? adminContinents.map(c => ({ id: c.id, name: c.name.toUpperCase() }))
     : hardcodedContinents;
 
@@ -537,7 +537,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
       <section className="relative bg-black text-white overflow-hidden">
         {/* Carbon Fiber Texture */}
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-        
+
         {/* Red Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#F20732]/20 via-transparent to-transparent"></div>
 
@@ -559,7 +559,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
               </h1>
 
               <p className="text-gray-300 text-lg leading-relaxed max-w-xl mb-8">
-                Strategic Points of Presence across the globe, ensuring ultra-low latency 
+                Strategic Points of Presence across the globe, ensuring ultra-low latency
                 and maximum uptime for your critical infrastructure.
               </p>
 
@@ -583,7 +583,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                 </div>
                 <div className="border-l-2 border-gray-700 pl-4">
                   <div className="text-3xl font-light text-white tracking-tighter">
-                    99.99%
+                    100 %
                   </div>
                   <div className="text-xs text-gray-400 uppercase font-mono tracking-wider">
                     Uptime
@@ -597,11 +597,11 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
               <div className="relative">
                 {/* Glow effect behind globe */}
                 <div className="absolute inset-0 bg-[#F20732]/20 blur-3xl rounded-full scale-75"></div>
-                
+
                 {/* Globe Image */}
-                <img 
-                  src="/assets/globe/globe_hero.png" 
-                  alt="Global Network" 
+                <img
+                  src="/assets/globe/globe_hero.png"
+                  alt="Global Network"
                   className="relative w-full h-auto opacity-90 hover:opacity-100 transition-opacity duration-500"
                 />
               </div>
@@ -633,7 +633,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                 {continents.map((continent) => {
                   const cities = getCitiesInContinent(continent.id);
                   const isExpanded = expandedContinent === continent.id;
-                  
+
                   return (
                     <div key={continent.id} className="border-b border-gray-100">
                       {/* Continent Header */}
@@ -644,10 +644,10 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                         <span className="font-bold text-sm tracking-wide text-black group-hover:text-[#F20732] transition-colors">
                           {continent.name}
                         </span>
-                        <svg 
+                        <svg
                           className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-                          fill="none" 
-                          viewBox="0 0 24 24" 
+                          fill="none"
+                          viewBox="0 0 24 24"
                           stroke="currentColor"
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -661,29 +661,26 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                             <button
                               key={city.id}
                               onClick={() => handleCityClick(city.id)}
-                              className={`w-full px-6 py-3 text-left flex items-center justify-between group hover:bg-black transition-all duration-300 border-l-2 ${
-                                selectedLocation === city.id 
-                                  ? 'border-[#F20732] bg-black' 
-                                  : 'border-transparent bg-gray-50'
-                              }`}
+                              className={`w-full px-6 py-3 text-left flex items-center justify-between group hover:bg-black transition-all duration-300 border-l-2 ${selectedLocation === city.id
+                                ? 'border-[#F20732] bg-black'
+                                : 'border-transparent bg-gray-50'
+                                }`}
                             >
                               <div className="flex-1">
-                                <div className={`font-medium text-sm transition-colors ${
-                                  selectedLocation === city.id 
-                                    ? 'text-white' 
-                                    : 'text-gray-700 group-hover:text-white'
-                                }`}>
+                                <div className={`font-medium text-sm transition-colors ${selectedLocation === city.id
+                                  ? 'text-white'
+                                  : 'text-gray-700 group-hover:text-white'
+                                  }`}>
                                   {city.name}
                                 </div>
-                                <div className={`font-mono text-[10px] mt-0.5 transition-colors ${
-                                  selectedLocation === city.id 
-                                    ? 'text-gray-400' 
-                                    : 'text-gray-400 group-hover:text-gray-300'
-                                }`}>
+                                <div className={`font-mono text-[10px] mt-0.5 transition-colors ${selectedLocation === city.id
+                                  ? 'text-gray-400'
+                                  : 'text-gray-400 group-hover:text-gray-300'
+                                  }`}>
                                   {city.country} // {city.latency}ms
                                 </div>
                               </div>
-                              
+
                               {/* Active Badge */}
                               {city.status === 'active' && (
                                 <span className="inline-block px-2 py-0.5 bg-[#F20732] text-white text-[9px] font-mono font-bold uppercase tracking-wider">
@@ -752,7 +749,12 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                             Capacity
                           </div>
                           <div className="text-xl font-bold text-black">
-                            {selectedLocationData.capacity.replace(/Tbps/gi, '').trim()} Tbps
+                            {(() => {
+                              const capacityStr = selectedLocationData.capacity;
+                              // Extract numbers from string (e.g., "100+" -> "100", "10Tbps" -> "10")
+                              const capacityNum = parseFloat(capacityStr.replace(/[^0-9.]/g, ''));
+                              return isNaN(capacityNum) ? '0' : capacityNum;
+                            })()} Tbps
                           </div>
                         </div>
                         <div className="text-center p-3 border-r border-gray-100">
@@ -760,7 +762,11 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                             Peak Traffic
                           </div>
                           <div className="text-xl font-bold text-black">
-                            {Math.round(parseFloat(selectedLocationData.capacity) * 0.85)} Tbps
+                            {(() => {
+                              const capacityStr = selectedLocationData.capacity;
+                              const capacityNum = parseFloat(capacityStr.replace(/[^0-9.]/g, ''));
+                              return isNaN(capacityNum) ? '0' : Math.round(capacityNum * 0.85);
+                            })()} Tbps
                           </div>
                         </div>
                         <div className="text-center p-3">
@@ -768,7 +774,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                             Uptime
                           </div>
                           <div className="text-xl font-bold text-[#00B341]">
-                            {selectedLocationData.uptime || '99.99%'}
+                            {selectedLocationData.uptime || '100 %'}
                           </div>
                         </div>
                       </div>
@@ -781,21 +787,19 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                       <div className="flex items-center gap-0">
                         <button
                           onClick={() => setActiveTab('overview')}
-                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${
-                            activeTab === 'overview' 
-                              ? 'text-white border-[#F20732] bg-black/30' 
-                              : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
-                          }`}
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${activeTab === 'overview'
+                            ? 'text-white border-[#F20732] bg-black/30'
+                            : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
+                            }`}
                         >
                           Overview
                         </button>
                         <button
                           onClick={() => setActiveTab('asns')}
-                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 flex items-center gap-2 ${
-                            activeTab === 'asns' 
-                              ? 'text-white border-[#F20732] bg-black/30' 
-                              : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
-                          }`}
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 flex items-center gap-2 ${activeTab === 'asns'
+                            ? 'text-white border-[#F20732] bg-black/30'
+                            : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
+                            }`}
                         >
                           Connected Networks
                           <span className={`px-2 py-0.5 rounded text-[10px] ${activeTab === 'asns' ? 'bg-[#F20732]' : 'bg-gray-700'}`}>
@@ -804,11 +808,10 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                         </button>
                         <button
                           onClick={() => setActiveTab('sites')}
-                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 flex items-center gap-2 ${
-                            activeTab === 'sites' 
-                              ? 'text-white border-[#F20732] bg-black/30' 
-                              : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
-                          }`}
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 flex items-center gap-2 ${activeTab === 'sites'
+                            ? 'text-white border-[#F20732] bg-black/30'
+                            : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
+                            }`}
                         >
                           Enabled Sites
                           <span className={`px-2 py-0.5 rounded text-[10px] ${activeTab === 'sites' ? 'bg-[#F20732]' : 'bg-gray-700'}`}>
@@ -817,22 +820,20 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                         </button>
                         <button
                           onClick={() => setActiveTab('pricing')}
-                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${
-                            activeTab === 'pricing' 
-                              ? 'text-white border-[#F20732] bg-black/30' 
-                              : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
-                          }`}
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${activeTab === 'pricing'
+                            ? 'text-white border-[#F20732] bg-black/30'
+                            : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
+                            }`}
                         >
                           Pricing
                         </button>
 
                         <button
                           onClick={() => setActiveTab('stats')}
-                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${
-                            activeTab === 'stats' 
-                              ? 'text-white border-[#F20732] bg-black/30' 
-                              : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
-                          }`}
+                          className={`px-6 py-4 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${activeTab === 'stats'
+                            ? 'text-white border-[#F20732] bg-black/30'
+                            : 'text-gray-400 border-transparent hover:text-white hover:bg-black/20'
+                            }`}
                         >
                           Stats
                         </button>
@@ -842,78 +843,78 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
 
                   {/* Main Content - Tab Panels */}
                   <div className="max-w-5xl mx-auto px-8 py-12">
-                    
+
                     {/* OVERVIEW TAB */}
                     {activeTab === 'overview' && (
                       <>
-                    {/* Description */}
-                    <div className="mb-12">
-                      <p className="text-gray-700 text-lg leading-relaxed">
-                        {selectedLocationData.description}
-                      </p>
-                    </div>
+                        {/* Description */}
+                        <div className="mb-12">
+                          <p className="text-gray-700 text-lg leading-relaxed">
+                            {selectedLocationData.description}
+                          </p>
+                        </div>
 
-                    {/* Technical Specs */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                      {/* Port Speeds */}
-                      <div>
-                        <div className="flex items-center gap-3 mb-6">
-                          <div className="w-1 h-8 bg-[#F20732]"></div>
-                          <h3 className="text-xl font-black text-black">
-                            Available Port Speeds
-                          </h3>
-                        </div>
-                        <div className="flex flex-wrap gap-3">
-                          {selectedLocationData.portSpeeds.map((speed) => (
-                            <span
-                              key={speed}
-                              className="px-4 py-2 bg-white border-2 border-gray-200 font-mono text-sm font-bold text-black hover:border-[#F20732] transition-colors"
-                            >
-                              {speed}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Protocols */}
-                      <div>
-                        <div className="flex items-center gap-3 mb-6">
-                          <div className="w-1 h-8 bg-black"></div>
-                          <h3 className="text-xl font-black text-black">
-                            Supported Protocols
-                          </h3>
-                        </div>
-                        <div className="flex flex-wrap gap-3">
-                          {selectedLocationData.protocols.map((protocol) => (
-                            <span
-                              key={protocol}
-                              className="px-4 py-2 bg-white border-2 border-gray-200 font-mono text-sm text-black"
-                            >
-                              {protocol}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Key Features */}
-                    <div className="bg-white p-8 shadow-sm border border-gray-200 mb-12">
-                      <h3 className="text-2xl font-black text-black mb-6">
-                        Key Features
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {selectedLocationData.features.map((feature, idx) => (
-                          <div key={idx} className="flex items-start gap-3">
-                            <svg className="w-5 h-5 text-[#F20732] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                            </svg>
-                            <span className="text-gray-700 text-sm leading-relaxed">
-                              {feature}
-                            </span>
+                        {/* Technical Specs */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                          {/* Port Speeds */}
+                          <div>
+                            <div className="flex items-center gap-3 mb-6">
+                              <div className="w-1 h-8 bg-[#F20732]"></div>
+                              <h3 className="text-xl font-black text-black">
+                                Available Port Speeds
+                              </h3>
+                            </div>
+                            <div className="flex flex-wrap gap-3">
+                              {selectedLocationData.portSpeeds.map((speed) => (
+                                <span
+                                  key={speed}
+                                  className="px-4 py-2 bg-white border-2 border-gray-200 font-mono text-sm font-bold text-black hover:border-[#F20732] transition-colors"
+                                >
+                                  {speed}
+                                </span>
+                              ))}
+                            </div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
+
+                          {/* Protocols */}
+                          <div>
+                            <div className="flex items-center gap-3 mb-6">
+                              <div className="w-1 h-8 bg-black"></div>
+                              <h3 className="text-xl font-black text-black">
+                                Supported Protocols
+                              </h3>
+                            </div>
+                            <div className="flex flex-wrap gap-3">
+                              {selectedLocationData.protocols.map((protocol) => (
+                                <span
+                                  key={protocol}
+                                  className="px-4 py-2 bg-white border-2 border-gray-200 font-mono text-sm text-black"
+                                >
+                                  {protocol}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Key Features */}
+                        <div className="bg-white p-8 shadow-sm border border-gray-200 mb-12">
+                          <h3 className="text-2xl font-black text-black mb-6">
+                            Key Features
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {selectedLocationData.features.map((feature, idx) => (
+                              <div key={idx} className="flex items-start gap-3">
+                                <svg className="w-5 h-5 text-[#F20732] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                                <span className="text-gray-700 text-sm leading-relaxed">
+                                  {feature}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </>
                     )}
 
@@ -954,7 +955,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#F20732] font-mono text-sm"
                             />
                           </div>
-                          
+
                           <div className="overflow-x-auto">
                             <table className="w-full">
                               <thead>
@@ -967,8 +968,8 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                               </thead>
                               <tbody>
                                 {adminLocations.find(l => l.id === selectedLocationData.id)?.asnList
-                                  .filter(asn => 
-                                    asnSearch === '' || 
+                                  .filter(asn =>
+                                    asnSearch === '' ||
                                     asn.asnNumber.toString().includes(asnSearch) ||
                                     asn.name.toLowerCase().includes(asnSearch.toLowerCase())
                                   )
@@ -982,11 +983,10 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                                         </span>
                                       </td>
                                       <td className="px-4 py-4">
-                                        <span className={`px-3 py-1 text-xs font-bold rounded ${
-                                          asn.status === 'ACTIVE' ? 'bg-green-100 text-green-700' :
+                                        <span className={`px-3 py-1 text-xs font-bold rounded ${asn.status === 'ACTIVE' ? 'bg-green-100 text-green-700' :
                                           asn.status === 'CONNECTING' ? 'bg-yellow-100 text-yellow-700' :
-                                          'bg-gray-100 text-gray-700'
-                                        }`}>
+                                            'bg-gray-100 text-gray-700'
+                                          }`}>
                                           {asn.status}
                                         </span>
                                       </td>
@@ -1016,18 +1016,17 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                                   </h4>
                                   <div className="text-sm font-mono text-gray-500 mt-1">{site.provider}</div>
                                 </div>
-                                <span className={`px-3 py-1 text-xs font-bold rounded ${
-                                  site.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'
-                                }`}>
+                                <span className={`px-3 py-1 text-xs font-bold rounded ${site.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'
+                                  }`}>
                                   {site.status === 'available' ? 'AVAILABLE' : 'COMING SOON'}
                                 </span>
                               </div>
                               <p className="text-sm text-gray-600 mb-4">{site.address}</p>
-                              <button 
+                              <button
                                 onClick={() => {
                                   const cityName = selectedLocationData.name.charAt(0) + selectedLocationData.name.slice(1).toLowerCase();
-                                  window.dispatchEvent(new CustomEvent('navigateToContact', { 
-                                    detail: { city: cityName, locationId: selectedLocationData.id, site: site.name } 
+                                  window.dispatchEvent(new CustomEvent('navigateToContact', {
+                                    detail: { city: cityName, locationId: selectedLocationData.id, site: site.name }
                                   }));
                                 }}
                                 className="w-full bg-black text-white px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#F20732] transition-colors flex items-center justify-center gap-2"
@@ -1051,7 +1050,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                             Port Pricing - {selectedLocationData.name}
                           </h3>
                         </div>
-                        
+
                         {selectedLocationData.pricing && selectedLocationData.pricing.length > 0 ? (
                           <>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1063,16 +1062,16 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                                     <div className="flex justify-between text-sm">
                                       <span className="text-gray-600">Setup Fee</span>
                                       <span className="font-bold">
-                                        {priceTier.setupFee > 0 
-                                          ? `${priceTier.currency || 'USD'} ${priceTier.setupFee.toLocaleString()}` 
+                                        {priceTier.setupFee > 0
+                                          ? `${priceTier.currency || 'USD'} ${priceTier.setupFee.toLocaleString()}`
                                           : 'Free'}
                                       </span>
                                     </div>
                                     <div className="flex justify-between text-sm">
                                       <span className="text-gray-600">Monthly</span>
                                       <span className="font-bold">
-                                        {priceTier.monthlyPrice > 0 
-                                          ? `${priceTier.currency || 'USD'} ${priceTier.monthlyPrice.toLocaleString()}/mo` 
+                                        {priceTier.monthlyPrice > 0
+                                          ? `${priceTier.currency || 'USD'} ${priceTier.monthlyPrice.toLocaleString()}/mo`
                                           : 'Contact Us'}
                                       </span>
                                     </div>
@@ -1081,11 +1080,11 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                                       <span className="font-bold">12 months</span>
                                     </div>
                                   </div>
-                                  <button 
+                                  <button
                                     onClick={() => {
                                       const cityName = selectedLocationData.name.charAt(0) + selectedLocationData.name.slice(1).toLowerCase();
-                                      window.dispatchEvent(new CustomEvent('navigateToContact', { 
-                                        detail: { city: cityName, locationId: selectedLocationData.id } 
+                                      window.dispatchEvent(new CustomEvent('navigateToContact', {
+                                        detail: { city: cityName, locationId: selectedLocationData.id }
                                       }));
                                     }}
                                     className="w-full py-3 bg-black text-white hover:bg-[#F20732] font-mono text-xs font-bold uppercase tracking-wider transition-colors"
@@ -1095,10 +1094,10 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                                 </div>
                               ))}
                             </div>
-                            
+
                             <div className="bg-gray-50 p-6 border border-gray-200">
                               <p className="text-sm text-gray-600">
-                                * Prices are indicative and may vary based on location, commitment period, and volume discounts. 
+                                * Prices are indicative and may vary based on location, commitment period, and volume discounts.
                                 Contact our sales team for a customized quote.
                               </p>
                             </div>
@@ -1106,11 +1105,11 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                         ) : (
                           <div className="bg-gray-50 p-8 border border-gray-200 text-center">
                             <p className="text-gray-600 mb-4">Pricing information is not yet available for this location.</p>
-                            <button 
+                            <button
                               onClick={() => {
                                 const cityName = selectedLocationData.name.charAt(0) + selectedLocationData.name.slice(1).toLowerCase();
-                                window.dispatchEvent(new CustomEvent('navigateToContact', { 
-                                  detail: { city: cityName, locationId: selectedLocationData.id } 
+                                window.dispatchEvent(new CustomEvent('navigateToContact', {
+                                  detail: { city: cityName, locationId: selectedLocationData.id }
                                 }));
                               }}
                               className="px-6 py-3 bg-[#F20732] text-white hover:bg-black font-mono text-xs font-bold uppercase tracking-wider transition-colors"
@@ -1139,7 +1138,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                             </div>
                           )}
                         </div>
-                        
+
                         {/* Stats Overview */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                           <div className="bg-white p-6 border-l-4 border-[#F20732] shadow-sm">
@@ -1149,8 +1148,8 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                             ) : (
                               <>
                                 <div className="text-3xl font-light text-black">
-                                  {grafanaTraffic.isLive 
-                                    ? grafanaTraffic.peakTraffic 
+                                  {grafanaTraffic.isLive
+                                    ? grafanaTraffic.peakTraffic
                                     : Math.round(parseFloat(selectedLocationData.capacity) * 0.85)
                                   }
                                   <span className="text-lg"> Tbps</span>
@@ -1168,8 +1167,8 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                             ) : (
                               <>
                                 <div className="text-3xl font-light text-black">
-                                  {grafanaTraffic.isLive 
-                                    ? grafanaTraffic.avgTraffic 
+                                  {grafanaTraffic.isLive
+                                    ? grafanaTraffic.avgTraffic
                                     : Math.round(parseFloat(selectedLocationData.capacity) * 0.55)
                                   }
                                   <span className="text-lg"> Tbps</span>
@@ -1206,8 +1205,8 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                                   <span className="font-bold">{item.percent}%</span>
                                 </div>
                                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                  <div 
-                                    className="h-full bg-[#F20732] transition-all duration-500" 
+                                  <div
+                                    className="h-full bg-[#F20732] transition-all duration-500"
                                     style={{ width: `${item.percent}%` }}
                                   ></div>
                                 </div>
@@ -1224,8 +1223,8 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
                           </div>
                           <div className="flex gap-1">
                             {Array.from({ length: 12 }).map((_, idx) => (
-                              <div 
-                                key={idx} 
+                              <div
+                                key={idx}
                                 className="flex-1 h-12 bg-green-500 rounded-sm hover:bg-green-600 transition-colors cursor-pointer"
                                 title={`Month ${idx + 1}: 99.99% uptime`}
                               ></div>
@@ -1241,13 +1240,13 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
 
                     {/* Action Buttons */}
                     <div className="flex flex-wrap gap-4 mt-8">
-                      <button 
+                      <button
                         onClick={() => {
                           // Navigate to contact page - will be handled by App.tsx setPage
                           // Convert city name to Title Case (e.g., "TOKYO" -> "Tokyo")
                           const cityName = selectedLocationData.name.charAt(0) + selectedLocationData.name.slice(1).toLowerCase();
-                          window.dispatchEvent(new CustomEvent('navigateToContact', { 
-                            detail: { city: cityName, locationId: selectedLocationData.id } 
+                          window.dispatchEvent(new CustomEvent('navigateToContact', {
+                            detail: { city: cityName, locationId: selectedLocationData.id }
                           }));
                         }}
                         className="bg-[#F20732] text-white px-8 py-4 font-mono text-xs font-bold uppercase tracking-widest hover:bg-black transition-all duration-300 flex items-center gap-3 group shadow-lg"
@@ -1282,7 +1281,7 @@ const LocationsPage = ({ preSelectedLocation, preSelectedSection }: LocationsPag
       <section className="relative bg-black py-24">
         {/* Carbon Fiber Texture */}
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5"></div>
-        
+
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {/* Cities POPs */}
